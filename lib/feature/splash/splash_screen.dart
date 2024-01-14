@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:presensi_blockchain/core/routing/router.dart';
 import 'package:svg_flutter/svg.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -27,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Timer(
       duration,
       () {
-        context.pushNamed('login-screen');
+        context.pushNamed(AppRoute.loginScreen.name);
       },
     );
   }

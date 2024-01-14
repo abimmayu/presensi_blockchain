@@ -8,6 +8,7 @@ class MainButton extends StatelessWidget {
     this.height,
     this.width,
     this.text,
+    this.textColor,
     this.color,
     required this.onTap,
   });
@@ -16,6 +17,7 @@ class MainButton extends StatelessWidget {
   final num? width;
   final String? text;
   final Color? color;
+  final Color? textColor;
   final Function() onTap;
 
   @override
@@ -37,7 +39,7 @@ class MainButton extends StatelessWidget {
           child: Text(
             text != null ? text! : '',
             style: bigTextSemibold.copyWith(
-              color: color ?? whiteColor,
+              color: textColor ?? whiteColor,
             ),
           ),
         ),

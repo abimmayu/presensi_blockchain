@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:presensi_blockchain/core/constant.dart';
+import 'package:presensi_blockchain/core/widget/custom_nav_bar.dart';
 import 'package:presensi_blockchain/feature/dashboard/domain/present_in_year.dart';
 import 'package:presensi_blockchain/feature/dashboard/presentation/present_charts.dart';
 import 'package:svg_flutter/svg.dart';
@@ -19,7 +20,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int? selectedMonth;
   int? selectedYear;
   int? selectedYear2;
-  int _currentIndex = 0;
+  final int _currentIndex = 0;
 
   List month = [
     "Januari",
@@ -144,38 +145,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: Container(
-        child: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: (value) {
-            setState(() {
-              _currentIndex = value;
-              log("$_currentIndex");
-            });
-          },
-          items: const [
-            BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.home,
-                  color: mainColor,
-                ),
-                label: "Home"),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.file_present_outlined,
-                color: mainColor,
-              ),
-              label: "Present",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.settings,
-                color: mainColor,
-              ),
-              label: "User Settings",
-            ),
-          ],
-        ),
+      bottomNavigationBar: CustomNavBar(
+        currentIndex: 0,
       ),
       body: SafeArea(
         child: ListView(
