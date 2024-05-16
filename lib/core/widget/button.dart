@@ -25,6 +25,9 @@ class MainButton extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: ScreenUtil().setWidth(20),
+        ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           color: color ?? mainColor,
@@ -38,7 +41,7 @@ class MainButton extends StatelessWidget {
         child: Center(
           child: Text(
             text != null ? text! : '',
-            style: bigTextSemibold.copyWith(
+            style: regularText.copyWith(
               color: textColor ?? whiteColor,
             ),
           ),

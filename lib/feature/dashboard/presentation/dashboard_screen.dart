@@ -1,4 +1,4 @@
-import 'dart:developer';
+// import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,7 +20,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int? selectedMonth;
   int? selectedYear;
   int? selectedYear2;
-  final int _currentIndex = 0;
+  // final int _currentIndex = 0;
 
   List month = [
     "Januari",
@@ -145,7 +145,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: CustomNavBar(
+      bottomNavigationBar: const CustomNavBar(
         currentIndex: 0,
       ),
       body: SafeArea(

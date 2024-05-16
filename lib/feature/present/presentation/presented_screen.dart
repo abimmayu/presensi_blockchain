@@ -3,12 +3,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:presensi_blockchain/core/constant.dart';
 import 'package:presensi_blockchain/core/routing/router.dart';
+import 'package:presensi_blockchain/core/service/blockchain_service.dart';
 import 'package:presensi_blockchain/core/widget/button.dart';
 import 'package:presensi_blockchain/core/widget/custom_app_bar.dart';
-import 'package:svg_flutter/svg_flutter.dart';
+// import 'package:svg_flutter/svg_flutter.dart';
 
 class PresentedScreen extends StatelessWidget {
-  const PresentedScreen({super.key});
+  PresentedScreen({super.key});
+
+  final BlockchainService service = BlockchainService();
+  final String privateKey =
+      "12413019a6025e5238f2b06222cc1228ba39da398af30273282670f2435a8bfc";
 
   @override
   Widget build(BuildContext context) {
@@ -213,9 +218,19 @@ class PresentedScreen extends StatelessWidget {
             ),
             child: MainButton(
               onTap: () {
-                context.pushNamed(
-                  AppRoute.presentSuccessScreen.name,
-                );
+                service
+                    .addPresentIn(
+                      functionName: "inputPresent",
+                      privateKey: privateKey,
+                      nip: "5194192254",
+                      fullName: "Abim Mayu Indra Ardiansyah",
+                      locations: "Sistem Komputer",
+                    )
+                    .then(
+                      (value) => context.pushNamed(
+                        AppRoute.presentSuccessScreen.name,
+                      ),
+                    );
               },
               text: 'Submit',
             ),

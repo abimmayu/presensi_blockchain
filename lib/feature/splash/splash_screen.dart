@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Timer(
       duration,
       () {
-        context.pushNamed(AppRoute.loginScreen.name);
+        context.pushReplacementNamed(AppRoute.loginScreen.name);
       },
     );
   }

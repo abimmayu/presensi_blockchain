@@ -3,6 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:presensi_blockchain/core/routing/router.dart';
 
 void main() {
+  const contractUrl =
+      "https://sepolia.infura.io/v3/a555c4f5ab0a4baf89bcc0e4963c0b3c";
+
   runApp(const MyApp());
 }
 

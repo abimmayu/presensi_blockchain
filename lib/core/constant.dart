@@ -24,6 +24,10 @@ final TextStyle bigTextSemibold = GoogleFonts.montserrat(
   fontSize: 24,
   fontWeight: FontWeight.w600,
 );
+final TextStyle regularText = GoogleFonts.montserrat(
+  fontSize: 20,
+  fontWeight: FontWeight.w600,
+);
 final TextStyle normalText = GoogleFonts.montserrat(
   fontSize: 16,
   fontWeight: FontWeight.w500,

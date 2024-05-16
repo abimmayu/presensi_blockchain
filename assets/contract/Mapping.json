@@ -1,0 +1,221 @@
+[
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "day",
+				"type": "string"
+			}
+		],
+		"name": "addPresentIn",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "day",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "hour",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"components": [
+							{
+								"internalType": "string",
+								"name": "nip",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "full_name",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "location",
+								"type": "string"
+							}
+						],
+						"internalType": "struct Mapping.Person[]",
+						"name": "person",
+						"type": "tuple[]"
+					}
+				],
+				"internalType": "struct Mapping.Presensi",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getDayofPresent",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getHourofPresent",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getPerson",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "nip",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "full_name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "location",
+						"type": "string"
+					}
+				],
+				"internalType": "struct Mapping.Person[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "index",
+				"type": "uint256"
+			}
+		],
+		"name": "getPersonIndex",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "nip",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "full_name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "location",
+						"type": "string"
+					}
+				],
+				"internalType": "struct Mapping.Person",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "nip",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "full_name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "locations",
+				"type": "string"
+			}
+		],
+		"name": "inputPresent",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "person",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "nip",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "full_name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "location",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "present",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "day",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "hour",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]

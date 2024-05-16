@@ -4,12 +4,12 @@ import 'package:presensi_blockchain/core/constant.dart';
 import 'package:presensi_blockchain/core/routing/router.dart';
 
 class CustomNavBar extends StatefulWidget {
-  CustomNavBar({
+  const CustomNavBar({
     super.key,
     required this.currentIndex,
   });
 
-  int currentIndex;
+  final int currentIndex;
 
   @override
   State<CustomNavBar> createState() => _CustomNavBarState();
