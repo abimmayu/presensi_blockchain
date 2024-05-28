@@ -5,13 +5,13 @@ import 'package:presensi_blockchain/feature/login/data/data_source/login_data_so
 import 'package:presensi_blockchain/feature/login/domain/repository/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
-  AuthLogin auth = AuthLoginImpl();
+  AuthDataSource auth = AuthDataSourceImpl();
 
   @override
-  Future<Either<Failure, User?>> login(String email, String password) async {
+  Future<Either<Failure, User>> login(String email, String password) async {
     try {
       final result = await auth.login(email, password);
-      return Right(result);
+      return Right(result!);
     } on FirebaseAuthException catch (e) {
       return Left(
         LoginFailure(message: e.message),
@@ -20,10 +20,10 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, User?>> signUp(String email, String password) async {
+  Future<Either<Failure, User>> signUp(String email, String password) async {
     try {
       final result = await auth.signUp(email, password);
-      return Right(result);
+      return Right(result!);
     } on FirebaseAuthException catch (e) {
       return Left(
         LoginFailure(message: e.message),

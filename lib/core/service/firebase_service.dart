@@ -4,7 +4,7 @@ import 'package:presensi_blockchain/core/widget/toast.dart';
 class FirebaseService {
   FirebaseAuth auth = FirebaseAuth.instance;
 
-  Future<User?> signInWithemailAndPassword(
+  Future<User> signInWithemailAndPassword(
     String email,
     String password,
   ) async {
@@ -28,11 +28,11 @@ class FirebaseService {
           message: 'An error occured: ${e.code}',
         );
       }
+      throw Exception(e.message);
     }
-    return null;
   }
 
-  Future<User?> signUpWithemailAndPassword(
+  Future<User> signUpWithemailAndPassword(
     String email,
     String password,
   ) async {
@@ -52,8 +52,8 @@ class FirebaseService {
           message: 'An error occurred: ${e.code}',
         );
       }
+      throw Exception(e.message);
     }
-    return null;
   }
 
   Future<void> signOut() async {

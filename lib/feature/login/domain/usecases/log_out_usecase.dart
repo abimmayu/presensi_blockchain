@@ -7,7 +7,7 @@ class LogoutUsecase {
 
   LogoutUsecase(this.authRepositoryl);
 
-  Future<Either<Failure, void>> logOut() async {
+  Future<Either<Failure, void>> execute() async {
     return await authRepositoryl.logOut();
   }
 }

@@ -36,3 +36,23 @@ final TextStyle tinyText = GoogleFonts.montserrat(
   fontSize: 12,
   fontWeight: FontWeight.w500,
 );
+
+//Variable
+class AppConstant {
+  //Contract Detail
+  static const String contractAddress =
+      "0x31f92b4e4BeC6077B397B6A0b9e6004CeE997f9f";
+  static const String contractName = "Presence";
+
+  //Name of Contract Function
+  static const String addPresentIn = "addPresentIn";
+  static const String getPresent = "getPresent";
+  static const String getAllPresents = "getAllPresents";
+  static const String getLastPresentId = "getLastPresentId";
+  static const String addEmployee = "addEmployee";
+  static const String inputPresent = "inputPresent";
+  static const String getEmployeePresentInMonth = "getEmployeePresentInMonth";
+  static const String getEmployeePresentOutMonth = "getEmployeePresentOutMonth";
+  static const String getEmployeePresentInYear = "getEmployeePresentInYear";
+  static const String getEmployeePresentOutYear = "getEmployeePresentOutYear";
+}

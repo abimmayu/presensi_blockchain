@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:presensi_blockchain/core/constant.dart';
+import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/routing/router.dart';
 import 'package:presensi_blockchain/core/widget/button.dart';
 import 'package:presensi_blockchain/core/widget/custom_app_bar.dart';

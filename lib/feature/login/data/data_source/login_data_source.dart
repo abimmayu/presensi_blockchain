@@ -1,13 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:presensi_blockchain/core/service/firebase_service.dart';
 
-abstract class AuthLogin {
+abstract class AuthDataSource {
   Future<User?> login(String email, String password);
   Future<User?> signUp(String email, String password);
   Future<void> signOut();
 }
 
-class AuthLoginImpl implements AuthLogin {
+class AuthDataSourceImpl implements AuthDataSource {
   final FirebaseService firebaseService = FirebaseService();
 
   @override

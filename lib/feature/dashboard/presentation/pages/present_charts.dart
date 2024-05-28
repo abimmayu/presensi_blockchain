@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:presensi_blockchain/core/utils/constant.dart';
 // import 'package:presensi_blockchain/core/constant.dart';
 import 'package:presensi_blockchain/feature/dashboard/domain/present_in_year.dart';
 import 'package:charts_flutter_new/flutter.dart' as charts;
@@ -15,12 +16,23 @@ class PresentChart extends StatelessWidget {
   Widget build(BuildContext context) {
     List<charts.Series<PresentinYear, String>> series = [
       charts.Series(
-        id: "developers",
+        id: "Present In",
         data: data,
         domainFn: (PresentinYear series, _) => "${series.month}",
-        measureFn: (PresentinYear series, _) => series.present,
-        colorFn: (PresentinYear series, _) => series.barColor,
-      )
+        measureFn: (PresentinYear series, _) => series.presentIn,
+        colorFn: (PresentinYear series, _) => charts.ColorUtil.fromDartColor(
+          mainColor,
+        ),
+      ),
+      charts.Series(
+        id: "Present Out",
+        data: data,
+        domainFn: (PresentinYear series, _) => "${series.month}",
+        measureFn: (PresentinYear series, _) => series.presentOut,
+        colorFn: (PresentinYear series, _) => charts.ColorUtil.fromDartColor(
+          Colors.grey,
+        ),
+      ),
     ];
 
     return Container(
@@ -42,6 +54,9 @@ class PresentChart extends StatelessWidget {
               domainAxis: charts.OrdinalAxisSpec(
                 viewport: charts.OrdinalViewport("${series.first}", 5),
               ),
+              defaultRenderer: charts.BarRendererConfig(
+                  groupingType: charts.BarGroupingType.grouped,
+                  strokeWidthPx: 2.0),
             ),
           )
         ],

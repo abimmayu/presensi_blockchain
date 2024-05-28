@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
+import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:web3dart/web3dart.dart';
 
 class BlockchainService {
@@ -24,15 +25,15 @@ class BlockchainService {
   Future<DeployedContract> getContract() async {
     initiateEthClient();
     String abiFile = await rootBundle.loadString(
-      "assets/contract/Mapping.json",
+      "assets/contract/Presensi.json",
     );
 
-    String contractAddress = "0x31f92b4e4BeC6077B397B6A0b9e6004CeE997f9f";
+    String contractAddress = AppConstant.contractAddress;
 
     final contract = DeployedContract(
       ContractAbi.fromJson(
         abiFile,
-        "Mapping",
+        AppConstant.contractName,
       ),
       EthereumAddress.fromHex(
         contractAddress,
@@ -42,40 +43,27 @@ class BlockchainService {
     return contract;
   }
 
-  Future<List> callViewFunction({
+  Future<List<dynamic>> callViewFunction({
     required String name,
-    Map<String, dynamic>? param,
+    List<dynamic>? param,
   }) async {
+    param ??= [];
     final contract = await getContract();
     final function = contract.function(name);
     final result = await web3Client.call(
       contract: contract,
       function: function,
-      params: [],
+      params: param,
     );
 
     return result;
   }
 
-  Future<String> addPresentIn({
+  Future<String> postFunction({
     required String functionName,
-    String? day,
-    String? nip,
-    String? fullName,
-    String? locations,
+    required List param,
     required String privateKey,
   }) async {
-    List param = [];
-    if (functionName == 'addPresentIn') {
-      param = [day];
-    } else if (functionName == 'inputPresent') {
-      param = [
-        nip,
-        fullName,
-        locations,
-      ];
-    }
-
     final credential = EthPrivateKey.fromHex(privateKey);
     final contract = await getContract();
     final function = contract.function(functionName);

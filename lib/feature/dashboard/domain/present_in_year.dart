@@ -1,13 +1,13 @@
-import 'package:charts_flutter_new/flutter.dart' as charts;
-
 class PresentinYear {
   final int month;
-  final int present;
-  final charts.Color barColor;
+  final int presentIn;
+  final int presentOut;
+  final int absent;
 
   PresentinYear({
     required this.month,
-    required this.present,
-    required this.barColor,
+    required this.presentIn,
+    required this.presentOut,
+    required this.absent,
   });
 }

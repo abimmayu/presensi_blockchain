@@ -1,0 +1,308 @@
+[
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id_employee",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "nip_employee",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "name_employee",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "occupation_employee",
+				"type": "string"
+			}
+		],
+		"name": "addEmployee",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id_presents",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "day_presents",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "month_presents",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "year_presents",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "variety_presents",
+				"type": "string"
+			}
+		],
+		"name": "addPresentIn",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id_presents",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "id_employee",
+				"type": "uint256"
+			}
+		],
+		"name": "checkPresentIdOnEmployee",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getAllPresents",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "day",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "month",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "year",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "variety",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "employeesId",
+						"type": "uint256[]"
+					}
+				],
+				"internalType": "struct Presence.Presents[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id_employee",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "month_presents",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "year_presents",
+				"type": "uint256"
+			}
+		],
+		"name": "getEmployeePresentInMonth",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id_employee",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "year_presents",
+				"type": "uint256"
+			}
+		],
+		"name": "getEmployeePresentInYear",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id_employee",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "month_presents",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "year_presents",
+				"type": "uint256"
+			}
+		],
+		"name": "getEmployeePresentOutMonth",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id_employee",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "year_presents",
+				"type": "uint256"
+			}
+		],
+		"name": "getEmployeePresentOutYear",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getLastPresentId",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "getPresent",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id_presents",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "id_employee",
+				"type": "uint256"
+			}
+		],
+		"name": "inputPresent",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	}
+]

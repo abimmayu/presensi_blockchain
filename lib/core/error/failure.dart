@@ -14,3 +14,10 @@ class LoginFailure extends Failure {
           title: "Login Failed",
         );
 }
+
+class HomeFailure extends Failure {
+  HomeFailure({super.message})
+      : super(
+          title: "Home Data failed to Get!",
+        );
+}

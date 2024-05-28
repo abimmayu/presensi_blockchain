@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:presensi_blockchain/core/constant.dart';
+import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/routing/router.dart';
 import 'package:presensi_blockchain/core/service/blockchain_service.dart';
 import 'package:presensi_blockchain/core/widget/button.dart';
@@ -218,19 +218,19 @@ class PresentedScreen extends StatelessWidget {
             ),
             child: MainButton(
               onTap: () {
-                service
-                    .addPresentIn(
-                      functionName: "inputPresent",
-                      privateKey: privateKey,
-                      nip: "5194192254",
-                      fullName: "Abim Mayu Indra Ardiansyah",
-                      locations: "Sistem Komputer",
-                    )
-                    .then(
-                      (value) => context.pushNamed(
-                        AppRoute.presentSuccessScreen.name,
-                      ),
-                    );
+                service.postFunction(
+                  functionName: AppConstant.inputPresent,
+                  privateKey: privateKey,
+                  param: [
+                    "5194192254",
+                    "Abim Mayu Indra Ardiansyah",
+                    "Sistem Komputer",
+                  ],
+                ).then(
+                  (value) => context.pushNamed(
+                    AppRoute.presentSuccessScreen.name,
+                  ),
+                );
               },
               text: 'Submit',
             ),

@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:presensi_blockchain/core/constant.dart';
+import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/widget/custom_nav_bar.dart';
 import 'package:presensi_blockchain/feature/dashboard/domain/present_in_year.dart';
-import 'package:presensi_blockchain/feature/dashboard/presentation/present_charts.dart';
+import 'package:presensi_blockchain/feature/dashboard/presentation/pages/present_charts.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:charts_flutter_new/flutter.dart' as charts;
 
@@ -44,63 +44,45 @@ class _DashboardScreenState extends State<DashboardScreen> {
   List<PresentinYear> data = [
     PresentinYear(
       month: 2017,
-      present: 40000,
-      barColor: charts.ColorUtil.fromDartColor(mainColor),
+      presentIn: 300,
+      presentOut: 300,
+      absent: 29,
     ),
     PresentinYear(
       month: 2018,
-      present: 5000,
-      barColor: charts.ColorUtil.fromDartColor(mainColor),
+      presentIn: 327,
+      presentOut: 327,
+      absent: 12,
     ),
     PresentinYear(
       month: 2019,
-      present: 40000,
-      barColor: charts.ColorUtil.fromDartColor(mainColor),
+      presentIn: 311,
+      presentOut: 301,
+      absent: 18,
     ),
     PresentinYear(
       month: 2020,
-      present: 35000,
-      barColor: charts.ColorUtil.fromDartColor(mainColor),
+      presentIn: 290,
+      presentOut: 290,
+      absent: 39,
     ),
     PresentinYear(
       month: 2021,
-      present: 45000,
-      barColor: charts.ColorUtil.fromDartColor(mainColor),
+      presentIn: 298,
+      presentOut: 295,
+      absent: 31,
     ),
     PresentinYear(
-      month: 2020,
-      present: 35000,
-      barColor: charts.ColorUtil.fromDartColor(mainColor),
+      month: 2022,
+      presentIn: 300,
+      presentOut: 300,
+      absent: 27,
     ),
     PresentinYear(
-      month: 2016,
-      present: 40000,
-      barColor: charts.ColorUtil.fromDartColor(mainColor),
-    ),
-    PresentinYear(
-      month: 2015,
-      present: 5000,
-      barColor: charts.ColorUtil.fromDartColor(mainColor),
-    ),
-    PresentinYear(
-      month: 2014,
-      present: 40000,
-      barColor: charts.ColorUtil.fromDartColor(mainColor),
-    ),
-    PresentinYear(
-      month: 2013,
-      present: 35000,
-      barColor: charts.ColorUtil.fromDartColor(mainColor),
-    ),
-    PresentinYear(
-      month: 2012,
-      present: 45000,
-      barColor: charts.ColorUtil.fromDartColor(mainColor),
-    ),
-    PresentinYear(
-      month: 2011,
-      present: 35000,
-      barColor: charts.ColorUtil.fromDartColor(mainColor),
+      month: 2023,
+      presentIn: 317,
+      presentOut: 317,
+      absent: 10,
     ),
   ];
 
@@ -408,7 +390,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   height: ScreenUtil().setHeight(50),
                 ),
                 Text(
-                  "Izin/Cuti perbulan",
+                  "Presensi per Tahun",
                   style: bigTextRegular,
                 ),
                 SizedBox(

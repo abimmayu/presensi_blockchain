@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:presensi_blockchain/core/constant.dart';
+import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/routing/router.dart';
 
 class CustomNavBar extends StatefulWidget {

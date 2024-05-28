@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:presensi_blockchain/feature/dashboard/presentation/dashboard_screen.dart';
-import 'package:presensi_blockchain/feature/login/presentation/login_screen.dart';
+import 'package:presensi_blockchain/feature/dashboard/presentation/pages/dashboard_screen.dart';
+import 'package:presensi_blockchain/feature/login/presentation/pages/login_screen.dart';
 import 'package:presensi_blockchain/feature/present/presentation/day_off_present_screen.dart';
 import 'package:presensi_blockchain/feature/present/presentation/home_present_screen.dart';
 import 'package:presensi_blockchain/feature/present/presentation/present_success_screen.dart';
@@ -57,7 +57,7 @@ final GoRouter router = GoRouter(
       path: '/login',
       name: AppRoute.loginScreen.name,
       builder: (context, state) {
-        return const LoginScreen();
+        return LoginScreen();
       },
     ),
     GoRoute(
