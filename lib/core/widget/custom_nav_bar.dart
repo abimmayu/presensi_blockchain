@@ -18,13 +18,13 @@ class CustomNavBar extends StatefulWidget {
 class _CustomNavBarState extends State<CustomNavBar> {
   void onTapNav(int index) {
     switch (index) {
+      // case 0:
+      //   context.pushNamed(AppRoute.dashboardScreen.name);
+      //   break;
       case 0:
-        context.pushNamed(AppRoute.dashboardScreen.name);
-        break;
-      case 1:
         context.pushNamed(AppRoute.presentScreen.name);
         break;
-      case 2:
+      case 1:
         context.pushNamed(AppRoute.userSettingScreen.name);
         break;
     }
@@ -36,12 +36,12 @@ class _CustomNavBarState extends State<CustomNavBar> {
       currentIndex: widget.currentIndex,
       onTap: onTapNav,
       items: const [
-        BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
-              color: mainColor,
-            ),
-            label: "Home"),
+        // BottomNavigationBarItem(
+        //     icon: Icon(
+        //       Icons.home,
+        //       color: mainColor,
+        //     ),
+        //     label: "Home"),
         BottomNavigationBarItem(
           icon: Icon(
             Icons.file_present_outlined,

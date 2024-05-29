@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:presensi_blockchain/feature/dashboard/presentation/pages/dashboard_screen.dart';
 import 'package:presensi_blockchain/feature/login/presentation/pages/login_screen.dart';
-import 'package:presensi_blockchain/feature/present/presentation/day_off_present_screen.dart';
-import 'package:presensi_blockchain/feature/present/presentation/home_present_screen.dart';
-import 'package:presensi_blockchain/feature/present/presentation/present_success_screen.dart';
-import 'package:presensi_blockchain/feature/present/presentation/presented_screen.dart';
-import 'package:presensi_blockchain/feature/present/presentation/present_screen.dart';
+import 'package:presensi_blockchain/feature/present/presentation/pages/day_off_present_screen.dart';
+import 'package:presensi_blockchain/feature/present/presentation/pages/home_present_screen.dart';
+import 'package:presensi_blockchain/feature/present/presentation/pages/present_success_screen.dart';
+import 'package:presensi_blockchain/feature/present/presentation/pages/presented_screen.dart';
+import 'package:presensi_blockchain/feature/present/presentation/pages/present_screen.dart';
 import 'package:presensi_blockchain/feature/splash/splash_screen.dart';
-import 'package:presensi_blockchain/feature/user_settings/presentation/change_password_screen.dart';
-import 'package:presensi_blockchain/feature/user_settings/presentation/copy_private_key_screen.dart';
-import 'package:presensi_blockchain/feature/user_settings/presentation/copy_recovery_phrase_screen.dart';
-import 'package:presensi_blockchain/feature/user_settings/presentation/import_wallet_screen.dart';
-import 'package:presensi_blockchain/feature/user_settings/presentation/profile_settings_screen.dart';
-import 'package:presensi_blockchain/feature/user_settings/presentation/see_private_key_screen.dart';
-import 'package:presensi_blockchain/feature/user_settings/presentation/see_recovery_phrase_screen.dart';
-import 'package:presensi_blockchain/feature/user_settings/presentation/user_settings_screen.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/pages/change_password_screen.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/pages/copy_private_key_screen.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/pages/copy_recovery_phrase_screen.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/pages/import_wallet_screen.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/pages/profile_settings_screen.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/pages/see_private_key_screen.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/pages/see_recovery_phrase_screen.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/pages/user_settings_screen.dart';
 
 enum AppRoute {
   splashScreen,

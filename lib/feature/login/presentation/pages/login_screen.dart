@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/routing/router.dart';
 import 'package:presensi_blockchain/core/widget/button.dart';
+import 'package:presensi_blockchain/feature/dashboard/presentation/bloc/home_bloc.dart';
 import 'package:presensi_blockchain/feature/login/presentation/bloc/auth_bloc.dart';
 import 'package:svg_flutter/svg.dart';
 
@@ -26,7 +27,7 @@ class LoginScreen extends StatelessWidget {
       listener: (context, state) {
         log(state.toString());
         if (state is AuthSuccess) {
-          context.pushReplacementNamed(AppRoute.dashboardScreen.name);
+          context.pushReplacementNamed(AppRoute.presentScreen.name);
         }
       },
       child: Scaffold(
@@ -128,18 +129,36 @@ class LoginScreen extends StatelessWidget {
                   SizedBox(
                     height: ScreenUtil().setHeight(50),
                   ),
-                  MainButton(
-                    onTap: () {
-                      log(emailController.text);
-                      log(passwordController.text);
-                      context.read<AuthBloc>().add(
-                            AuthLogin(
-                              emailController.text,
-                              passwordController.text.toString(),
-                            ),
-                          );
+                  BlocBuilder<AuthBloc, AuthState>(
+                    builder: (context, state) {
+                      if (state is AuthInitial) {
+                        return MainButton(
+                          onTap: () {
+                            log(emailController.text);
+                            log(passwordController.text);
+                            context.read<AuthBloc>().add(
+                                  AuthLogin(
+                                    emailController.text,
+                                    passwordController.text.toString(),
+                                  ),
+                                );
+                          },
+                          text: 'Login',
+                        );
+                      } else if (state is AuthLoading) {
+                        return const Center(
+                          child: CircularProgressIndicator(
+                            color: mainColor,
+                          ),
+                        );
+                      } else if (state is AuthError) {
+                        return Text(
+                          state.message,
+                        );
+                      } else {
+                        return Container();
+                      }
                     },
-                    text: 'Login',
                   ),
                 ],
               ),

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:presensi_blockchain/feature/dashboard/data/repository/home_repository_impl.dart';
@@ -14,7 +16,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           HomeLoading(),
         ) {
     on<GetPresentInMonth>(
-      (event, emit) {},
+      (event, emit) async {
+        await getPresentInMonth(
+          event.id,
+          event.month,
+          event.year,
+          emit,
+        );
+      },
     );
   }
 
@@ -27,11 +36,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     final result = await homeRepository.getPresentInMonth(id, month, year);
     result.fold(
       (l) => emit(HomeError(l.message!)),
-      (r) => emit(
-        HomeLoaded(
-          presentInMonth: r[0],
-        ),
-      ),
+      (r) {
+        log(r.runtimeType.toString());
+        emit(
+          HomeLoaded(
+            presentInMonth: r[0],
+          ),
+        );
+      },
     );
   }
 

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:presensi_blockchain/core/routing/router.dart';
+import 'package:presensi_blockchain/core/service/secure_storage.dart';
 import 'package:svg_flutter/svg.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -14,6 +15,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  SecureStorage storage = SecureStorage();
+
   @override
   void initState() {
     openSplashScreen();
@@ -22,13 +25,21 @@ class _SplashScreenState extends State<SplashScreen> {
 
   openSplashScreen() async {
     var duration = const Duration(
-      seconds: 3,
+      seconds: 5,
     );
 
     return Timer(
       duration,
-      () {
-        context.pushReplacementNamed(AppRoute.loginScreen.name);
+      () async {
+        await storage.readData(key: "refresh_token").then(
+          (value) {
+            if (value.isNotEmpty) {
+              context.pushReplacementNamed(AppRoute.presentScreen.name);
+            } else {
+              context.pushReplacement(AppRoute.loginScreen.name);
+            }
+          },
+        );
       },
     );
   }

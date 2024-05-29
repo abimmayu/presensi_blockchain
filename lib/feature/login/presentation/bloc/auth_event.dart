@@ -32,3 +32,12 @@ class AuthLogout extends AuthEvent {
   @override
   List<Object> get props => [];
 }
+
+class AuthGetDataUser extends AuthEvent {
+  final String id;
+
+  AuthGetDataUser(this.id);
+
+  @override
+  List<Object> get props => [id];
+}

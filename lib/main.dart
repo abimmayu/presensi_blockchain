@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:presensi_blockchain/core/routing/router.dart';
 import 'package:presensi_blockchain/core/utils/injection.dart' as di;
+import 'package:presensi_blockchain/feature/dashboard/presentation/bloc/home_bloc.dart';
 import 'package:presensi_blockchain/feature/login/presentation/bloc/auth_bloc.dart';
 import 'package:presensi_blockchain/firebase_options.dart';
 
@@ -38,6 +39,9 @@ class _MyAppState extends State<MyApp> {
       providers: [
         BlocProvider<AuthBloc>(
           create: (context) => di.locator<AuthBloc>(),
+        ),
+        BlocProvider<HomeBloc>(
+          create: (context) => di.locator<HomeBloc>(),
         ),
       ],
       child: ScreenUtilInit(

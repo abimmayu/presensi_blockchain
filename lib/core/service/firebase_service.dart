@@ -58,7 +58,7 @@ class FirebaseService {
 
   Future<void> signOut() async {
     try {
-      final result = auth.signOut();
+      final result = await auth.signOut();
       return result;
     } on FirebaseAuthException catch (e) {
       showToast(

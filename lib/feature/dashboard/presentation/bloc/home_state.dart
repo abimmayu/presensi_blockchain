@@ -8,10 +8,10 @@ abstract class HomeState extends Equatable {
 class HomeLoading extends HomeState {}
 
 class HomeLoaded extends HomeState {
-  final int? presentInMonth;
-  final int? presentOutMonth;
-  final int? presentInYear;
-  final int? presentOutYear;
+  final BigInt? presentInMonth;
+  final BigInt? presentOutMonth;
+  final BigInt? presentInYear;
+  final BigInt? presentOutYear;
 
   HomeLoaded({
     this.presentInMonth,

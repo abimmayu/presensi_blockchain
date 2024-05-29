@@ -14,7 +14,7 @@ class PresentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: const CustomNavBar(
-        currentIndex: 1,
+        currentIndex: 0,
       ),
       appBar: const PreferredSize(
         preferredSize: Size.fromHeight(kToolbarHeight),
@@ -51,17 +51,17 @@ class PresentScreen extends StatelessWidget {
               },
               text: "Pulang",
             ),
-            SizedBox(
-              height: ScreenUtil().setHeight(30),
-            ),
-            MainButton(
-              onTap: () {
-                context.pushNamed(
-                  AppRoute.dayOffScreen.name,
-                );
-              },
-              text: "Izin",
-            ),
+            // SizedBox(
+            //   height: ScreenUtil().setHeight(30),
+            // ),
+            // MainButton(
+            //   onTap: () {
+            //     context.pushNamed(
+            //       AppRoute.dayOffScreen.name,
+            //     );
+            //   },
+            //   text: "Izin",
+            // ),
           ],
         ),
       ),

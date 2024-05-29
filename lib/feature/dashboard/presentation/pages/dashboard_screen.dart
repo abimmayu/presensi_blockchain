@@ -1,10 +1,14 @@
 // import 'dart:developer';
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/widget/custom_nav_bar.dart';
 import 'package:presensi_blockchain/feature/dashboard/domain/present_in_year.dart';
+import 'package:presensi_blockchain/feature/dashboard/presentation/bloc/home_bloc.dart';
 import 'package:presensi_blockchain/feature/dashboard/presentation/pages/present_charts.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:charts_flutter_new/flutter.dart' as charts;
@@ -121,6 +125,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     selectYear2(
       DateTime.now().year,
     );
+    context.read<HomeBloc>().add(
+          GetPresentInMonth(
+            1,
+            selectedMonth!,
+            selectedYear!,
+          ),
+        );
     super.initState();
   }
 
@@ -343,15 +354,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                         Container(
                           padding: const EdgeInsets.all(20),
+                          width: 200.w,
+                          height: 300.h,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
                             color: mainColor,
                           ),
-                          child: Text(
-                            "24",
-                            style: headingBold.copyWith(
-                              color: whiteColor,
-                            ),
+                          child: BlocBuilder<HomeBloc, HomeState>(
+                            builder: (context, state) {
+                              if (state is HomeError) {
+                                return Flexible(
+                                  child: Text(
+                                    state.error,
+                                    maxLines: 10,
+                                  ),
+                                );
+                              } else if (state is HomeLoaded) {
+                                return Text(
+                                  "24",
+                                  style: headingBold.copyWith(
+                                    color: whiteColor,
+                                  ),
+                                );
+                              } else {
+                                return const CircularProgressIndicator(
+                                  color: whiteColor,
+                                );
+                              }
+                            },
                           ),
                         ),
                       ],
