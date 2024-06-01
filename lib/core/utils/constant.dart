@@ -55,4 +55,12 @@ class AppConstant {
   static const String getEmployeePresentOutMonth = "getEmployeePresentOutMonth";
   static const String getEmployeePresentInYear = "getEmployeePresentInYear";
   static const String getEmployeePresentOutYear = "getEmployeePresentOutYear";
+
+  //Storage key
+  static const String password = "password";
+  static const String address = "address";
+  static const String publicKey = "publicKey";
+  static const String privateKey = "privateKey";
+  static const String recoveryPhrase = "recoveryPhrase";
+  static const String refreshToken = "refreshToken";
 }

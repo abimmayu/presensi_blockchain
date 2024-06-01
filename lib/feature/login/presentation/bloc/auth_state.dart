@@ -28,3 +28,12 @@ class AuthSuccess extends AuthState {
 class AuthSignout extends AuthState {}
 
 class AuthInitial extends AuthState {}
+
+class AuthWalletSuccess extends AuthState {
+  final Wallet wallet;
+
+  AuthWalletSuccess(this.wallet);
+
+  @override
+  List<Object> get props => [wallet];
+}

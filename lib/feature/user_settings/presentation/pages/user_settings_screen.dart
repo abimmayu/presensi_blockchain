@@ -8,8 +8,10 @@ import 'package:go_router/go_router.dart';
 import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/routing/router.dart';
 import 'package:presensi_blockchain/core/widget/custom_nav_bar.dart';
+import 'package:presensi_blockchain/core/widget/list_user_settings.dart';
 import 'package:presensi_blockchain/feature/login/presentation/bloc/auth_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user_bloc.dart';
 
 class UserSettingsScreen extends StatefulWidget {
   const UserSettingsScreen({super.key});
@@ -21,57 +23,18 @@ class UserSettingsScreen extends StatefulWidget {
 class _UserSettingsScreenState extends State<UserSettingsScreen> {
   User? user = FirebaseAuth.instance.currentUser;
 
-  final List icon = [
-    Icons.person,
-    // Icons.account_balance_wallet,
-    Icons.key,
-    Icons.person_add_alt_1,
-    Icons.logout,
-  ];
-
-  final List title = [
-    "Profile Settings",
-    // "Import Wallet",
-    "Change Password",
-    "Add a Account",
-    "Logout",
-  ];
-
   dynamic data;
 
   @override
   void initState() {
-    context.read<AuthBloc>().add(
-          AuthGetDataUser(user!.uid),
+    context.read<UserBloc>().add(
+          GetUserData(user!.uid),
         );
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    List action = [
-      () {
-        context.pushNamed(
-          AppRoute.profileSettingScreen.name,
-        );
-      },
-      // () {
-      //   context.pushNamed(
-      //     AppRoute.importWalletScreen.name,
-      //   );
-      // },
-      () {
-        context.pushNamed(
-          AppRoute.changePasswordScreen.name,
-        );
-      },
-      () {},
-      () {
-        context.read<AuthBloc>().add(
-              AuthLogout(),
-            );
-      },
-    ];
     return Scaffold(
       bottomNavigationBar: const CustomNavBar(
         currentIndex: 1,
@@ -169,26 +132,43 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                         strokeAlign: BorderSide.strokeAlignOutside,
                       ),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          height: ScreenUtil().setHeight(40),
-                          child: Text(
-                            data["name"],
-                            style: normalText.copyWith(color: whiteColor),
-                          ),
-                        ),
-                        Text(
-                          "${(data["nip"] as double).toInt()}",
-                          style: tinyText.copyWith(color: whiteColor),
-                        ),
-                        Text(
-                          data["id"],
-                          style: tinyText.copyWith(color: whiteColor),
-                        ),
-                      ],
+                    child: BlocBuilder<UserBloc, UserState>(
+                      builder: (context, state) {
+                        if (state is UserLoaded) {
+                          data = state.user;
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                height: ScreenUtil().setHeight(40),
+                                child: Text(
+                                  data["name"],
+                                  style: normalText.copyWith(color: whiteColor),
+                                ),
+                              ),
+                              Text(
+                                "${(data["nip"] as double).toInt()}",
+                                style: tinyText.copyWith(
+                                  color: whiteColor,
+                                ),
+                              ),
+                              Text(
+                                data["occupation"],
+                                style: tinyText.copyWith(
+                                  color: whiteColor,
+                                ),
+                              ),
+                            ],
+                          );
+                        } else {
+                          return const Center(
+                            child: CircularProgressIndicator(
+                              color: whiteColor,
+                            ),
+                          );
+                        }
+                      },
                     ),
                   ),
                 )
@@ -211,26 +191,65 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
               ),
             ],
           ),
-          ListView.builder(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            itemCount: icon.length,
-            itemBuilder: (context, value) {
-              return ListTile(
-                leading: Icon(
-                  icon[value],
-                  color: mainColor,
-                  size: ScreenUtil().setHeight(30),
-                ),
-                title: Text(
-                  title[value],
-                  style: normalText,
-                ),
-                trailing: const Icon(
-                  Icons.arrow_right_sharp,
-                ),
-                onTap: action[value],
-              );
+          BlocBuilder<UserBloc, UserState>(
+            builder: (context, state) {
+              if (state is UserLoading) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (state is UserLoaded) {
+                return ListView(
+                  shrinkWrap: true,
+                  children: [
+                    ListUserSettingsWidget(
+                      icon: Icons.person,
+                      title: "Profile Settings",
+                      action: () {
+                        context.pushNamed(AppRoute.profileSettingScreen.name);
+                      },
+                    ),
+                    state.user["role"] == "admin"
+                        ? ListUserSettingsWidget(
+                            icon: Icons.person_add,
+                            title: "Add an Account",
+                            action: () {
+                              context.pushNamed(
+                                  AppRoute.profileSettingScreen.name);
+                            },
+                          )
+                        : const SizedBox.shrink(),
+                    ListUserSettingsWidget(
+                      icon: Icons.key,
+                      title: "Change Password",
+                      action: () {
+                        context.pushNamed(AppRoute.changePasswordScreen.name);
+                      },
+                    ),
+                    ListUserSettingsWidget(
+                      icon: Icons.logout,
+                      title: "Logout",
+                      action: () {},
+                    ),
+                    // ListUserSettingsWidget(
+                    //   icon: Icons.account_balance_wallet,
+                    //   title: "Import Wallet",
+                    //   action: () {
+                    //     context.pushNamed(AppRoute.importWalletScreen.name);
+                    //   },
+                    // ),
+                  ],
+                );
+              } else if (state is UserError) {
+                return Center(
+                  child: Text(state.message),
+                );
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: mainColor,
+                  ),
+                );
+              }
             },
           ),
         ],

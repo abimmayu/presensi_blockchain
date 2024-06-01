@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:presensi_blockchain/core/routing/router.dart';
-import 'package:presensi_blockchain/core/service/secure_storage.dart';
+import 'package:presensi_blockchain/core/utils/secure_storage.dart';
 import 'package:svg_flutter/svg.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -33,10 +33,10 @@ class _SplashScreenState extends State<SplashScreen> {
       () async {
         await storage.readData(key: "refresh_token").then(
           (value) {
-            if (value.isNotEmpty) {
-              context.pushReplacementNamed(AppRoute.presentScreen.name);
+            if (value != null) {
+              context.pushReplacementNamed(AppRoute.checkWalletScreen.name);
             } else {
-              context.pushReplacement(AppRoute.loginScreen.name);
+              context.pushReplacementNamed(AppRoute.loginScreen.name);
             }
           },
         );

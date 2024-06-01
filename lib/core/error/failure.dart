@@ -21,3 +21,10 @@ class HomeFailure extends Failure {
           title: "Home Data failed to Get!",
         );
 }
+
+class PresentFailure extends Failure {
+  PresentFailure({super.message})
+      : super(
+          title: "Present data failed to Send!",
+        );
+}

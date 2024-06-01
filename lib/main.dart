@@ -6,6 +6,7 @@ import 'package:presensi_blockchain/core/routing/router.dart';
 import 'package:presensi_blockchain/core/utils/injection.dart' as di;
 import 'package:presensi_blockchain/feature/dashboard/presentation/bloc/home_bloc.dart';
 import 'package:presensi_blockchain/feature/login/presentation/bloc/auth_bloc.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user_bloc.dart';
 import 'package:presensi_blockchain/firebase_options.dart';
 
 void main() async {
@@ -42,6 +43,9 @@ class _MyAppState extends State<MyApp> {
         ),
         BlocProvider<HomeBloc>(
           create: (context) => di.locator<HomeBloc>(),
+        ),
+        BlocProvider<UserBloc>(
+          create: (context) => di.locator<UserBloc>(),
         ),
       ],
       child: ScreenUtilInit(

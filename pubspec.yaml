@@ -28,6 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  bip39: ^1.0.6
   charts_flutter_new: ^0.12.0
   cloud_firestore: ^4.17.3
   cupertino_icons: ^1.0.2
@@ -48,6 +49,7 @@ dependencies:
   google_fonts: ^6.1.0
   http: ^1.2.1
   logger: ^2.3.0
+  shared_preferences: ^2.2.3
   svg_flutter: ^0.0.1
   web3dart: ^2.7.3
 

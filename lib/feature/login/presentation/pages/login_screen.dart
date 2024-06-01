@@ -1,15 +1,12 @@
 import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/routing/router.dart';
 import 'package:presensi_blockchain/core/widget/button.dart';
-import 'package:presensi_blockchain/feature/dashboard/presentation/bloc/home_bloc.dart';
 import 'package:presensi_blockchain/feature/login/presentation/bloc/auth_bloc.dart';
 import 'package:svg_flutter/svg.dart';
 
@@ -27,7 +24,7 @@ class LoginScreen extends StatelessWidget {
       listener: (context, state) {
         log(state.toString());
         if (state is AuthSuccess) {
-          context.pushReplacementNamed(AppRoute.presentScreen.name);
+          context.pushReplacementNamed(AppRoute.checkWalletScreen.name);
         }
       },
       child: Scaffold(

@@ -1,16 +1,12 @@
-import 'dart:developer';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:presensi_blockchain/core/routing/router.dart';
-import 'package:presensi_blockchain/core/service/secure_storage.dart';
-import 'package:presensi_blockchain/feature/login/domain/usecases/get_data_user_usecase.dart';
+import 'package:presensi_blockchain/core/utils/secure_storage.dart';
+import 'package:presensi_blockchain/feature/login/domain/usecases/generate_wallet_usecase.dart';
 import 'package:presensi_blockchain/feature/login/domain/usecases/log_out_usecase.dart';
 import 'package:presensi_blockchain/feature/login/domain/usecases/login_usecases.dart';
 import 'package:presensi_blockchain/feature/login/domain/usecases/sign_up_usecase.dart';
+import 'package:web3dart/credentials.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -19,13 +15,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LoginUsecases loginUsecases;
   final LogoutUsecase logoutUsecase;
   final SignUpUsecase signUpUsecase;
-  final GetDataUserUsecase getDataUserUsecase;
+  final GenerateWalletUsecase generateWalletUsecase;
 
   final SecureStorage storage = SecureStorage();
 
-  AuthBloc(this.loginUsecases, this.logoutUsecase, this.signUpUsecase,
-      this.getDataUserUsecase)
-      : super(
+  AuthBloc(
+    this.loginUsecases,
+    this.logoutUsecase,
+    this.signUpUsecase,
+    this.generateWalletUsecase,
+  ) : super(
           AuthInitial(),
         ) {
     on<AuthLogin>(
@@ -53,10 +52,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         );
       },
     );
-    on<AuthGetDataUser>(
+    on<AuthCreateWallet>(
       (event, emit) async {
-        return await getData(
-          event.id,
+        return await createWallet(
+          event.pin,
           emit,
         );
       },
@@ -124,18 +123,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
-  Future<void> getData(
-    String id,
+  Future<void> createWallet(
+    String password,
     Emitter<AuthState> emit,
   ) async {
     emit(
       AuthLoading(),
     );
-    final result = await getDataUserUsecase.execute(id);
+
+    final result = await generateWalletUsecase.execute(password);
 
     result.fold(
       (l) => emit(AuthError(l.message!)),
-      (r) {},
+      (r) {
+        emit(
+          AuthWalletSuccess(r),
+        );
+      },
     );
   }
 }

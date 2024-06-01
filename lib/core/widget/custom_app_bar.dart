@@ -37,15 +37,15 @@ class CustomAppBar extends StatelessWidget {
         ),
       ),
       backgroundColor: color,
-      leading: IconButton(
-        icon: Icon(
-          Icons.arrow_back_ios,
-          color: leadingColor,
-        ),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
+      // leading: IconButton(
+      //   icon: Icon(
+      //     Icons.arrow_back_ios,
+      //     color: leadingColor,
+      //   ),
+      //   onPressed: () {
+      //     Navigator.pop(context);
+      //   },
+      // ),
       actions: [
         actionsIcon != null
             ? IconButton(

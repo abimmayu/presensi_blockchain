@@ -7,6 +7,7 @@ import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/routing/router.dart';
 import 'package:presensi_blockchain/core/widget/button.dart';
 import 'package:presensi_blockchain/core/widget/custom_app_bar.dart';
+import 'package:presensi_blockchain/core/widget/pin_modal.dart';
 import 'package:svg_flutter/svg.dart';
 
 class PrivateKeyScreen extends StatelessWidget {
@@ -62,73 +63,10 @@ class PrivateKeyScreen extends StatelessWidget {
       ),
       context: context,
       builder: (context) {
-        return Container(
-          margin: EdgeInsets.symmetric(
-            horizontal: ScreenUtil().setWidth(30),
-          ),
-          // height: MediaQuery.sizeOf(context).width / 2,
-          child: Column(
-            children: [
-              Align(
-                alignment: Alignment.center,
-                child: Container(
-                  width: ScreenUtil().setWidth(200),
-                  height: ScreenUtil().setHeight(10),
-                  margin: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: greyColor.withOpacity(0.8),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: ScreenUtil().setHeight(50),
-              ),
-              SizedBox(
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: ScreenUtil().setWidth(9),
-                        ),
-                        SvgPicture.asset(
-                          'assets/images/Password logo.svg',
-                          height: ScreenUtil().setHeight(30),
-                        ),
-                        SizedBox(
-                          width: ScreenUtil().setWidth(12),
-                        ),
-                        SizedBox(
-                          width: ScreenUtil().setWidth(250),
-                          child: const TextField(
-                            obscureText: true,
-                            decoration: InputDecoration.collapsed(
-                              hintText: "Type your password",
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Divider(
-                      color: blackColor,
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: ScreenUtil().setHeight(50),
-              ),
-              MainButton(
-                text: "Submit",
-                onTap: () {
-                  context.pushNamed(
-                    AppRoute.copyPrivateKeyScreen.name,
-                  );
-                },
-              )
-            ],
-          ),
+        TextEditingController controller = TextEditingController();
+        return PinInputModal(
+          controller: controller,
+          function: () {},
         );
       },
     );

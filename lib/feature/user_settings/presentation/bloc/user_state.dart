@@ -6,7 +6,7 @@ abstract class UserState extends Equatable {
 }
 
 class UserLoaded extends UserState {
-  final User user;
+  final DocumentSnapshot user;
 
   UserLoaded(this.user);
 
@@ -24,3 +24,5 @@ class UserError extends UserState {
 }
 
 class UserLoading extends UserState {}
+
+class UserUpdated extends UserState {}

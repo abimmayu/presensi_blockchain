@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:presensi_blockchain/feature/dashboard/presentation/pages/dashboard_screen.dart';
+import 'package:presensi_blockchain/feature/login/presentation/pages/check_user_wallet_screen.dart';
+import 'package:presensi_blockchain/feature/login/presentation/pages/create_wallet_screen.dart';
 import 'package:presensi_blockchain/feature/login/presentation/pages/login_screen.dart';
 import 'package:presensi_blockchain/feature/present/presentation/pages/day_off_present_screen.dart';
 import 'package:presensi_blockchain/feature/present/presentation/pages/home_present_screen.dart';
@@ -20,6 +22,8 @@ import 'package:presensi_blockchain/feature/user_settings/presentation/pages/use
 enum AppRoute {
   splashScreen,
   loginScreen,
+  checkWalletScreen,
+  createWalletScreen,
   dashboardScreen,
   presentScreen,
   presentedScreen,
@@ -59,6 +63,22 @@ final GoRouter router = GoRouter(
       builder: (context, state) {
         return LoginScreen();
       },
+      routes: [
+        GoRoute(
+          path: 'check-wallet',
+          name: AppRoute.checkWalletScreen.name,
+          builder: (context, state) {
+            return const IntializeUser();
+          },
+        ),
+        GoRoute(
+          path: 'create-wallet-1',
+          name: AppRoute.createWalletScreen.name,
+          builder: (context, state) {
+            return CreateWalletScreen();
+          },
+        ),
+      ],
     ),
     GoRoute(
       path: '/dashboard',
@@ -115,7 +135,7 @@ final GoRouter router = GoRouter(
       path: '/user-settings',
       name: AppRoute.userSettingScreen.name,
       builder: (context, state) {
-        return UserSettingsScreen();
+        return const UserSettingsScreen();
       },
       routes: [
         GoRoute(

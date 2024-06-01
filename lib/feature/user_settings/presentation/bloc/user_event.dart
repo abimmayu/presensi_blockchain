@@ -11,6 +11,21 @@ class GetUserData extends UserEvent {
   List<Object> get props => [id];
 }
 
+class PostPublicKey extends UserEvent {
+  final String id;
+  final Map<String, dynamic> data;
+  final void function;
+
+  PostPublicKey(
+    this.id,
+    this.data,
+    this.function,
+  );
+
+  @override
+  List<Object> get props => [id, data];
+}
+
 class ChangeUserData extends UserEvent {
   final String id;
   final String name;
