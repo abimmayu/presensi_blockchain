@@ -7,8 +7,13 @@ class FireStore {
     required String doc,
     required String collection,
   }) async {
-    final DocumentReference document =
-        firestore.collection(collection).doc(doc);
+    final DocumentReference document = firestore
+        .collection(
+          collection,
+        )
+        .doc(
+          doc,
+        );
 
     final DocumentSnapshot result = await document.get();
     return result;

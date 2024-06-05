@@ -149,8 +149,18 @@ class LoginScreen extends StatelessWidget {
                           ),
                         );
                       } else if (state is AuthError) {
-                        return Text(
-                          state.message,
+                        return MainButton(
+                          onTap: () {
+                            log(emailController.text);
+                            log(passwordController.text);
+                            context.read<AuthBloc>().add(
+                                  AuthLogin(
+                                    emailController.text,
+                                    passwordController.text.toString(),
+                                  ),
+                                );
+                          },
+                          text: 'Login',
                         );
                       } else {
                         return Container();

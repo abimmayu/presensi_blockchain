@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +12,8 @@ part 'user_state.dart';
 class UserBloc extends Bloc<UserEvent, UserState> {
   final GetDataUserUsecase getDataUserUsecase;
   final UpdateDataUserUsecase updateDataUserUsecase;
+
+  dynamic dataUser;
 
   UserBloc(
     this.getDataUserUsecase,
@@ -49,6 +53,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     result.fold(
       (l) => emit(UserError(l.message!)),
       (r) {
+        dataUser = r;
+        log(r.toString());
         emit(
           UserLoaded(r),
         );
@@ -81,6 +87,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         add(
           GetUserData(id),
         );
+
         function;
       },
     );

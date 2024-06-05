@@ -17,3 +17,7 @@ class PresentError extends PresentState {
 }
 
 class PresentSuccess extends PresentState {}
+
+class LocationMatch extends PresentState {}
+
+class LocationNotMatch extends PresentState {}

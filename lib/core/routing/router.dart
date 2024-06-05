@@ -75,7 +75,7 @@ final GoRouter router = GoRouter(
           path: 'create-wallet-1',
           name: AppRoute.createWalletScreen.name,
           builder: (context, state) {
-            return CreateWalletScreen();
+            return const CreateWalletScreen();
           },
         ),
       ],
@@ -98,7 +98,10 @@ final GoRouter router = GoRouter(
           path: 'presented',
           name: AppRoute.presentedScreen.name,
           builder: (context, state) {
-            return PresentedScreen();
+            final param = state.extra as PresentedScreenParam;
+            return PresentedScreen(
+              param: param,
+            );
           },
         ),
         GoRoute(

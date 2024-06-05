@@ -11,6 +11,7 @@ import 'package:presensi_blockchain/core/widget/custom_nav_bar.dart';
 import 'package:presensi_blockchain/core/widget/list_user_settings.dart';
 import 'package:presensi_blockchain/feature/login/presentation/bloc/auth_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:presensi_blockchain/feature/present/presentation/bloc/present_bloc.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user_bloc.dart';
 
 class UserSettingsScreen extends StatefulWidget {
@@ -113,8 +114,8 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                     padding: EdgeInsets.all(
                       ScreenUtil().setHeight(10),
                     ),
-                    height: ScreenUtil().setHeight(100),
-                    width: ScreenUtil().setWidth(300),
+                    height: 125.h,
+                    width: 300.w,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       color: mainColor,
@@ -215,6 +216,34 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                             action: () {
                               context.pushNamed(
                                   AppRoute.profileSettingScreen.name);
+                            },
+                          )
+                        : const SizedBox.shrink(),
+                    state.user["role"] == "admin"
+                        ? ListUserSettingsWidget(
+                            icon: Icons.person_add,
+                            title: "Generate today's present",
+                            action: () {
+                              context.read<PresentBloc>().add(
+                                    PresentIn(
+                                      BigInt.from(DateTime.now()
+                                          .millisecondsSinceEpoch),
+                                      BigInt.from(DateTime.now().day),
+                                      BigInt.from(DateTime.now().month),
+                                      BigInt.from(DateTime.now().year),
+                                      "Masuk",
+                                    ),
+                                  );
+                              context.read<PresentBloc>().add(
+                                    PresentOut(
+                                      BigInt.from(DateTime.now()
+                                          .millisecondsSinceEpoch),
+                                      BigInt.from(DateTime.now().day),
+                                      BigInt.from(DateTime.now().month),
+                                      BigInt.from(DateTime.now().year),
+                                      "Pulang",
+                                    ),
+                                  );
                             },
                           )
                         : const SizedBox.shrink(),
