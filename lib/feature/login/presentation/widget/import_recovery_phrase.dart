@@ -1,7 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/widget/button.dart';
 
 class ImportRecoveryPhraseWidget extends StatefulWidget {
@@ -41,9 +39,11 @@ class _ImportRecoveryPhraseWidgetState
       padding: EdgeInsets.all(8.w),
       child: Column(
         children: [
-          Expanded(
+          Container(
+            height: 250.h,
+            padding: EdgeInsets.only(bottom: 10.h),
             child: GridView.builder(
-              padding: EdgeInsets.only(top: 10.h),
+              padding: EdgeInsets.zero,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 crossAxisSpacing: 10.w,
@@ -66,7 +66,7 @@ class _ImportRecoveryPhraseWidgetState
           MainButton(
             onTap: () {},
             text: "Submit",
-          )
+          ),
         ],
       ),
     );
