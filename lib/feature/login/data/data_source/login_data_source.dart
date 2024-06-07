@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:bip39/bip39.dart' as bip39;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hex/hex.dart';
 import 'package:presensi_blockchain/core/service/firebase_firestore.dart';
 import 'package:presensi_blockchain/core/service/firebase_service.dart';
 import 'package:presensi_blockchain/core/utils/constant.dart';
@@ -25,7 +26,7 @@ abstract class AuthDataSource {
     String collection = "User",
     required Map<String, dynamic> data,
   });
-  Future<Wallet> createWallet({required String password});
+  Future<Wallet> createWallet({required String password, String? address});
 }
 
 class AuthDataSourceImpl implements AuthDataSource {
@@ -97,14 +98,30 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
-  Future<Wallet> createWallet({required String password}) async {
+  Future<Wallet> createWallet({
+    required String password,
+    String? address,
+  }) async {
     Random random = Random.secure();
     //Generate Recovery Phrase.
-    String mnemonic = bip39.generateMnemonic();
+
+    EthPrivateKey? privateKey;
+    String? mnemonic;
+    // String? privateKeyHex;
+    dev.log(address.toString());
 
     //Generate Private Key.
-    String seedHex = bip39.mnemonicToSeedHex(mnemonic);
-    EthPrivateKey privateKey = EthPrivateKey.fromHex(seedHex);
+    if (address == null) {
+      mnemonic = bip39.generateMnemonic();
+      String seedHex = bip39.mnemonicToSeedHex(mnemonic);
+      privateKey = EthPrivateKey.fromHex(seedHex);
+    } else {
+      privateKey = EthPrivateKey.fromHex(address);
+      dev.log(privateKey.privateKey.length.toString());
+      mnemonic = bip39.entropyToMnemonic(
+        HEX.encode(privateKey.privateKey),
+      );
+    }
 
     //Generate Wallet.
     Wallet wallet = Wallet.createNew(
@@ -115,7 +132,7 @@ class AuthDataSourceImpl implements AuthDataSource {
 
     var privateKeyHex = bytesToHex(wallet.privateKey.privateKey);
 
-    dev.log(mnemonic);
+    dev.log(mnemonic.toString());
     dev.log(privateKeyHex.toString());
 
     //Save Wallet to Shared Preferences.

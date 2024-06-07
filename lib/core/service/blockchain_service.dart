@@ -9,7 +9,7 @@ class BlockchainService {
   late Client client;
   late Web3Client web3Client;
 
-  final String address = "0xbe6990B887F86cB992cE58F475BE0F1DB165b59C";
+  // final String address = "0xbe6990B887F86cB992cE58F475BE0F1DB165b59C";
 
   final contractUrl =
       "https://sepolia.infura.io/v3/a555c4f5ab0a4baf89bcc0e4963c0b3c";

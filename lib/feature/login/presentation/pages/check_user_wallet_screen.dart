@@ -7,7 +7,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:presensi_blockchain/core/routing/router.dart';
 import 'package:presensi_blockchain/core/utils/constant.dart';
+import 'package:presensi_blockchain/core/utils/secure_storage.dart';
 import 'package:presensi_blockchain/core/widget/pin_modal.dart';
+import 'package:presensi_blockchain/feature/login/presentation/pages/create_wallet_screen.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user_bloc.dart';
 
 class IntializeUser extends StatefulWidget {
@@ -19,13 +21,19 @@ class IntializeUser extends StatefulWidget {
 
 class _IntializeUserState extends State<IntializeUser> {
   final id = FirebaseAuth.instance.currentUser!.uid;
+  String? privateKey;
 
   @override
   void initState() {
     context.read<UserBloc>().add(
           GetUserData(id),
         );
+    getPrivateKey();
     super.initState();
+  }
+
+  getPrivateKey() async {
+    privateKey = await SecureStorage().readData(key: AppConstant.privateKey);
   }
 
   @override
@@ -33,12 +41,14 @@ class _IntializeUserState extends State<IntializeUser> {
     return BlocListener<UserBloc, UserState>(
       listener: (context, state) {
         if (state is UserLoaded) {
-          if (state.user["public_key"] == null) {
+          if (state.user["public_key"] as bool) {
+            if (privateKey == null) {
+              context.pushReplacementNamed(AppRoute.importWalletScreen.name);
+            } else {
+              context.pushReplacementNamed(AppRoute.presentScreen.name);
+            }
+          } else {
             context.pushReplacementNamed(AppRoute.createWalletScreen.name);
-          } else if ((state.user["public_key"] as String).isEmpty) {
-            context.pushReplacementNamed(AppRoute.createWalletScreen.name);
-          } else if ((state.user["public_key"] as String).isNotEmpty) {
-            context.pushReplacementNamed(AppRoute.presentScreen.name);
           }
         }
       },

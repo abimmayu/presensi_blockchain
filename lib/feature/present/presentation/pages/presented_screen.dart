@@ -1,9 +1,12 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:presensi_blockchain/core/routing/router.dart';
 import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/service/blockchain_service.dart';
 import 'package:presensi_blockchain/core/widget/button.dart';
@@ -27,6 +30,8 @@ class PresentedScreen extends StatefulWidget {
 
 class _PresentedScreenState extends State<PresentedScreen> {
   final BlockchainService service = BlockchainService();
+
+  final userId = FirebaseAuth.instance.currentUser!.uid;
 
   final String privateKey =
       "12413019a6025e5238f2b06222cc1228ba39da398af30273282670f2435a8bfc";
@@ -85,32 +90,31 @@ class _PresentedScreenState extends State<PresentedScreen> {
             ),
             child: MainButton(
               onTap: () {
-                // service.postFunction(
-                //   functionName: AppConstant.inputPresent,
-                //   privateKey: privateKey,
-                //   param: [
-                //     "5194192254",
-                //     "Abim Mayu Indra Ardiansyah",
-                //     "Sistem Komputer",
-                //   ],
-                // ).then(
-                //   (value) => context.pushNamed(
-                //     AppRoute.presentSuccessScreen.name,
-                //   ),
-                // );
-                CheckCorrectLocationUsecase()
-                    .checkLocationStatus(
-                      LatLng(
-                        widget.param.position.latitude,
-                        widget.param.position.longitude,
-                      ),
-                    )
-                    .then(
-                      (value) => setState(() {
-                        locationStatus = value;
-                        log("location status: $locationStatus");
-                      }),
-                    );
+                service.postFunction(
+                  functionName: AppConstant.inputPresent,
+                  privateKey: privateKey,
+                  param: [
+                    BigInt.from(1),
+                    BigInt.from(2),
+                  ],
+                ).then(
+                  (value) => context.pushNamed(
+                    AppRoute.presentSuccessScreen.name,
+                  ),
+                );
+                // CheckCorrectLocationUsecase()
+                //     .checkLocationStatus(
+                //       LatLng(
+                //         widget.param.position.latitude,
+                //         widget.param.position.longitude,
+                //       ),
+                //     )
+                //     .then(
+                //       (value) => setState(() {
+                //         locationStatus = value;
+                //         log("location status: $locationStatus");
+                //       }),
+                //     );
               },
               text: 'Submit',
             ),

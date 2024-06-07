@@ -17,5 +17,6 @@ abstract class AuthRepository {
     String collection = "User",
     required Map<String, dynamic> data,
   });
-  Future<Either<Failure, Wallet>> createWallet(String password);
+  Future<Either<Failure, Wallet>> createWallet(
+      {required String password, String? address});
 }

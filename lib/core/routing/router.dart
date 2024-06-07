@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:presensi_blockchain/feature/dashboard/presentation/pages/dashboard_screen.dart';
 import 'package:presensi_blockchain/feature/login/presentation/pages/check_user_wallet_screen.dart';
 import 'package:presensi_blockchain/feature/login/presentation/pages/create_wallet_screen.dart';
+import 'package:presensi_blockchain/feature/login/presentation/pages/import_wallet_screen.dart';
 import 'package:presensi_blockchain/feature/login/presentation/pages/login_screen.dart';
 import 'package:presensi_blockchain/feature/present/presentation/pages/day_off_present_screen.dart';
 import 'package:presensi_blockchain/feature/present/presentation/pages/home_present_screen.dart';
@@ -13,7 +14,6 @@ import 'package:presensi_blockchain/feature/splash/splash_screen.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/pages/change_password_screen.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/pages/copy_private_key_screen.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/pages/copy_recovery_phrase_screen.dart';
-import 'package:presensi_blockchain/feature/user_settings/presentation/pages/import_wallet_screen.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/pages/profile_settings_screen.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/pages/see_private_key_screen.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/pages/see_recovery_phrase_screen.dart';
@@ -78,6 +78,13 @@ final GoRouter router = GoRouter(
             return const CreateWalletScreen();
           },
         ),
+        GoRoute(
+          path: 'import-wallet',
+          name: AppRoute.importWalletScreen.name,
+          builder: (context, state) {
+            return ImportWalletScreen();
+          },
+        )
       ],
     ),
     GoRoute(
@@ -179,13 +186,6 @@ final GoRouter router = GoRouter(
               },
             ),
           ],
-        ),
-        GoRoute(
-          path: 'import-wallet',
-          name: AppRoute.importWalletScreen.name,
-          builder: (context, state) {
-            return const ImportWalletScreen();
-          },
         ),
         GoRoute(
           path: 'change-password',

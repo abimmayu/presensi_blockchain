@@ -35,11 +35,18 @@ class AuthLogout extends AuthEvent {
 
 class AuthCreateWallet extends AuthEvent {
   final String pin;
+  String? address;
 
-  AuthCreateWallet(this.pin);
+  AuthCreateWallet({
+    required this.pin,
+    this.address,
+  });
 
   @override
-  List<Object> get props => [pin];
+  List<Object> get props => [
+        pin,
+        address.toString(),
+      ];
 }
 
 class AuthGetDataUser extends AuthEvent {

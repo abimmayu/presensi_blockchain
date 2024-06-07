@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latlong2/latlong.dart';
@@ -74,20 +76,28 @@ class PresentBloc extends Bloc<PresentEvent, PresentState> {
     String variety,
     Emitter<PresentState> emit,
   ) async {
+    log("Fungsi presentIn berjalan!");
     final result = await presentInUsecase.execute(
       id: id,
       day: day,
       month: month,
       year: year,
     );
+    log(result.toString());
 
     result.fold(
-      (l) => emit(
-        PresentError(l.message!),
-      ),
-      (r) => emit(
-        PresentSuccess(),
-      ),
+      (l) {
+        log(l.message!);
+        emit(
+          PresentError(l.message!),
+        );
+      },
+      (r) {
+        log(r);
+        emit(
+          PresentSuccess(),
+        );
+      },
     );
   }
 

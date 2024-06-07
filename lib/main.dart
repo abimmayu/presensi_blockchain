@@ -1,11 +1,15 @@
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:presensi_blockchain/core/routing/router.dart';
+import 'package:presensi_blockchain/core/service/blockchain_service.dart';
 import 'package:presensi_blockchain/core/utils/injection.dart' as di;
 import 'package:presensi_blockchain/feature/dashboard/presentation/bloc/home_bloc.dart';
 import 'package:presensi_blockchain/feature/login/presentation/bloc/auth_bloc.dart';
+import 'package:presensi_blockchain/feature/present/data/data_post/present_data_post.dart';
+import 'package:presensi_blockchain/feature/present/presentation/bloc/present_bloc.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user_bloc.dart';
 import 'package:presensi_blockchain/firebase_options.dart';
 
@@ -13,6 +17,22 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  await AndroidAlarmManager.initialize();
+  await AndroidAlarmManager.periodic(
+    const Duration(hours: 24),
+    0,
+    () => addPresent(),
+    startAt: DateTime(
+      DateTime.now().year,
+      DateTime.now().month,
+      DateTime.now().day,
+      7,
+      0,
+    ),
+    exact: true,
+    wakeup: true,
   );
   runApp(
     const MyApp(),
@@ -46,6 +66,9 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<UserBloc>(
           create: (context) => di.locator<UserBloc>(),
         ),
+        BlocProvider<PresentBloc>(
+          create: (context) => di.locator<PresentBloc>(),
+        ),
       ],
       child: ScreenUtilInit(
         designSize: const Size(390, 844),
@@ -60,4 +83,23 @@ class _MyAppState extends State<MyApp> {
       ),
     );
   }
+}
+
+void addPresent() async {
+  PresentDataPost presentDataPost = PresentDataPostImpl();
+  final now = DateTime.now();
+
+  await presentDataPost.addPresentIn(
+    id: BigInt.from(now.millisecondsSinceEpoch),
+    day: BigInt.from(now.day),
+    month: BigInt.from(now.month),
+    year: BigInt.from(now.year),
+  );
+
+  await presentDataPost.addPresentOut(
+    id: BigInt.from(now.millisecondsSinceEpoch),
+    day: BigInt.from(now.day),
+    month: BigInt.from(now.month),
+    year: BigInt.from(now.year),
+  );
 }

@@ -13,6 +13,11 @@ import 'package:presensi_blockchain/feature/login/domain/usecases/login_usecases
 import 'package:presensi_blockchain/feature/login/domain/usecases/sign_up_usecase.dart';
 import 'package:presensi_blockchain/feature/login/domain/usecases/update_data_user_usecase.dart';
 import 'package:presensi_blockchain/feature/login/presentation/bloc/auth_bloc.dart';
+import 'package:presensi_blockchain/feature/present/domain/usecase/check_location_usecase.dart';
+import 'package:presensi_blockchain/feature/present/domain/usecase/input_present_usecase.dart';
+import 'package:presensi_blockchain/feature/present/domain/usecase/present_in_usecase.dart';
+import 'package:presensi_blockchain/feature/present/domain/usecase/present_out_usecase.dart';
+import 'package:presensi_blockchain/feature/present/presentation/bloc/present_bloc.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -33,6 +38,14 @@ init() async {
   );
   locator.registerFactory(
     () => UserBloc(
+      locator(),
+      locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => PresentBloc(
+      locator(),
+      locator(),
       locator(),
       locator(),
     ),
@@ -84,6 +97,19 @@ init() async {
     () => UpdateDataUserUsecase(
       locator(),
     ),
+  );
+  //2. Present Usecase
+  locator.registerLazySingleton(
+    () => CheckCorrectLocationUsecase(),
+  );
+  locator.registerLazySingleton(
+    () => PresentInUsecase(),
+  );
+  locator.registerLazySingleton(
+    () => PresentOutUsecase(),
+  );
+  locator.registerLazySingleton(
+    () => InputPresentUsecase(),
   );
 
   //Local Source

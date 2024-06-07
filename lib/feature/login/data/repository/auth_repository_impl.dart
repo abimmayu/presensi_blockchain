@@ -93,9 +93,11 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, Wallet>> createWallet(String password) async {
+  Future<Either<Failure, Wallet>> createWallet(
+      {required String password, String? address}) async {
     try {
-      final result = await auth.createWallet(password: password);
+      final result =
+          await auth.createWallet(password: password, address: address);
       return Right(result);
     } catch (e) {
       return Left(

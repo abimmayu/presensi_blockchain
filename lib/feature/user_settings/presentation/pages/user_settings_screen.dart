@@ -234,16 +234,16 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                                       "Masuk",
                                     ),
                                   );
-                              context.read<PresentBloc>().add(
-                                    PresentOut(
-                                      BigInt.from(DateTime.now()
-                                          .millisecondsSinceEpoch),
-                                      BigInt.from(DateTime.now().day),
-                                      BigInt.from(DateTime.now().month),
-                                      BigInt.from(DateTime.now().year),
-                                      "Pulang",
-                                    ),
-                                  );
+                              // context.read<PresentBloc>().add(
+                              //       PresentOut(
+                              //         BigInt.from(DateTime.now()
+                              //             .millisecondsSinceEpoch),
+                              //         BigInt.from(DateTime.now().day),
+                              //         BigInt.from(DateTime.now().month),
+                              //         BigInt.from(DateTime.now().year),
+                              //         "Pulang",
+                              //       ),
+                              //     );
                             },
                           )
                         : const SizedBox.shrink(),

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:presensi_blockchain/core/service/blockchain_service.dart';
 import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/utils/secure_storage.dart';
@@ -35,11 +37,15 @@ class PresentDataPostImpl implements PresentDataPost {
     required BigInt year,
     String variety = "Masuk",
   }) async {
+    final privateKey =
+        await SecureStorage().readData(key: AppConstant.privateKey);
+    log(
+      privateKey.toString(),
+    );
     final result = await blockchainService.postFunction(
-      functionName: AppConstant.addPresentIn,
+      functionName: AppConstant.addPresent,
       param: [id, day, month, year, variety],
-      privateKey:
-          (await SecureStorage().readData(key: AppConstant.privateKey))!,
+      privateKey: privateKey.toString(),
     );
     return result;
   }
@@ -53,11 +59,12 @@ class PresentDataPostImpl implements PresentDataPost {
     required BigInt year,
     String variety = "Pulang",
   }) async {
+    final privateKey =
+        await SecureStorage().readData(key: AppConstant.privateKey);
     final result = await blockchainService.postFunction(
-      functionName: AppConstant.addPresentIn,
+      functionName: AppConstant.addPresent,
       param: [id, day, month, year, variety],
-      privateKey:
-          (await SecureStorage().readData(key: AppConstant.privateKey))!,
+      privateKey: privateKey.toString(),
     );
     return result;
   }
@@ -68,11 +75,12 @@ class PresentDataPostImpl implements PresentDataPost {
     required BigInt idPresent,
     required BigInt idEmployee,
   }) async {
+    final privateKey =
+        await SecureStorage().readData(key: AppConstant.privateKey);
     final result = await blockchainService.postFunction(
       functionName: AppConstant.inputPresent,
       param: [],
-      privateKey:
-          (await SecureStorage().readData(key: AppConstant.privateKey))!,
+      privateKey: privateKey.toString(),
     );
     return result;
   }

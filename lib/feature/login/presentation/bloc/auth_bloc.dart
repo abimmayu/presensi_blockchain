@@ -55,8 +55,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthCreateWallet>(
       (event, emit) async {
         return await createWallet(
-          event.pin,
-          emit,
+          password: event.pin,
+          emit: emit,
+          address: event.address,
         );
       },
     );
@@ -124,14 +125,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> createWallet(
-    String password,
-    Emitter<AuthState> emit,
-  ) async {
+      {required String password,
+      required Emitter<AuthState> emit,
+      String? address}) async {
     emit(
       AuthLoading(),
     );
 
-    final result = await generateWalletUsecase.execute(password);
+    final result = await generateWalletUsecase.execute(
+      password: password,
+      address: address,
+    );
 
     result.fold(
       (l) => emit(AuthError(l.message!)),
@@ -142,4 +146,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       },
     );
   }
+
+  Future<void> importWallet(
+    String password,
+    String address,
+    Emitter<AuthState> emit,
+  ) async {}
 }

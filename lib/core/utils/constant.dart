@@ -41,11 +41,11 @@ final TextStyle tinyText = GoogleFonts.montserrat(
 class AppConstant {
   //Contract Detail
   static const String contractAddress =
-      "0x31f92b4e4BeC6077B397B6A0b9e6004CeE997f9f";
+      "0xf9DB75dc762cD1e60ac3862dd7be757BD52fbe9a";
   static const String contractName = "Presence";
 
   //Name of Contract Function
-  static const String addPresentIn = "addPresentIn";
+  static const String addPresent = "addPresent";
   static const String getPresent = "getPresent";
   static const String getAllPresents = "getAllPresents";
   static const String getLastPresentId = "getLastPresentId";

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +14,9 @@ import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user
 import 'package:svg_flutter/svg_flutter.dart';
 
 class CreateWalletScreen extends StatefulWidget {
-  const CreateWalletScreen({super.key});
+  const CreateWalletScreen({
+    super.key,
+  });
 
   @override
   State<CreateWalletScreen> createState() => _CreateWalletScreenState();
@@ -104,7 +108,9 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
                 text: "Create Wallet",
                 onTap: () {
                   context.read<AuthBloc>().add(
-                        AuthCreateWallet(controller.text),
+                        AuthCreateWallet(
+                          pin: controller.text,
+                        ),
                       );
                 },
               )
