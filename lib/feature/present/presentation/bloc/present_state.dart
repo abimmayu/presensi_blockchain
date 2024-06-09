@@ -21,3 +21,23 @@ class PresentSuccess extends PresentState {}
 class LocationMatch extends PresentState {}
 
 class LocationNotMatch extends PresentState {}
+
+class PresentLocationGet extends PresentState {
+  final Position position;
+
+  PresentLocationGet(this.position);
+
+  @override
+  List<Object> get props => [position];
+}
+
+class StartPresent extends PresentState {}
+
+class PresentFailed extends PresentState {
+  final String error;
+
+  PresentFailed(this.error);
+
+  @override
+  List<Object> get props => [error];
+}

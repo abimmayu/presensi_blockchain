@@ -76,3 +76,8 @@ class CheckLocation extends PresentEvent {
   @override
   List<Object> get props => [latLng];
 }
+
+class GetCurrentLocation extends PresentEvent {
+  @override
+  List<Object> get props => [];
+}

@@ -88,7 +88,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           GetUserData(id),
         );
 
-        // function;
+        function;
       },
     );
   }

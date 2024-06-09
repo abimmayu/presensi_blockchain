@@ -1,69 +1,41 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:presensi_blockchain/core/widget/toast.dart';
+import 'package:presensi_blockchain/core/utils/constant.dart';
+import 'package:presensi_blockchain/core/utils/secure_storage.dart';
 
 class FirebaseService {
   FirebaseAuth auth = FirebaseAuth.instance;
+  SecureStorage secureStorage = SecureStorage();
 
   Future<User> signInWithemailAndPassword(
     String email,
     String password,
   ) async {
-    try {
-      UserCredential userCredential = await auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      return userCredential.user!;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        showToast(
-          message: "Invalid email",
-        );
-      } else if (e.code == 'wrong-password') {
-        showToast(
-          message: "Invalid password",
-        );
-      } else {
-        showToast(
-          message: 'An error occured: ${e.code}',
-        );
-      }
-      throw Exception(e.message);
-    }
+    UserCredential userCredential = await auth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    log("userCredential: $userCredential");
+    secureStorage.writeData(key: AppConstant.userEmail, value: email);
+    secureStorage.writeData(key: AppConstant.userPassword, value: password);
+    return userCredential.user!;
   }
 
   Future<User> signUpWithemailAndPassword(
     String email,
     String password,
   ) async {
-    try {
-      UserCredential userCredential = await auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      return userCredential.user!;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'email-already-in-use') {
-        showToast(
-          message: 'The email address is already in use.',
-        );
-      } else {
-        showToast(
-          message: 'An error occurred: ${e.code}',
-        );
-      }
-      throw Exception(e.message);
-    }
+    UserCredential userCredential = await auth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    return userCredential.user!;
   }
 
   Future<void> signOut() async {
-    try {
-      final result = await auth.signOut();
-      return result;
-    } on FirebaseAuthException catch (e) {
-      showToast(
-        message: e.message!,
-      );
-    }
+    final result = await auth.signOut();
+    return result;
   }
 }

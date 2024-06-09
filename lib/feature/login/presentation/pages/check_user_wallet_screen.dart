@@ -8,8 +8,6 @@ import 'package:go_router/go_router.dart';
 import 'package:presensi_blockchain/core/routing/router.dart';
 import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/utils/secure_storage.dart';
-import 'package:presensi_blockchain/core/widget/pin_modal.dart';
-import 'package:presensi_blockchain/feature/login/presentation/pages/create_wallet_screen.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user_bloc.dart';
 
 class IntializeUser extends StatefulWidget {
@@ -28,6 +26,7 @@ class _IntializeUserState extends State<IntializeUser> {
     context.read<UserBloc>().add(
           GetUserData(id),
         );
+    log(id);
     getPrivateKey();
     super.initState();
   }

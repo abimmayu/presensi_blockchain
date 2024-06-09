@@ -1,11 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:presensi_blockchain/core/utils/constant.dart';
+import 'package:presensi_blockchain/core/utils/secure_storage.dart';
 import 'package:presensi_blockchain/core/widget/button.dart';
 import 'package:presensi_blockchain/core/widget/custom_app_bar.dart';
 
-class CopyPrivateKeyScreen extends StatelessWidget {
+class CopyPrivateKeyScreen extends StatefulWidget {
   const CopyPrivateKeyScreen({super.key});
+
+  @override
+  State<CopyPrivateKeyScreen> createState() => _CopyPrivateKeyScreenState();
+}
+
+class _CopyPrivateKeyScreenState extends State<CopyPrivateKeyScreen> {
+  String? privateKey;
+
+  @override
+  void initState() {
+    getPrivateKey();
+    super.initState();
+  }
+
+  getPrivateKey() async {
+    final storePrivateKey =
+        await SecureStorage().readData(key: AppConstant.privateKey);
+    setState(() {
+      privateKey = storePrivateKey.toString();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,34 +42,42 @@ class CopyPrivateKeyScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
-              height: ScreenUtil().setHeight(30),
+              height: 30.h,
             ),
-            Container(
-              height: ScreenUtil().setHeight(100),
-              padding: EdgeInsets.symmetric(
-                horizontal: ScreenUtil().setWidth(10),
-                vertical: ScreenUtil().setHeight(10),
-              ),
-              margin: EdgeInsets.symmetric(
-                horizontal: ScreenUtil().setWidth(10),
-              ),
-              decoration: BoxDecoration(
+            Flexible(
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 10.w,
+                  vertical: 10.h,
+                ),
+                margin: EdgeInsets.symmetric(
+                  horizontal: 10.w,
+                ),
+                decoration: BoxDecoration(
                   border: Border.all(
                     color: mainColor,
-                    width: ScreenUtil().setWidth(2),
+                    width: 2.w,
                   ),
-                  borderRadius: BorderRadius.circular(20)),
-              child: Text(
-                "e4670281e80550a2a5dd5b68e93aaf66032b0d5be024b661b02731905ae0c516",
-                style: normalText,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  privateKey.toString(),
+                  style: normalText,
+                ),
               ),
             ),
             SizedBox(
-              height: ScreenUtil().setHeight(20),
+              height: 20.h,
             ),
             MainButton(
-              width: ScreenUtil().setWidth(250),
-              onTap: () {},
+              width: 300.w,
+              onTap: () {
+                Clipboard.setData(
+                  ClipboardData(
+                    text: privateKey.toString(),
+                  ),
+                );
+              },
               text: "Copy Private Key",
             )
           ],

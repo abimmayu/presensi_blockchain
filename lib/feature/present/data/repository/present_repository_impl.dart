@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:presensi_blockchain/core/error/failure.dart';
 import 'package:presensi_blockchain/feature/present/data/data_post/present_data_post.dart';
@@ -66,6 +68,7 @@ class PresentRepositoryImpl implements PresentRepository {
       );
       return Right(result);
     } catch (e) {
+      log("Error nya: $e");
       return Left(
         PresentFailure(
           message: e.toString(),

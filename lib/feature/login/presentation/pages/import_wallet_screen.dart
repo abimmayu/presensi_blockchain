@@ -19,7 +19,7 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
   int index = 0;
 
   final List<Widget> widgets = [
-    const ImportPrivateKeyWidget(),
+    ImportPrivateKeyWidget(),
     const ImportRecoveryPhraseWidget(),
   ];
 
@@ -44,7 +44,7 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
               style: normalText,
             ),
             SizedBox(
-              height: 50.h,
+              height: 20.h,
             ),
             DropdownButton(
               items: const [

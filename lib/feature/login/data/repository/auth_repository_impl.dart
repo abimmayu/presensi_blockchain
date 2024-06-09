@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:presensi_blockchain/core/error/failure.dart';
+import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/utils/secure_storage.dart';
 import 'package:presensi_blockchain/feature/login/data/data_source/login_data_source.dart';
 import 'package:presensi_blockchain/feature/login/domain/repository/auth_repository.dart';
@@ -20,13 +24,19 @@ class AuthRepositoryImpl implements AuthRepository {
       IdTokenResult tokenResult = await result!.getIdTokenResult(true);
       String refreshToken = tokenResult.token!;
       storage.writeData(
-        key: "refresh_token",
+        key: AppConstant.refreshToken,
         value: refreshToken,
       );
       return Right(result);
     } on FirebaseAuthException catch (e) {
       return Left(
         LoginFailure(message: e.message),
+      );
+    } catch (e) {
+      return Left(
+        LoginFailure(
+          message: e.toString(),
+        ),
       );
     }
   }
@@ -40,6 +50,12 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(
         LoginFailure(message: e.message),
       );
+    } catch (e) {
+      return Left(
+        LoginFailure(
+          message: e.toString(),
+        ),
+      );
     }
   }
 
@@ -52,6 +68,12 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(
         LoginFailure(message: e.message),
       );
+    } catch (e) {
+      return Left(
+        LoginFailure(
+          message: e.toString(),
+        ),
+      );
     }
   }
 
@@ -62,6 +84,26 @@ class AuthRepositoryImpl implements AuthRepository {
   }) async {
     try {
       final result = await auth.getDataUser(id: id);
+      return Right(result);
+    } catch (e) {
+      return Left(
+        LoginFailure(
+          message: e.toString(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> addDataUser(
+      {required String id,
+      String collection = "User",
+      required Map<String, dynamic> data}) async {
+    try {
+      final result = await auth.addDataUser(
+        id: id,
+        data: data,
+      );
       return Right(result);
     } catch (e) {
       return Left(
@@ -96,8 +138,29 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, Wallet>> createWallet(
       {required String password, String? address}) async {
     try {
-      final result =
-          await auth.createWallet(password: password, address: address);
+      final result = await auth.createWallet(password: password);
+      return Right(result);
+    } catch (e) {
+      return Left(
+        LoginFailure(
+          message: e.toString(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, Wallet>> importWallet({
+    required String password,
+    String? privateKey,
+    List<TextEditingController>? mnemonicWords,
+  }) async {
+    try {
+      final result = await auth.importWallet(
+        password: password,
+        privateKey: privateKey,
+        mnemonicWords: mnemonicWords,
+      );
       return Right(result);
     } catch (e) {
       return Left(

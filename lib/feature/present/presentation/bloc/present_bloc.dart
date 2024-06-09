@@ -2,8 +2,10 @@ import 'dart:developer';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:presensi_blockchain/feature/present/domain/usecase/check_location_usecase.dart';
+import 'package:presensi_blockchain/feature/present/domain/usecase/handle_location_permission_usecase.dart';
 import 'package:presensi_blockchain/feature/present/domain/usecase/input_present_usecase.dart';
 import 'package:presensi_blockchain/feature/present/domain/usecase/present_in_usecase.dart';
 import 'package:presensi_blockchain/feature/present/domain/usecase/present_out_usecase.dart';
@@ -16,6 +18,8 @@ class PresentBloc extends Bloc<PresentEvent, PresentState> {
   final PresentInUsecase presentInUsecase;
   final PresentOutUsecase presentOutUsecase;
   final InputPresentUsecase inputPresentUsecase;
+  final HandleLocationPermissionUsecase handleLocationPermissionUsecase =
+      HandleLocationPermissionUsecase();
 
   PresentBloc(
     this.checkCorrectLocationUsecase,
@@ -55,6 +59,11 @@ class PresentBloc extends Bloc<PresentEvent, PresentState> {
           event.latLng,
           emit,
         );
+      },
+    );
+    on<GetCurrentLocation>(
+      (event, emit) async {
+        return await getLocation(emit);
       },
     );
     on<InputPresent>(
@@ -144,11 +153,29 @@ class PresentBloc extends Bloc<PresentEvent, PresentState> {
     );
   }
 
+  Future<void> getLocation(
+    Emitter<PresentState> emit,
+  ) async {
+    final location = await handleLocationPermissionUsecase.getCurrentLocation();
+    if (location != null) {
+      return emit(
+        PresentLocationGet(location),
+      );
+    }
+    return emit(
+      PresentError("Location is null!"),
+    );
+  }
+
   Future<void> inputPresent(
     BigInt idPresent,
     BigInt idEmployee,
     Emitter<PresentState> emit,
   ) async {
+    emit(
+      StartPresent(),
+    );
+    log("idEmploye: $idEmployee");
     final result = await inputPresentUsecase.execute(
       idPresent: idPresent,
       idEmployee: idEmployee,
@@ -156,7 +183,7 @@ class PresentBloc extends Bloc<PresentEvent, PresentState> {
 
     result.fold(
       (l) => emit(
-        PresentError(l.message!),
+        PresentFailed(l.message!),
       ),
       (r) => emit(
         PresentSuccess(),

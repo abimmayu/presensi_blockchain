@@ -11,6 +11,7 @@ import 'package:presensi_blockchain/feature/present/presentation/pages/present_s
 import 'package:presensi_blockchain/feature/present/presentation/pages/presented_screen.dart';
 import 'package:presensi_blockchain/feature/present/presentation/pages/present_screen.dart';
 import 'package:presensi_blockchain/feature/splash/splash_screen.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/pages/add_account_screen.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/pages/change_password_screen.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/pages/copy_private_key_screen.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/pages/copy_recovery_phrase_screen.dart';
@@ -61,7 +62,7 @@ final GoRouter router = GoRouter(
       path: '/login',
       name: AppRoute.loginScreen.name,
       builder: (context, state) {
-        return LoginScreen();
+        return const LoginScreen();
       },
       routes: [
         GoRoute(
@@ -82,7 +83,7 @@ final GoRouter router = GoRouter(
           path: 'import-wallet',
           name: AppRoute.importWalletScreen.name,
           builder: (context, state) {
-            return ImportWalletScreen();
+            return const ImportWalletScreen();
           },
         )
       ],
@@ -159,7 +160,7 @@ final GoRouter router = GoRouter(
           path: 'see-private-key',
           name: AppRoute.seePrivateKeyScreen.name,
           builder: (context, state) {
-            return const PrivateKeyScreen();
+            return PrivateKeyScreen();
           },
           routes: [
             GoRoute(
@@ -214,7 +215,7 @@ final GoRouter router = GoRouter(
           path: 'add-account',
           name: AppRoute.addAccountScreen.name,
           builder: (context, state) {
-            return Container();
+            return const AddAccountScreen();
           },
         ),
         GoRoute(

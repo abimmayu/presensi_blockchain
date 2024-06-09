@@ -42,12 +42,18 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
             context.read<UserBloc>().add(
                   PostPublicKey(
                     id,
-                    {
-                      "public_key": state.wallet.privateKey.address.toString(),
+                    const {
+                      "public_key": true,
                     },
                     context.pushReplacementNamed(AppRoute.presentScreen.name),
                   ),
                 );
+          } else if (state is AuthError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+              ),
+            );
           }
         },
         child: Padding(

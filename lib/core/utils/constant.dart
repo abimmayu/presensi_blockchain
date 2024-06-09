@@ -39,6 +39,10 @@ final TextStyle tinyText = GoogleFonts.montserrat(
 
 //Variable
 class AppConstant {
+  //User Credential
+  static const String userEmail = "user_email";
+  static const String userPassword = "user_password";
+
   //Contract Detail
   static const String contractAddress =
       "0xf9DB75dc762cD1e60ac3862dd7be757BD52fbe9a";

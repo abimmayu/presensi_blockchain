@@ -29,23 +29,42 @@ class AuthSignUp extends AuthEvent {
 }
 
 class AuthLogout extends AuthEvent {
+  final AuthState state;
+
+  AuthLogout(this.state);
   @override
   List<Object> get props => [];
 }
 
 class AuthCreateWallet extends AuthEvent {
   final String pin;
-  String? address;
 
   AuthCreateWallet({
     required this.pin,
-    this.address,
   });
 
   @override
   List<Object> get props => [
         pin,
-        address.toString(),
+      ];
+}
+
+class AuthImportWallet extends AuthEvent {
+  final String password;
+  final String? privateKey;
+  final List<TextEditingController>? mnemonicInput;
+
+  AuthImportWallet(
+    this.password,
+    this.privateKey,
+    this.mnemonicInput,
+  );
+
+  @override
+  List<Object?> get props => [
+        password,
+        privateKey,
+        mnemonicInput,
       ];
 }
 
@@ -56,4 +75,24 @@ class AuthGetDataUser extends AuthEvent {
 
   @override
   List<Object> get props => [id];
+}
+
+class AuthRegisterUser extends AuthEvent {
+  final String id;
+  final Map<String, dynamic> data;
+
+  AuthRegisterUser(this.id, this.data);
+
+  @override
+  List<Object> get props => [id, data];
+}
+
+class AuthUpdatePublicKey extends AuthEvent {
+  final String id;
+  final Map<String, dynamic> data;
+
+  AuthUpdatePublicKey(this.id, this.data);
+
+  @override
+  List<Object> get props => [id, data];
 }

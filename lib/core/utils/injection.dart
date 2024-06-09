@@ -8,6 +8,7 @@ import 'package:presensi_blockchain/feature/login/data/repository/auth_repositor
 import 'package:presensi_blockchain/feature/login/domain/repository/auth_repository.dart';
 import 'package:presensi_blockchain/feature/login/domain/usecases/generate_wallet_usecase.dart';
 import 'package:presensi_blockchain/feature/login/domain/usecases/get_data_user_usecase.dart';
+import 'package:presensi_blockchain/feature/login/domain/usecases/import_wallet_usecase.dart';
 import 'package:presensi_blockchain/feature/login/domain/usecases/log_out_usecase.dart';
 import 'package:presensi_blockchain/feature/login/domain/usecases/login_usecases.dart';
 import 'package:presensi_blockchain/feature/login/domain/usecases/sign_up_usecase.dart';
@@ -18,6 +19,7 @@ import 'package:presensi_blockchain/feature/present/domain/usecase/input_present
 import 'package:presensi_blockchain/feature/present/domain/usecase/present_in_usecase.dart';
 import 'package:presensi_blockchain/feature/present/domain/usecase/present_out_usecase.dart';
 import 'package:presensi_blockchain/feature/present/presentation/bloc/present_bloc.dart';
+import 'package:presensi_blockchain/feature/login/domain/usecases/add_data_user_usecase.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -27,6 +29,9 @@ init() async {
   //Bloc locator
   locator.registerFactory(
     () => AuthBloc(
+      locator(),
+      locator(),
+      locator(),
       locator(),
       locator(),
       locator(),
@@ -98,6 +103,12 @@ init() async {
       locator(),
     ),
   );
+  locator.registerLazySingleton(
+    () => ImportWalletUsecase(
+      locator(),
+    ),
+  );
+
   //2. Present Usecase
   locator.registerLazySingleton(
     () => CheckCorrectLocationUsecase(),
@@ -112,10 +123,19 @@ init() async {
     () => InputPresentUsecase(),
   );
 
+  //3. User Usecase
+  locator.registerLazySingleton(
+    () => AddDataUserUsecase(
+      locator(),
+    ),
+  );
+
   //Local Source
   final SharedPreferences sharedPreferences =
       await SharedPreferences.getInstance();
-  locator.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
+  locator.registerLazySingleton<SharedPreferences>(
+    () => sharedPreferences,
+  );
   locator.registerLazySingleton<LocalPreferences>(
     () => LocalPrefrencesImpl(
       shared: locator(),

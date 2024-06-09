@@ -57,9 +57,10 @@ class PinInputModal extends StatelessWidget {
                     ),
                     SizedBox(
                       width: ScreenUtil().setWidth(250),
-                      child: const TextField(
+                      child: TextField(
+                        controller: controller,
                         obscureText: true,
-                        decoration: InputDecoration.collapsed(
+                        decoration: const InputDecoration.collapsed(
                           hintText: "Type your password",
                         ),
                       ),
@@ -77,11 +78,7 @@ class PinInputModal extends StatelessWidget {
           ),
           MainButton(
             text: "Submit",
-            onTap: () {
-              context.pushNamed(
-                AppRoute.copyPrivateKeyScreen.name,
-              );
-            },
+            onTap: function,
           )
         ],
       ),

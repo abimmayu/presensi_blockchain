@@ -37,3 +37,14 @@ class AuthWalletSuccess extends AuthState {
   @override
   List<Object> get props => [wallet];
 }
+
+class AuthRegisterSuccess extends AuthState {
+  final User user;
+
+  AuthRegisterSuccess(this.user);
+
+  @override
+  List<Object> get props => [user];
+}
+
+class AuthAddUserSuccess extends AuthState {}

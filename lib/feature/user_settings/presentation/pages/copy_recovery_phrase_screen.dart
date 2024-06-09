@@ -1,11 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:presensi_blockchain/core/utils/constant.dart';
+import 'package:presensi_blockchain/core/utils/secure_storage.dart';
 import 'package:presensi_blockchain/core/widget/button.dart';
 import 'package:presensi_blockchain/core/widget/custom_app_bar.dart';
 
-class CopyRecoveryPhraseScreen extends StatelessWidget {
+class CopyRecoveryPhraseScreen extends StatefulWidget {
   const CopyRecoveryPhraseScreen({super.key});
+
+  @override
+  State<CopyRecoveryPhraseScreen> createState() =>
+      _CopyRecoveryPhraseScreenState();
+}
+
+class _CopyRecoveryPhraseScreenState extends State<CopyRecoveryPhraseScreen> {
+  String? mnemonicPhrase;
+
+  @override
+  void initState() {
+    getMnemonicPhrase();
+    super.initState();
+  }
+
+  getMnemonicPhrase() async {
+    final mnemonic = await SecureStorage().readData(
+      key: AppConstant.recoveryPhrase,
+    );
+
+    setState(() {
+      mnemonicPhrase = mnemonic.toString();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,14 +64,20 @@ class CopyRecoveryPhraseScreen extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    "snipe runner trigger crisp wide absent cliff father leaf save milk faster",
+                    "$mnemonicPhrase",
                     style: normalText,
                   ),
                   SizedBox(
                     height: ScreenUtil().setHeight(20),
                   ),
                   MainButton(
-                    onTap: () {},
+                    onTap: () {
+                      Clipboard.setData(
+                        ClipboardData(
+                          text: "$mnemonicPhrase",
+                        ),
+                      );
+                    },
                     text: "Copy Recovery Phrase",
                     width: 300,
                   ),

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -16,6 +17,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   SecureStorage storage = SecureStorage();
+  final currentUser = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
@@ -31,15 +33,11 @@ class _SplashScreenState extends State<SplashScreen> {
     return Timer(
       duration,
       () async {
-        await storage.readData(key: "refresh_token").then(
-          (value) {
-            if (value != null) {
-              context.pushReplacementNamed(AppRoute.checkWalletScreen.name);
-            } else {
-              context.pushReplacementNamed(AppRoute.loginScreen.name);
-            }
-          },
-        );
+        if (currentUser != null) {
+          context.pushReplacementNamed(AppRoute.checkWalletScreen.name);
+        } else {
+          context.pushReplacementNamed(AppRoute.loginScreen.name);
+        }
       },
     );
   }

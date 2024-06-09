@@ -23,6 +23,7 @@ abstract class PresentDataPost {
     required BigInt idPresent,
     required BigInt idEmployee,
   });
+  Future<String> sendBalance();
 }
 
 class PresentDataPostImpl implements PresentDataPost {
@@ -79,9 +80,15 @@ class PresentDataPostImpl implements PresentDataPost {
         await SecureStorage().readData(key: AppConstant.privateKey);
     final result = await blockchainService.postFunction(
       functionName: AppConstant.inputPresent,
-      param: [],
+      param: [idPresent, idEmployee],
       privateKey: privateKey.toString(),
     );
+    return result;
+  }
+
+  @override
+  Future<String> sendBalance() async {
+    final result = await blockchainService.sendBalance();
     return result;
   }
 }

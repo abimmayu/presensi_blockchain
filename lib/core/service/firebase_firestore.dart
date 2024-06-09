@@ -19,6 +19,19 @@ class FireStore {
     return result;
   }
 
+  Future<void> addData({
+    required String doc,
+    required String collection,
+    required Map<String, dynamic> data,
+  }) async {
+    final DocumentReference document =
+        firestore.collection(collection).doc(doc);
+
+    final result = await document.set(data);
+
+    return result;
+  }
+
   Future<void> updateData({
     required String doc,
     required String collection,

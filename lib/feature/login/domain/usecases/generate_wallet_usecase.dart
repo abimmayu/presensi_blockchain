@@ -8,11 +8,9 @@ class GenerateWalletUsecase {
 
   GenerateWalletUsecase(this.walletRepository);
 
-  Future<Either<Failure, Wallet>> execute(
-      {required String password, String? address}) async {
+  Future<Either<Failure, Wallet>> execute({required String password}) async {
     return await walletRepository.createWallet(
       password: password,
-      address: address,
     );
   }
 }
