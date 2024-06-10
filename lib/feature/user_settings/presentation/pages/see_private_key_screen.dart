@@ -86,6 +86,26 @@ class _PrivateKeyScreenState extends State<PrivateKeyScreen> {
         TextEditingController controller = TextEditingController();
         return PinInputModal(
           controller: controller,
+          onChanged: (value) {
+            setState(() {
+              controller.text = value;
+            });
+          },
+          onSubmitted: (value) {
+            if (value == password) {
+              context.pop();
+              context.pushNamed(
+                AppRoute.copyPrivateKeyScreen.name,
+              );
+            } else if (value != password) {
+              context.pop();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("The password is wrong!"),
+                ),
+              );
+            }
+          },
           function: () {
             if (controller.text == password) {
               context.pop();

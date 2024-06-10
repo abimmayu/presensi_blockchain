@@ -1,6 +1,5 @@
-import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:logger/logger.dart';
 import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/utils/secure_storage.dart';
 
@@ -16,7 +15,7 @@ class FirebaseService {
       email: email,
       password: password,
     );
-    log("userCredential: $userCredential");
+    Logger().d(userCredential.user);
     secureStorage.writeData(key: AppConstant.userEmail, value: email);
     secureStorage.writeData(key: AppConstant.userPassword, value: password);
     return userCredential.user!;
@@ -30,6 +29,7 @@ class FirebaseService {
       email: email,
       password: password,
     );
+    Logger().d(userCredential.user);
 
     return userCredential.user!;
   }

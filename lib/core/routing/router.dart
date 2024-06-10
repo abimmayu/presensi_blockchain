@@ -116,7 +116,10 @@ final GoRouter router = GoRouter(
           path: 'home-present',
           name: AppRoute.homePresentScreen.name,
           builder: (context, state) {
-            return const HomePresentedScreen();
+            final param = state.extra as HomePresentedParam;
+            return HomePresentedScreen(
+              param: param,
+            );
           },
         ),
         GoRoute(
@@ -160,7 +163,7 @@ final GoRouter router = GoRouter(
           path: 'see-private-key',
           name: AppRoute.seePrivateKeyScreen.name,
           builder: (context, state) {
-            return PrivateKeyScreen();
+            return const PrivateKeyScreen();
           },
           routes: [
             GoRoute(

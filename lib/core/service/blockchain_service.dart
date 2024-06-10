@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/services.dart';
 import 'package:http/http.dart';
+import 'package:logger/logger.dart';
 import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/utils/secure_storage.dart';
 import 'package:web3dart/web3dart.dart';
@@ -51,11 +52,13 @@ class BlockchainService {
     param ??= [];
     final contract = await getContract();
     final function = contract.function(name);
+    Logger().d(function);
     final result = await web3Client.call(
       contract: contract,
       function: function,
       params: param,
     );
+    Logger().d(result);
 
     return result;
   }
@@ -66,25 +69,24 @@ class BlockchainService {
     required String privateKey,
   }) async {
     final credential = EthPrivateKey.fromHex(privateKey);
+    Logger().i(credential);
     final contract = await getContract();
     final function = contract.function(functionName);
-
-    log(
-      "Param: $param",
-    );
-    log("Credential: ${credential.privateKey}");
+    Logger().d(functionName);
 
     final transaction = Transaction.callContract(
       contract: contract,
       function: function,
       parameters: param,
     );
+    Logger().d(transaction);
 
     final result = web3Client.sendTransaction(
       credential,
       transaction,
       chainId: 11155111,
     );
+    Logger().d(result);
 
     return result;
   }

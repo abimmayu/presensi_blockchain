@@ -215,18 +215,18 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                               icon: Icons.person_add,
                               title: "Generate today's present",
                               action: () {
-                                // context.read<PresentBloc>().add(
-                                //       PresentIn(
-                                //         BigInt.from(
-                                //           today,
-                                //         ),
-                                //         BigInt.from(DateTime.now().day),
-                                //         BigInt.from(DateTime.now().month),
-                                //         BigInt.from(DateTime.now().year),
-                                //         "Masuk",
-                                //       ),
-                                //     );
-                                service.sendBalance();
+                                context.read<PresentBloc>().add(
+                                      PresentIn(
+                                        BigInt.from(
+                                          today,
+                                        ),
+                                        BigInt.from(DateTime.now().day),
+                                        BigInt.from(DateTime.now().month),
+                                        BigInt.from(DateTime.now().year),
+                                        "Masuk",
+                                      ),
+                                    );
+                                // service.sendBalance();
                                 // context.read<PresentBloc>().add(
                                 //       PresentOut(
                                 //         BigInt.from(DateTime.now()

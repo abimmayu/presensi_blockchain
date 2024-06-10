@@ -11,12 +11,23 @@ import 'package:presensi_blockchain/core/widget/pin_modal.dart';
 import 'package:presensi_blockchain/feature/login/presentation/bloc/auth_bloc.dart';
 import 'package:svg_flutter/svg.dart';
 
-class ImportPrivateKeyWidget extends StatelessWidget {
-  ImportPrivateKeyWidget({super.key});
+class ImportPrivateKeyWidget extends StatefulWidget {
+  const ImportPrivateKeyWidget({super.key});
 
+  @override
+  State<ImportPrivateKeyWidget> createState() => _ImportPrivateKeyWidgetState();
+}
+
+class _ImportPrivateKeyWidgetState extends State<ImportPrivateKeyWidget> {
   String? password;
 
   TextEditingController privateKeyController = TextEditingController();
+
+  @override
+  void dispose() {
+    privateKeyController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -123,6 +134,21 @@ class ImportPrivateKeyWidget extends StatelessWidget {
         TextEditingController controller = TextEditingController();
         return PinInputModal(
           controller: controller,
+          onChanged: (value) {
+            setState(() {
+              controller.text = value;
+            });
+          },
+          onSubmitted: (value) {
+            context.pop();
+            context.read<AuthBloc>().add(
+                  AuthImportWallet(
+                    value,
+                    privateKeyController.text,
+                    null,
+                  ),
+                );
+          },
           function: () {
             context.pop();
             context.read<AuthBloc>().add(

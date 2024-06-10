@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-import 'package:presensi_blockchain/core/routing/router.dart';
 import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/widget/button.dart';
 import 'package:svg_flutter/svg_flutter.dart';
@@ -11,10 +9,14 @@ class PinInputModal extends StatelessWidget {
     super.key,
     required this.controller,
     required this.function,
+    required this.onChanged,
+    required this.onSubmitted,
   });
 
   final TextEditingController controller;
   final Function() function;
+  final Function(dynamic) onChanged;
+  final Function(dynamic) onSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +61,8 @@ class PinInputModal extends StatelessWidget {
                       width: ScreenUtil().setWidth(250),
                       child: TextField(
                         controller: controller,
+                        onChanged: onChanged,
+                        onSubmitted: onSubmitted,
                         obscureText: true,
                         decoration: const InputDecoration.collapsed(
                           hintText: "Type your password",

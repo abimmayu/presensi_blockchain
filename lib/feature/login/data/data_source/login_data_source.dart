@@ -193,13 +193,16 @@ class AuthDataSourceImpl implements AuthDataSource {
   }) async {
     Random random = Random.secure();
     String? mnemonic;
+    String? privateKeyHex;
 
     //Regenerate the EthPrivateKey
     EthPrivateKey? ethPrivateKey;
     if (privateKey != null) {
       ethPrivateKey = EthPrivateKey.fromHex(privateKey);
+      privateKeyHex = privateKey;
       mnemonic = bip39.generateMnemonic();
     } else if (mnemonicWords != null) {
+      //Generate Recovery Phrase
       List<String> words = List.generate(
         mnemonicWords.length,
         (index) => mnemonicWords[index].text.trim(),
@@ -207,8 +210,15 @@ class AuthDataSourceImpl implements AuthDataSource {
       mnemonic = words.join(" ");
       final mnemonicIsValid = bip39.validateMnemonic(mnemonic);
       if (mnemonicIsValid) {
-        final seed = bip39.mnemonicToSeedHex(mnemonic);
-        ethPrivateKey = EthPrivateKey.fromHex(seed);
+        final seed = bip39.mnemonicToSeed(mnemonic);
+        final root = BIP32.fromSeed(Uint8List.fromList(seed));
+        final child = root.derivePath("m/44'/60'/0'/0/0");
+
+        final byte = child.privateKey!
+            .map((e) => e.toRadixString(16).padLeft(2, '0'))
+            .join('');
+        privateKeyHex = byte;
+        ethPrivateKey = EthPrivateKey.fromHex(privateKeyHex);
       }
     }
 
@@ -219,10 +229,6 @@ class AuthDataSourceImpl implements AuthDataSource {
       ethPrivateKey!,
       password,
       random,
-    );
-
-    var privateKeyHex = crypto.bytesToHex(
-      wallet.privateKey.privateKey,
     );
 
     //Save Wallet to Shared Preferences.

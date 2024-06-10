@@ -13,6 +13,7 @@ import 'package:presensi_blockchain/core/widget/button.dart';
 import 'package:presensi_blockchain/core/widget/custom_app_bar.dart';
 import 'package:presensi_blockchain/core/widget/custom_nav_bar.dart';
 import 'package:presensi_blockchain/feature/present/presentation/bloc/present_bloc.dart';
+import 'package:presensi_blockchain/feature/present/presentation/pages/home_present_screen.dart';
 import 'package:presensi_blockchain/feature/present/presentation/pages/presented_screen.dart';
 
 class PresentScreen extends StatefulWidget {
@@ -77,8 +78,21 @@ class _PresentScreenState extends State<PresentScreen> {
                   return Center(
                     child: Text(state.error),
                   );
+                } else if (state is PresentLocationGet) {
+                  return buildWidget();
                 }
-                return buildWidget();
+                return Column(
+                  children: [
+                    buildWidget(),
+                    SizedBox(
+                      height: 50.h,
+                    ),
+                    Text(
+                      "Please refresh to get you location!",
+                      style: normalText,
+                    ),
+                  ],
+                );
               },
             ),
           ],
@@ -119,6 +133,7 @@ class _PresentScreenState extends State<PresentScreen> {
             onTap: () {
               context.pushNamed(
                 AppRoute.homePresentScreen.name,
+                extra: HomePresentedParam(position!),
               );
             },
             text: "Pulang",

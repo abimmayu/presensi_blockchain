@@ -146,6 +146,21 @@ class _ImportRecoveryPhraseWidgetState
         TextEditingController controller = TextEditingController();
         return PinInputModal(
           controller: controller,
+          onChanged: (value) {
+            setState(() {
+              controller.text = value;
+            });
+          },
+          onSubmitted: (value) {
+            context.pop();
+            context.read<AuthBloc>().add(
+                  AuthImportWallet(
+                    value,
+                    null,
+                    controllers,
+                  ),
+                );
+          },
           function: () {
             context.pop();
             context.read<AuthBloc>().add(

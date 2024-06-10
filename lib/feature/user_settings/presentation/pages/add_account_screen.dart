@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/utils/secure_storage.dart';
 import 'package:presensi_blockchain/core/widget/button.dart';
@@ -118,6 +119,38 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                     context.read<AuthBloc>().add(
                           AuthLogin(userEmail, userPassword),
                         );
+                  } else if (state is AuthSuccess) {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text(
+                            "You're Data has been saved!",
+                            style: bigTextSemibold,
+                          ),
+                          content: Text(
+                            "The Employee's data success to be save!.",
+                            style: tinyText,
+                          ),
+                          actions: [
+                            InkWell(
+                              onTap: () {
+                                context.pop();
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 5.h, horizontal: 20.h),
+                                decoration: BoxDecoration(
+                                  color: mainColor,
+                                  borderRadius: BorderRadius.circular(10.h),
+                                ),
+                                child: const Text("Ok"),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   }
                 },
                 builder: (context, state) {
