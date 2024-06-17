@@ -5,12 +5,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:presensi_blockchain/core/routing/router.dart';
 import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/widget/button.dart';
 import 'package:presensi_blockchain/core/widget/custom_app_bar.dart';
 import 'package:presensi_blockchain/core/widget/dropdown_button_date.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/get_all_present/get_present_bloc.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/get_holiday/get_holiday_bloc.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/pages/admin_menu/present_collected/present_detail_screen.dart';
 
 class PresentCollectedScreen extends StatefulWidget {
   const PresentCollectedScreen({super.key});
@@ -196,7 +198,7 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
         dates.length,
         (index) {
           final data = dates[index];
-          final format = DateFormat('EEEE, dd-MM-yyyy');
+          final format = DateFormat('EEEE, d MMMM yyyy', 'id_ID');
           final date = format.format(data);
           return DataRow(
             cells: [
@@ -216,7 +218,14 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
                 Padding(
                   padding: EdgeInsets.all(10.w),
                   child: MainButton(
-                    onTap: () {},
+                    onTap: () {
+                      context.pushNamed(
+                        AppRoute.presentDetailScreen.name,
+                        extra: PresentDetailParam(
+                          dateTime: data,
+                        ),
+                      );
+                    },
                     text: 'Detail',
                     width: 150.w,
                   ),

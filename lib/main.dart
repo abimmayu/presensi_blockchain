@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:presensi_blockchain/core/routing/router.dart';
 import 'package:presensi_blockchain/core/utils/injection.dart' as di;
 import 'package:presensi_blockchain/feature/dashboard/presentation/bloc/home_bloc.dart';
@@ -25,8 +26,10 @@ void main() async {
     androidProvider: AndroidProvider.debug,
     appleProvider: AppleProvider.appAttest,
   );
-  runApp(
-    const MyApp(),
+  await initializeDateFormatting('id_ID', null).then(
+    (value) => runApp(
+      const MyApp(),
+    ),
   );
 }
 

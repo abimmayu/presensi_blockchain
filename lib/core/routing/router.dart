@@ -13,6 +13,7 @@ import 'package:presensi_blockchain/feature/present/presentation/pages/present_s
 import 'package:presensi_blockchain/feature/splash/splash_screen.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/pages/admin_menu/account_setting/add_account_screen.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/pages/admin_menu/present_collected/present_collected_screen.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/pages/admin_menu/present_collected/present_detail_screen.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/pages/change_password_screen.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/pages/profile_settings/private_key/copy_private_key_screen.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/pages/profile_settings/recovery_phrase/copy_recovery_phrase_screen.dart';
@@ -46,6 +47,7 @@ enum AppRoute {
   addAccountScreen,
   editAccountScreen,
   presentCollectedScreen,
+  presentDetailScreen,
 }
 
 final GoRouter router = GoRouter(
@@ -239,6 +241,18 @@ final GoRouter router = GoRouter(
           builder: (context, state) {
             return const PresentCollectedScreen();
           },
+          routes: [
+            GoRoute(
+              path: 'present-detail',
+              name: AppRoute.presentDetailScreen.name,
+              builder: (context, state) {
+                final param = state.extra as PresentDetailParam;
+                return PresentDetailScreen(
+                  param: param,
+                );
+              },
+            ),
+          ],
         ),
       ],
     ),

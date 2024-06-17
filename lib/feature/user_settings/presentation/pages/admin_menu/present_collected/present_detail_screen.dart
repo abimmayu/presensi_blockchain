@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_date_pickers/flutter_date_pickers.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,47 +14,27 @@ import 'package:presensi_blockchain/core/widget/dropdown_button_date.dart';
 import 'package:presensi_blockchain/feature/user_settings/domain/entity/present_result.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/get_all_present/get_present_bloc.dart';
 
+class PresentDetailParam {
+  final DateTime dateTime;
+  PresentDetailParam({required this.dateTime});
+}
+
 class PresentDetailScreen extends StatefulWidget {
-  const PresentDetailScreen({super.key});
+  const PresentDetailScreen({super.key, required this.param});
+
+  final PresentDetailParam param;
 
   @override
   State<PresentDetailScreen> createState() => _PresentDetailScreenState();
 }
 
 class _PresentDetailScreenState extends State<PresentDetailScreen> {
-  int? selectedMonth;
-  int? selectedYear;
   int _currentIndex = 0;
 
-  List month = [
-    "Januari",
-    "Februari",
-    "Maret",
-    "April",
-    "Mei",
-    "Juni",
-    "Juli",
-    "Agustus",
-    "September",
-    "Oktober",
-    "November",
-    "Desember",
-  ];
-
-  List year = List.generate(10, (index) => DateTime.now().year - index);
-
-  List indexMonth = List.generate(12, (index) => index);
-  List indexYear = List.generate(10, (index) => index);
-
-  List? nameOfEmployee = [];
-
-  List<DateTime>? dates = [];
+  List employee = [];
 
   @override
   void initState() {
-    selectedMonth = DateTime.now().month - 1;
-    selectedYear = indexYear.first;
-    getDate(DateTime.now().year, DateTime.now().month);
     context.read<AllPresentBloc>().add(
           AllPresentGet(),
         );
@@ -68,7 +47,7 @@ class _PresentDetailScreenState extends State<PresentDetailScreen> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
         child: CustomAppBar(
-          title: 'Present Collected',
+          title: 'Present Detail',
           leadingOnPressed: () {
             context.pop();
           },
@@ -83,104 +62,70 @@ class _PresentDetailScreenState extends State<PresentDetailScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              DropdownDateWidget(
-                value: selectedMonth!,
-                dateOption: indexMonth,
-                dateTitle: month,
-                onSelected: (value) {
-                  onSelectedMonth(
-                    value,
-                  );
+              MainButton(
+                onTap: () {
+                  changeIndex(0);
                   context.read<AllPresentBloc>().add(
                         AllPresentGet(),
                       );
-                  getDate(year[selectedYear!], value + 1);
                 },
+                text: 'Masuk',
+                width: 150.w,
+                color: _currentIndex == 1 ? greyColor : mainColor,
               ),
               SizedBox(
                 width: 20.w,
               ),
-              DropdownDateWidget(
-                value: selectedYear!,
-                dateOption: indexYear,
-                dateTitle: year,
-                onSelected: (value) {
-                  onSelectedYear(
-                    value,
-                  );
+              MainButton(
+                onTap: () {
+                  changeIndex(1);
                   context.read<AllPresentBloc>().add(
                         AllPresentGet(),
                       );
-                  getDate(year[value], selectedMonth! + 1);
                 },
+                text: 'Pulang',
+                width: 150.w,
+                color: _currentIndex == 0 ? greyColor : mainColor,
               ),
             ],
           ),
-          // SizedBox(
-          //   height: 50.h,
-          // ),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.center,
-          //   children: [
-          //     MainButton(
-          //       onTap: () {
-          //         changeIndex(0);
-          //         context.read<AllPresentBloc>().add(
-          //               AllPresentGet(),
-          //             );
-          //       },
-          //       text: 'Masuk',
-          //       width: 150.w,
-          //       color: _currentIndex == 1 ? greyColor : mainColor,
-          //     ),
-          //     SizedBox(
-          //       width: 20.w,
-          //     ),
-          //     MainButton(
-          //       onTap: () {
-          //         changeIndex(1);
-          //         context.read<AllPresentBloc>().add(
-          //               AllPresentGet(),
-          //             );
-          //       },
-          //       text: 'Pulang',
-          //       width: 150.w,
-          //       color: _currentIndex == 0 ? greyColor : mainColor,
-          //     ),
-          //   ],
-          // ),
           SizedBox(
             height: 25.h,
           ),
-          // Padding(
-          //   padding: EdgeInsets.symmetric(
-          //     horizontal: 50.w,
-          //   ),
-          //   child: MainButton(
-          //     onTap: () {
-          //       getExcludeDate(
-          //           context, year[selectedYear!], selectedMonth! + 1);
-          //     },
-          //     text: 'Get Exclude Date',
-          //   ),
-          // ),
+          Center(
+            child: Text(
+              DateFormat('EEEE, dd MMMM yyyy', 'id_ID').format(
+                widget.param.dateTime,
+              ),
+              style: bigTextSemibold,
+            ),
+          ),
+          SizedBox(
+            height: 25.h,
+          ),
           BlocConsumer<AllPresentBloc, AllPresentState>(
             listener: (context, state) async {
               if (state is AllPresentSuccess) {
+                final date = widget.param.dateTime;
                 final uniqueDatas = <String, PresentResult>{};
                 state.presents.where(
                   (element) {
                     final timeStamp = int.parse(element.timeStamp);
-                    final startOfMonth =
-                        DateTime(year[selectedYear!], selectedMonth! + 1, 1, 0)
+                    final start = _currentIndex == 0
+                        ? DateTime(date.year, date.month, date.day, 8, 0)
+                                .millisecondsSinceEpoch /
+                            1000
+                        : DateTime(date.year, date.month, date.day, 15, 30)
                                 .millisecondsSinceEpoch /
                             1000;
-                    final startOfNextMonth =
-                        DateTime(year[selectedYear!], selectedMonth! + 2, 1, 0)
+                    final end = _currentIndex == 0
+                        ? DateTime(date.year, date.month, date.day, 8, 30)
+                                .millisecondsSinceEpoch /
+                            1000
+                        : DateTime(date.year, date.month, date.day, 16, 0)
                                 .millisecondsSinceEpoch /
                             1000;
-                    if (timeStamp >= startOfMonth &&
-                        timeStamp < startOfNextMonth) {
+                    if (timeStamp >= start && timeStamp < end) {
                       return true;
                     } else {
                       return false;
@@ -192,14 +137,14 @@ class _PresentDetailScreenState extends State<PresentDetailScreen> {
                 final realDatas = uniqueDatas.values.toList();
                 final List<Map<String, dynamic>> dataName = [];
                 for (var i = 0; i < realDatas.length; i++) {
-                  final finalData =
-                      await searchDataByField('address', realDatas[i].from);
-                  log('finalData: $finalData');
+                  final finalData = await searchDataByField(
+                    'address',
+                    realDatas[i].from,
+                  );
                   dataName.add(finalData);
-                  log('$dataName');
                 }
                 setState(() {
-                  nameOfEmployee = dataName;
+                  employee = dataName;
                 });
               }
             },
@@ -209,58 +154,79 @@ class _PresentDetailScreenState extends State<PresentDetailScreen> {
                   child: Text(state.error),
                 );
               } else if (state is AllPresentSuccess) {
-                return SingleChildScrollView(
-                  // padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  // scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                    columnSpacing: 10.w,
-                    showBottomBorder: true,
-                    columns: const [
-                      DataColumn(
-                        label: Text('No.'),
-                      ),
-                      DataColumn(
-                        label: Text('Tanggal'),
-                      ),
-                      DataColumn(
-                        label: Text('Action'),
-                      ),
-                    ],
-                    rows: List.generate(
-                      dates!.length,
-                      (index) {
-                        final format = DateFormat('EEEE, dd-MM-yyyy');
-                        final dateTime = dates?[index];
-                        final date = format.format(dateTime!);
-                        return DataRow(
-                          cells: [
-                            DataCell(
-                              Text('${index + 1}'),
+                if (employee.isNotEmpty) {
+                  return SingleChildScrollView(
+                    child: DataTable(
+                      columnSpacing: 10.w,
+                      showBottomBorder: true,
+                      columns: [
+                        DataColumn(
+                          label: Text(
+                            'No.',
+                            style: normalText.copyWith(
+                              fontWeight: FontWeight.bold,
                             ),
-                            DataCell(
-                              Text(
-                                date,
-                              ),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Nama',
+                            style: normalText.copyWith(
+                              fontWeight: FontWeight.bold,
                             ),
-                            DataCell(
-                              Padding(
-                                padding: EdgeInsets.all(10.h),
-                                child: MainButton(
-                                  onTap: () {
-                                    setState(() {
-                                      dates?.removeAt(index);
-                                    });
-                                  },
-                                  text: 'Hapus',
-                                  color: Colors.red,
-                                  width: 130.w,
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Waktu',
+                            style: normalText.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                      rows: List.generate(
+                        employee.length,
+                        (index) {
+                          final format = DateFormat('HH:mm');
+                          final data = employee[index];
+                          final timeStamp =
+                              int.parse(state.presents[index].timeStamp);
+                          final date = format.format(
+                            DateTime.fromMillisecondsSinceEpoch(
+                                timeStamp * 1000),
+                          );
+                          return DataRow(
+                            cells: [
+                              DataCell(
+                                Text(
+                                  '${index + 1}',
+                                  style: tinyText,
                                 ),
                               ),
-                            ),
-                          ],
-                        );
-                      },
+                              DataCell(
+                                Text(
+                                  data['name'],
+                                  style: tinyText,
+                                ),
+                              ),
+                              DataCell(
+                                Text(
+                                  '$date WIB',
+                                  style: tinyText,
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
                     ),
+                  );
+                }
+                return Center(
+                  child: Text(
+                    'No Present Data',
+                    style: bigTextRegular,
                   ),
                 );
               }
@@ -276,83 +242,6 @@ class _PresentDetailScreenState extends State<PresentDetailScreen> {
     );
   }
 
-  onSelectedMonth(value) {
-    setState(() {
-      selectedMonth = value;
-    });
-  }
-
-  onSelectedYear(value) {
-    setState(() {
-      selectedYear = value;
-    });
-  }
-
-  getDate(int year, int month) {
-    final startMonth = DateTime(year, month, 1, 0);
-    final startNextMonth = DateTime(year, month + 1, 0);
-    setState(
-      () {
-        dates = List.generate(
-          startNextMonth.day,
-          (index) => DateTime(year, month, index + 1),
-        );
-      },
-    );
-  }
-
-  Future<void> getExcludeDate(BuildContext context, int year, int month) async {
-    final startDate = DateTime(year, month, 1, 0);
-    final endDate = startDate.add(
-      const Duration(days: 30),
-    );
-    final List<DateTime>? picked = await showDialog<List<DateTime>>(
-      context: context,
-      builder: (context) {
-        List<DateTime> excludeDate = [];
-        return AlertDialog(
-          content: SizedBox(
-            height: 400.h,
-            child: DayPicker.multi(
-              selectedDates: excludeDate,
-              onChanged: (selectedDate) {
-                excludeDate = selectedDate;
-                log('excludeDate: $excludeDate');
-              },
-              firstDate: startDate,
-              lastDate: endDate,
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(excludeDate);
-              },
-              child: const Text('Ok'),
-            ),
-          ],
-        );
-      },
-    ).then(
-      (value) {
-        log('picked: $value');
-        if (value != null && value.isNotEmpty) {
-          setState(
-            () {
-              dates = dates
-                  ?.where(
-                    (element) => !value.contains(element),
-                  )
-                  .toList();
-            },
-          );
-          log('dates: $dates');
-        }
-        return null;
-      },
-    );
-  }
-
   changeIndex(value) {
     setState(() {
       _currentIndex = value;
@@ -361,9 +250,8 @@ class _PresentDetailScreenState extends State<PresentDetailScreen> {
 
   Future<Map<String, dynamic>> searchDataByField(
       String fieldName, dynamic value) async {
-    // Referensikan koleksi dan query berdasarkan field dan nilai
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('User') // Ganti dengan nama koleksi Anda
+        .collection('User')
         .where('address', isEqualTo: value)
         .get();
     Map<String, dynamic> data =
