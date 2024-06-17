@@ -8,53 +8,53 @@ import 'package:presensi_blockchain/feature/present/domain/repository/present_re
 class PresentRepositoryImpl implements PresentRepository {
   PresentDataPost presentDataPost = PresentDataPostImpl();
 
-  @override
-  Future<Either<Failure, String>> addPresentIn({
-    required BigInt id,
-    required BigInt day,
-    required BigInt month,
-    required BigInt year,
-  }) async {
-    try {
-      final result = await presentDataPost.addPresentIn(
-        id: id,
-        day: day,
-        month: month,
-        year: year,
-      );
-      return Right(result);
-    } catch (e) {
-      return Left(
-        PresentFailure(
-          message: e.toString(),
-        ),
-      );
-    }
-  }
+  // @override
+  // Future<Either<Failure, String>> addPresentIn({
+  //   required BigInt id,
+  //   required BigInt day,
+  //   required BigInt month,
+  //   required BigInt year,
+  // }) async {
+  //   try {
+  //     final result = await presentDataPost.addPresentIn(
+  //       id: id,
+  //       day: day,
+  //       month: month,
+  //       year: year,
+  //     );
+  //     return Right(result);
+  //   } catch (e) {
+  //     return Left(
+  //       PresentFailure(
+  //         message: e.toString(),
+  //       ),
+  //     );
+  //   }
+  // }
 
-  @override
-  Future<Either<Failure, String>> addPresentOut({
-    required BigInt id,
-    required BigInt day,
-    required BigInt month,
-    required BigInt year,
-  }) async {
-    try {
-      final result = await presentDataPost.addPresentOut(
-        id: id,
-        day: day,
-        month: month,
-        year: year,
-      );
-      return Right(result);
-    } catch (e) {
-      return Left(
-        PresentFailure(
-          message: e.toString(),
-        ),
-      );
-    }
-  }
+  // @override
+  // Future<Either<Failure, String>> addPresentOut({
+  //   required BigInt id,
+  //   required BigInt day,
+  //   required BigInt month,
+  //   required BigInt year,
+  // }) async {
+  //   try {
+  //     final result = await presentDataPost.addPresentOut(
+  //       id: id,
+  //       day: day,
+  //       month: month,
+  //       year: year,
+  //     );
+  //     return Right(result);
+  //   } catch (e) {
+  //     return Left(
+  //       PresentFailure(
+  //         message: e.toString(),
+  //       ),
+  //     );
+  //   }
+  // }
 
   @override
   Future<Either<Failure, String>> postPresent({

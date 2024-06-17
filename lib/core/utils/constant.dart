@@ -44,21 +44,23 @@ class AppConstant {
   static const String userPassword = "user_password";
 
   //Contract Detail
+  // static const String contractAddress =
+  //     "0xf9DB75dc762cD1e60ac3862dd7be757BD52fbe9a";
   static const String contractAddress =
-      "0xf9DB75dc762cD1e60ac3862dd7be757BD52fbe9a";
+      '0x75eD2fa092777Fd72512C149dC519346dBE5b778';
   static const String contractName = "Presence";
 
   //Name of Contract Function
-  static const String addPresent = "addPresent";
-  static const String getPresent = "getPresent";
-  static const String getAllPresents = "getAllPresents";
-  static const String getLastPresentId = "getLastPresentId";
-  static const String addEmployee = "addEmployee";
-  static const String inputPresent = "inputPresent";
-  static const String getEmployeePresentInMonth = "getEmployeePresentInMonth";
-  static const String getEmployeePresentOutMonth = "getEmployeePresentOutMonth";
-  static const String getEmployeePresentInYear = "getEmployeePresentInYear";
-  static const String getEmployeePresentOutYear = "getEmployeePresentOutYear";
+  // static const String addPresent = "addPresent";
+  // static const String getPresent = "getPresent";
+  // static const String getAllPresents = "getAllPresents";
+  // static const String getLastPresentId = "getLastPresentId";
+  // static const String addEmployee = "addEmployee";
+  // static const String inputPresent = "inputPresent";
+  // static const String getEmployeePresentInMonth = "getEmployeePresentInMonth";
+  // static const String getEmployeePresentOutMonth = "getEmployeePresentOutMonth";
+  // static const String getEmployeePresentInYear = "getEmployeePresentInYear";
+  // static const String getEmployeePresentOutYear = "getEmployeePresentOutYear";
 
   //Storage key
   static const String password = "password";
@@ -67,4 +69,11 @@ class AppConstant {
   static const String privateKey = "privateKey";
   static const String recoveryPhrase = "recoveryPhrase";
   static const String refreshToken = "refreshToken";
+}
+
+class AppFunction {
+  static const String inputPresent = 'inputPresent';
+  static const String getPresentTimes = 'getPresentTimes';
+  static const String getPresentByTime = 'getPresentByTime';
+  static const String getPaginatedPresents = 'getPaginatedPresents';
 }

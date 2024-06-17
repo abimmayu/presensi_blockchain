@@ -15,7 +15,7 @@ import 'package:presensi_blockchain/core/widget/list_user_settings.dart';
 import 'package:presensi_blockchain/feature/login/presentation/bloc/auth_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:presensi_blockchain/feature/present/presentation/bloc/present_bloc.dart';
-import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user_bloc.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user/user_bloc.dart';
 
 class UserSettingsScreen extends StatefulWidget {
   const UserSettingsScreen({super.key});
@@ -205,41 +205,53 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                               icon: Icons.person_add,
                               title: "Add an Account",
                               action: () {
-                                context
-                                    .pushNamed(AppRoute.addAccountScreen.name);
+                                context.pushNamed(
+                                  AppRoute.addAccountScreen.name,
+                                );
                               },
                             )
                           : const SizedBox.shrink(),
                       state.user["role"] == "admin"
                           ? ListUserSettingsWidget(
-                              icon: Icons.person_add,
-                              title: "Generate today's present",
+                              icon: Icons.library_books,
+                              title: "Present Data",
                               action: () {
-                                context.read<PresentBloc>().add(
-                                      PresentIn(
-                                        BigInt.from(
-                                          today,
-                                        ),
-                                        BigInt.from(DateTime.now().day),
-                                        BigInt.from(DateTime.now().month),
-                                        BigInt.from(DateTime.now().year),
-                                        "Masuk",
-                                      ),
-                                    );
-                                // service.sendBalance();
-                                // context.read<PresentBloc>().add(
-                                //       PresentOut(
-                                //         BigInt.from(DateTime.now()
-                                //             .millisecondsSinceEpoch),
-                                //         BigInt.from(DateTime.now().day),
-                                //         BigInt.from(DateTime.now().month),
-                                //         BigInt.from(DateTime.now().year),
-                                //         "Pulang",
-                                //       ),
-                                //     );
+                                context.pushNamed(
+                                  AppRoute.presentCollectedScreen.name,
+                                );
                               },
                             )
                           : const SizedBox.shrink(),
+                      // state.user["role"] == "admin"
+                      //     ? ListUserSettingsWidget(
+                      //         icon: Icons.person_add,
+                      //         title: "Generate today's present",
+                      //         action: () {
+                      //           context.read<PresentBloc>().add(
+                      //                 PresentIn(
+                      //                   BigInt.from(
+                      //                     today,
+                      //                   ),
+                      //                   BigInt.from(DateTime.now().day),
+                      //                   BigInt.from(DateTime.now().month),
+                      //                   BigInt.from(DateTime.now().year),
+                      //                   "Masuk",
+                      //                 ),
+                      //               );
+                      // service.sendBalance();
+                      // context.read<PresentBloc>().add(
+                      //       PresentOut(
+                      //         BigInt.from(DateTime.now()
+                      //             .millisecondsSinceEpoch),
+                      //         BigInt.from(DateTime.now().day),
+                      //         BigInt.from(DateTime.now().month),
+                      //         BigInt.from(DateTime.now().year),
+                      //         "Pulang",
+                      //       ),
+                      //     );
+                      //     },
+                      //   )
+                      // : const SizedBox.shrink(),
                       ListUserSettingsWidget(
                         icon: Icons.key,
                         title: "Change Password",

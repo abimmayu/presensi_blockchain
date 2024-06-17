@@ -11,13 +11,14 @@ import 'package:presensi_blockchain/feature/present/presentation/pages/present_s
 import 'package:presensi_blockchain/feature/present/presentation/pages/presented_screen.dart';
 import 'package:presensi_blockchain/feature/present/presentation/pages/present_screen.dart';
 import 'package:presensi_blockchain/feature/splash/splash_screen.dart';
-import 'package:presensi_blockchain/feature/user_settings/presentation/pages/add_account_screen.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/pages/admin_menu/account_setting/add_account_screen.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/pages/admin_menu/present_collected/present_collected_screen.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/pages/change_password_screen.dart';
-import 'package:presensi_blockchain/feature/user_settings/presentation/pages/copy_private_key_screen.dart';
-import 'package:presensi_blockchain/feature/user_settings/presentation/pages/copy_recovery_phrase_screen.dart';
-import 'package:presensi_blockchain/feature/user_settings/presentation/pages/profile_settings_screen.dart';
-import 'package:presensi_blockchain/feature/user_settings/presentation/pages/see_private_key_screen.dart';
-import 'package:presensi_blockchain/feature/user_settings/presentation/pages/see_recovery_phrase_screen.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/pages/profile_settings/private_key/copy_private_key_screen.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/pages/profile_settings/recovery_phrase/copy_recovery_phrase_screen.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/pages/profile_settings/profile_settings_screen.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/pages/profile_settings/private_key/see_private_key_screen.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/pages/profile_settings/recovery_phrase/see_recovery_phrase_screen.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/pages/user_settings_screen.dart';
 
 enum AppRoute {
@@ -40,8 +41,8 @@ enum AppRoute {
   copyRecoveryPhraseScreen,
   importWalletScreen,
   changePasswordScreen,
-  adminScreen,
   accountSettingsScreen,
+  adminScreen,
   addAccountScreen,
   editAccountScreen,
   presentCollectedScreen,
@@ -158,47 +159,49 @@ final GoRouter router = GoRouter(
           builder: (context, state) {
             return const ProfileSettingsScreen();
           },
-        ),
-        GoRoute(
-          path: 'see-private-key',
-          name: AppRoute.seePrivateKeyScreen.name,
-          builder: (context, state) {
-            return const PrivateKeyScreen();
-          },
           routes: [
             GoRoute(
-              path: 'copy-private-key',
-              name: AppRoute.copyPrivateKeyScreen.name,
+              path: 'see-private-key',
+              name: AppRoute.seePrivateKeyScreen.name,
               builder: (context, state) {
-                return const CopyPrivateKeyScreen();
+                return const PrivateKeyScreen();
               },
-            )
-          ],
-        ),
-        GoRoute(
-          path: 'see-recovery-phrase',
-          name: AppRoute.seeRecoveryPhraseScreen.name,
-          builder: (context, state) {
-            return const RecoveryPhraseScreen();
-          },
-          routes: [
+              routes: [
+                GoRoute(
+                  path: 'copy-private-key',
+                  name: AppRoute.copyPrivateKeyScreen.name,
+                  builder: (context, state) {
+                    return const CopyPrivateKeyScreen();
+                  },
+                )
+              ],
+            ),
             GoRoute(
-              path: 'copy-recovery-phrase',
-              name: AppRoute.copyRecoveryPhraseScreen.name,
+              path: 'see-recovery-phrase',
+              name: AppRoute.seeRecoveryPhraseScreen.name,
               builder: (context, state) {
-                return const CopyRecoveryPhraseScreen();
+                return const RecoveryPhraseScreen();
               },
+              routes: [
+                GoRoute(
+                  path: 'copy-recovery-phrase',
+                  name: AppRoute.copyRecoveryPhraseScreen.name,
+                  builder: (context, state) {
+                    return const CopyRecoveryPhraseScreen();
+                  },
+                ),
+              ],
             ),
           ],
         ),
-        GoRoute(
-          path: 'change-password',
-          name: AppRoute.changePasswordScreen.name,
-          builder: (context, state) {
-            return const ChangePasswordScreen();
-          },
-        ),
       ],
+    ),
+    GoRoute(
+      path: '/change-password',
+      name: AppRoute.changePasswordScreen.name,
+      builder: (context, state) {
+        return const ChangePasswordScreen();
+      },
     ),
     GoRoute(
       path: '/admin-dashboard',
@@ -206,36 +209,38 @@ final GoRouter router = GoRouter(
       builder: (context, state) {
         return Container();
       },
-    ),
-    GoRoute(
-      path: '/account-settings',
-      name: AppRoute.accountSettingsScreen.name,
-      builder: (context, state) {
-        return Container();
-      },
       routes: [
         GoRoute(
-          path: 'add-account',
-          name: AppRoute.addAccountScreen.name,
-          builder: (context, state) {
-            return const AddAccountScreen();
-          },
-        ),
-        GoRoute(
-          path: 'edit-account',
-          name: AppRoute.editAccountScreen.name,
+          path: 'account-settings',
+          name: AppRoute.accountSettingsScreen.name,
           builder: (context, state) {
             return Container();
           },
+          routes: [
+            GoRoute(
+              path: 'add-account',
+              name: AppRoute.addAccountScreen.name,
+              builder: (context, state) {
+                return const AddAccountScreen();
+              },
+            ),
+            GoRoute(
+              path: 'edit-account',
+              name: AppRoute.editAccountScreen.name,
+              builder: (context, state) {
+                return Container();
+              },
+            ),
+          ],
+        ),
+        GoRoute(
+          path: 'present-collected',
+          name: AppRoute.presentCollectedScreen.name,
+          builder: (context, state) {
+            return const PresentCollectedScreen();
+          },
         ),
       ],
-    ),
-    GoRoute(
-      path: '/present-collected',
-      name: AppRoute.presentCollectedScreen.name,
-      builder: (context, state) {
-        return Container();
-      },
     ),
   ],
 );

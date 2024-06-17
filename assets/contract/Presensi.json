@@ -68,9 +68,27 @@
 				"type": "uint256"
 			},
 			{
-				"internalType": "uint256",
+				"internalType": "string",
 				"name": "id_employee",
+				"type": "string"
+			}
+		],
+		"name": "inputPresent",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id_presents",
 				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "id_employee",
+				"type": "string"
 			}
 		],
 		"name": "checkEmployeesIdonPresent",
@@ -116,9 +134,9 @@
 						"type": "string"
 					},
 					{
-						"internalType": "uint256[]",
+						"internalType": "string[]",
 						"name": "employeesId",
-						"type": "uint256[]"
+						"type": "string[]"
 					}
 				],
 				"internalType": "struct Presence.Presents[]",
@@ -285,24 +303,6 @@
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "id_presents",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "id_employee",
-				"type": "uint256"
-			}
-		],
-		"name": "inputPresent",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ]

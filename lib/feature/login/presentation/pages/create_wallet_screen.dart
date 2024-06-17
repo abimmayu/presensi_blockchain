@@ -10,7 +10,7 @@ import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/utils/secure_storage.dart';
 import 'package:presensi_blockchain/core/widget/button.dart';
 import 'package:presensi_blockchain/feature/login/presentation/bloc/auth_bloc.dart';
-import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user_bloc.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user/user_bloc.dart';
 import 'package:svg_flutter/svg_flutter.dart';
 
 class CreateWalletScreen extends StatefulWidget {
@@ -42,7 +42,8 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
             context.read<UserBloc>().add(
                   PostPublicKey(
                     id,
-                    const {
+                    {
+                      "address": state.wallet.privateKey.address.hex,
                       "public_key": true,
                     },
                     context.pushReplacementNamed(AppRoute.presentScreen.name),

@@ -14,7 +14,7 @@ import 'package:presensi_blockchain/core/widget/button.dart';
 import 'package:presensi_blockchain/core/widget/custom_app_bar.dart';
 import 'package:presensi_blockchain/core/widget/pin_modal.dart';
 import 'package:presensi_blockchain/feature/present/presentation/bloc/present_bloc.dart';
-import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user_bloc.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user/user_bloc.dart';
 
 class PresentedScreenParam {
   Position position;

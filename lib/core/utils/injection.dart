@@ -20,7 +20,14 @@ import 'package:presensi_blockchain/feature/present/domain/usecase/present_in_us
 import 'package:presensi_blockchain/feature/present/domain/usecase/present_out_usecase.dart';
 import 'package:presensi_blockchain/feature/present/presentation/bloc/present_bloc.dart';
 import 'package:presensi_blockchain/feature/login/domain/usecases/add_data_user_usecase.dart';
-import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user_bloc.dart';
+import 'package:presensi_blockchain/feature/user_settings/data/datasource/all_present_data_source.dart';
+import 'package:presensi_blockchain/feature/user_settings/data/repository/all_present_repository_impl.dart';
+import 'package:presensi_blockchain/feature/user_settings/domain/repository/all_present_repository.dart';
+import 'package:presensi_blockchain/feature/user_settings/domain/usecase/all_present_usecase.dart';
+import 'package:presensi_blockchain/feature/user_settings/domain/usecase/get_holiday_usecase.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/get_all_present/get_present_bloc.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/get_holiday/get_holiday_bloc.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user/user_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 GetIt locator = GetIt.instance;
@@ -51,7 +58,17 @@ init() async {
     () => PresentBloc(
       locator(),
       locator(),
+      // locator(),
+      // locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => AllPresentBloc(
       locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => HolidayBloc(
       locator(),
     ),
   );
@@ -62,6 +79,9 @@ init() async {
       locator(),
     ),
   );
+  locator.registerLazySingleton<AllPresentRepository>(
+    () => AllPresentRepositoryImpl(),
+  );
 
   //Data Source
   locator.registerLazySingleton<AuthDataSource>(
@@ -69,6 +89,9 @@ init() async {
       preferences: locator(),
       storage: locator(),
     ),
+  );
+  locator.registerLazySingleton<AllPresentDataSource>(
+    () => AllPresentDataSourceImpl(),
   );
 
   //Usecase locator
@@ -114,18 +137,22 @@ init() async {
     () => CheckCorrectLocationUsecase(),
   );
   locator.registerLazySingleton(
-    () => PresentInUsecase(),
-  );
-  locator.registerLazySingleton(
-    () => PresentOutUsecase(),
-  );
-  locator.registerLazySingleton(
     () => InputPresentUsecase(),
   );
 
   //3. User Usecase
   locator.registerLazySingleton(
     () => AddDataUserUsecase(
+      locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => AllPresentUsecase(
+      locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => GetHolidayUsecase(
       locator(),
     ),
   );

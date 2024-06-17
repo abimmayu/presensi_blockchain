@@ -15,44 +15,44 @@ part 'present_state.dart';
 
 class PresentBloc extends Bloc<PresentEvent, PresentState> {
   final CheckCorrectLocationUsecase checkCorrectLocationUsecase;
-  final PresentInUsecase presentInUsecase;
-  final PresentOutUsecase presentOutUsecase;
+  // final PresentInUsecase presentInUsecase;
+  // final PresentOutUsecase presentOutUsecase;
   final InputPresentUsecase inputPresentUsecase;
   final HandleLocationPermissionUsecase handleLocationPermissionUsecase =
       HandleLocationPermissionUsecase();
 
   PresentBloc(
     this.checkCorrectLocationUsecase,
-    this.presentInUsecase,
-    this.presentOutUsecase,
+    // this.presentInUsecase,
+    // this.presentOutUsecase,
     this.inputPresentUsecase,
   ) : super(
           PresentLoading(),
         ) {
-    on<PresentIn>(
-      (event, emit) async {
-        return await presentIn(
-          event.id,
-          event.day,
-          event.month,
-          event.year,
-          event.variety,
-          emit,
-        );
-      },
-    );
-    on<PresentOut>(
-      (event, emit) async {
-        return await presentOut(
-          event.id,
-          event.day,
-          event.month,
-          event.year,
-          event.variety,
-          emit,
-        );
-      },
-    );
+    // on<PresentIn>(
+    //   (event, emit) async {
+    //     return await presentIn(
+    //       event.id,
+    //       event.day,
+    //       event.month,
+    //       event.year,
+    //       event.variety,
+    //       emit,
+    //     );
+    //   },
+    // );
+    // on<PresentOut>(
+    //   (event, emit) async {
+    //     return await presentOut(
+    //       event.id,
+    //       event.day,
+    //       event.month,
+    //       event.year,
+    //       event.variety,
+    //       emit,
+    //     );
+    //   },
+    // );
     on<CheckLocation>(
       (event, emit) async {
         return await checkLocation(
@@ -77,63 +77,63 @@ class PresentBloc extends Bloc<PresentEvent, PresentState> {
     );
   }
 
-  Future<void> presentIn(
-    BigInt id,
-    BigInt day,
-    BigInt month,
-    BigInt year,
-    String variety,
-    Emitter<PresentState> emit,
-  ) async {
-    log("Fungsi presentIn berjalan!");
-    final result = await presentInUsecase.execute(
-      id: id,
-      day: day,
-      month: month,
-      year: year,
-    );
-    log(result.toString());
+  // Future<void> presentIn(
+  //   BigInt id,
+  //   BigInt day,
+  //   BigInt month,
+  //   BigInt year,
+  //   String variety,
+  //   Emitter<PresentState> emit,
+  // ) async {
+  //   log("Fungsi presentIn berjalan!");
+  //   final result = await presentInUsecase.execute(
+  //     id: id,
+  //     day: day,
+  //     month: month,
+  //     year: year,
+  //   );
+  //   log(result.toString());
 
-    result.fold(
-      (l) {
-        log(l.message!);
-        emit(
-          PresentError(l.message!),
-        );
-      },
-      (r) {
-        log(r);
-        emit(
-          PresentSuccess(),
-        );
-      },
-    );
-  }
+  //   result.fold(
+  //     (l) {
+  //       log(l.message!);
+  //       emit(
+  //         PresentError(l.message!),
+  //       );
+  //     },
+  //     (r) {
+  //       log(r);
+  //       emit(
+  //         PresentSuccess(),
+  //       );
+  //     },
+  //   );
+  // }
 
-  Future<void> presentOut(
-    BigInt id,
-    BigInt day,
-    BigInt month,
-    BigInt year,
-    String variety,
-    Emitter<PresentState> emit,
-  ) async {
-    final result = await presentOutUsecase.execute(
-      id: id,
-      day: day,
-      month: month,
-      year: year,
-    );
+  // Future<void> presentOut(
+  //   BigInt id,
+  //   BigInt day,
+  //   BigInt month,
+  //   BigInt year,
+  //   String variety,
+  //   Emitter<PresentState> emit,
+  // ) async {
+  //   final result = await presentOutUsecase.execute(
+  //     id: id,
+  //     day: day,
+  //     month: month,
+  //     year: year,
+  //   );
 
-    result.fold(
-      (l) => emit(
-        PresentError(l.message!),
-      ),
-      (r) => emit(
-        PresentSuccess(),
-      ),
-    );
-  }
+  //   result.fold(
+  //     (l) => emit(
+  //       PresentError(l.message!),
+  //     ),
+  //     (r) => emit(
+  //       PresentSuccess(),
+  //     ),
+  //   );
+  // }
 
   Future<void> checkLocation(
     LatLng latLng,

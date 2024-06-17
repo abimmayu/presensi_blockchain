@@ -12,7 +12,7 @@ import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/routing/router.dart';
 import 'package:presensi_blockchain/core/widget/button.dart';
 import 'package:presensi_blockchain/feature/login/presentation/bloc/auth_bloc.dart';
-import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user_bloc.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user/user_bloc.dart';
 import 'package:svg_flutter/svg.dart';
 
 class LoginScreen extends StatefulWidget {

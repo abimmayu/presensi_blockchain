@@ -8,7 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:presensi_blockchain/core/routing/router.dart';
 import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/utils/secure_storage.dart';
-import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user_bloc.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user/user_bloc.dart';
 
 class IntializeUser extends StatefulWidget {
   const IntializeUser({super.key});

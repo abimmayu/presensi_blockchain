@@ -10,29 +10,15 @@ import 'package:presensi_blockchain/feature/dashboard/presentation/bloc/home_blo
 import 'package:presensi_blockchain/feature/login/presentation/bloc/auth_bloc.dart';
 import 'package:presensi_blockchain/feature/present/data/data_post/present_data_post.dart';
 import 'package:presensi_blockchain/feature/present/presentation/bloc/present_bloc.dart';
-import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user_bloc.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/get_all_present/get_present_bloc.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/get_holiday/get_holiday_bloc.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user/user_bloc.dart';
 import 'package:presensi_blockchain/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-  await AndroidAlarmManager.initialize();
-  await AndroidAlarmManager.periodic(
-    const Duration(hours: 24),
-    0,
-    () => addPresent(),
-    startAt: DateTime(
-      DateTime.now().year,
-      DateTime.now().month,
-      DateTime.now().day,
-      7,
-      0,
-    ),
-    exact: true,
-    wakeup: true,
   );
   await FirebaseAppCheck.instance.activate(
     webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
@@ -74,6 +60,12 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<PresentBloc>(
           create: (context) => di.locator<PresentBloc>(),
         ),
+        BlocProvider<AllPresentBloc>(
+          create: (context) => di.locator<AllPresentBloc>(),
+        ),
+        BlocProvider<HolidayBloc>(
+          create: (context) => di.locator<HolidayBloc>(),
+        ),
       ],
       child: ScreenUtilInit(
         designSize: const Size(390, 844),
@@ -88,31 +80,4 @@ class _MyAppState extends State<MyApp> {
       ),
     );
   }
-}
-
-void addPresent() async {
-  PresentDataPost presentDataPost = PresentDataPostImpl();
-  final now = DateTime.now();
-  final today = DateTime(
-    DateTime.now().year,
-    DateTime.now().month,
-    DateTime.now().day,
-    7,
-    0,
-  ).millisecondsSinceEpoch;
-
-  Future.wait({
-    presentDataPost.addPresentIn(
-      id: BigInt.from(today),
-      day: BigInt.from(now.day),
-      month: BigInt.from(now.month),
-      year: BigInt.from(now.year),
-    ),
-    presentDataPost.addPresentOut(
-      id: BigInt.from(now.millisecondsSinceEpoch),
-      day: BigInt.from(now.day),
-      month: BigInt.from(now.month),
-      year: BigInt.from(now.year),
-    ),
-  });
 }

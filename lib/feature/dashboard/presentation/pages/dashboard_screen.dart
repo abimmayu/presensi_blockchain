@@ -11,7 +11,7 @@ import 'package:presensi_blockchain/feature/dashboard/domain/present_in_year.dar
 import 'package:presensi_blockchain/feature/dashboard/presentation/bloc/home_bloc.dart';
 import 'package:presensi_blockchain/feature/dashboard/presentation/pages/present_charts.dart';
 import 'package:svg_flutter/svg.dart';
-import 'package:charts_flutter_new/flutter.dart' as charts;
+// import 'package:charts_flutter_new/flutter.dart' as charts;
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -460,9 +460,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 SizedBox(
                   height: ScreenUtil().setHeight(10),
                 ),
-                PresentChart(
-                  data: data,
-                ),
+                // PresentChart(
+                //   data: data,
+                // ),
               ],
             ),
           ],
