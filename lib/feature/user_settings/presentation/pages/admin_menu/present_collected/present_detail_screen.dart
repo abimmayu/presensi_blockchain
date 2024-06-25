@@ -138,7 +138,6 @@ class _PresentDetailScreenState extends State<PresentDetailScreen> {
                 final List<Map<String, dynamic>> dataName = [];
                 for (var i = 0; i < realDatas.length; i++) {
                   final finalData = await searchDataByField(
-                    'address',
                     realDatas[i].from,
                   );
                   dataName.add(finalData);
@@ -249,14 +248,22 @@ class _PresentDetailScreenState extends State<PresentDetailScreen> {
   }
 
   Future<Map<String, dynamic>> searchDataByField(
-      String fieldName, dynamic value) async {
+    dynamic value,
+  ) async {
+    log("value: $value");
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('User')
         .where('address', isEqualTo: value)
         .get();
-    Map<String, dynamic> data =
-        querySnapshot.docs[0].data() as Map<String, dynamic>;
-    log('data: $data');
-    return data;
+    log("querySnapshot: ${querySnapshot.docs}");
+    if (querySnapshot.docs.isNotEmpty) {
+      Map<String, dynamic> data =
+          querySnapshot.docs[0].data() as Map<String, dynamic>;
+      log('data: $data');
+      return data;
+    }
+    return {
+      "name": value,
+    };
   }
 }

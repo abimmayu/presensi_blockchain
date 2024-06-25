@@ -12,6 +12,7 @@ import 'package:presensi_blockchain/core/routing/router.dart';
 import 'package:presensi_blockchain/core/utils/secure_storage.dart';
 import 'package:presensi_blockchain/core/widget/custom_nav_bar.dart';
 import 'package:presensi_blockchain/core/widget/list_user_settings.dart';
+import 'package:presensi_blockchain/feature/login/domain/entities/user_data.dart';
 import 'package:presensi_blockchain/feature/login/presentation/bloc/auth_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:presensi_blockchain/feature/present/presentation/bloc/present_bloc.dart';
@@ -102,7 +103,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                     child: BlocBuilder<UserBloc, UserState>(
                       builder: (context, state) {
                         if (state is UserLoaded) {
-                          data = state.user;
+                          UserData data = state.user;
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -110,20 +111,20 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                               SizedBox(
                                 height: ScreenUtil().setHeight(40),
                                 child: Text(
-                                  data["name"],
+                                  data.name!,
                                   style: normalText.copyWith(color: whiteColor),
                                 ),
                               ),
                               Text(
-                                data["nip"] is double
-                                    ? "${(data["nip"] as double).toInt()}"
-                                    : "${data["nip"]}",
+                                data.nip is double
+                                    ? "${(data.nip as double).toInt()}"
+                                    : "${data.nip}",
                                 style: tinyText.copyWith(
                                   color: whiteColor,
                                 ),
                               ),
                               Text(
-                                data["occupation"],
+                                data.occupation!,
                                 style: tinyText.copyWith(
                                   color: whiteColor,
                                 ),
@@ -200,7 +201,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                           context.pushNamed(AppRoute.profileSettingScreen.name);
                         },
                       ),
-                      state.user["role"] == "admin"
+                      state.user.role == "admin"
                           ? ListUserSettingsWidget(
                               icon: Icons.person_add,
                               title: "Add an Account",
@@ -211,7 +212,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                               },
                             )
                           : const SizedBox.shrink(),
-                      state.user["role"] == "admin"
+                      state.user.role == "admin"
                           ? ListUserSettingsWidget(
                               icon: Icons.library_books,
                               title: "Present Data",

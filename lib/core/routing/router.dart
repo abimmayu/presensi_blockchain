@@ -5,6 +5,7 @@ import 'package:presensi_blockchain/feature/login/presentation/pages/check_user_
 import 'package:presensi_blockchain/feature/login/presentation/pages/create_wallet_screen.dart';
 import 'package:presensi_blockchain/feature/login/presentation/pages/import_wallet_screen.dart';
 import 'package:presensi_blockchain/feature/login/presentation/pages/login_screen.dart';
+import 'package:presensi_blockchain/feature/login/presentation/pages/reminder_recovery_phrase_screen.dart';
 import 'package:presensi_blockchain/feature/present/presentation/pages/day_off_present_screen.dart';
 import 'package:presensi_blockchain/feature/present/presentation/pages/home_present_screen.dart';
 import 'package:presensi_blockchain/feature/present/presentation/pages/present_success_screen.dart';
@@ -27,6 +28,7 @@ enum AppRoute {
   loginScreen,
   checkWalletScreen,
   createWalletScreen,
+  doneCreateWallet,
   dashboardScreen,
   presentScreen,
   presentedScreen,
@@ -74,21 +76,32 @@ final GoRouter router = GoRouter(
           builder: (context, state) {
             return const IntializeUser();
           },
+          routes: [
+            GoRoute(
+              path: 'create-wallet-1',
+              name: AppRoute.createWalletScreen.name,
+              builder: (context, state) {
+                return const CreateWalletScreen();
+              },
+            ),
+            GoRoute(
+              path: 'import-wallet',
+              name: AppRoute.importWalletScreen.name,
+              builder: (context, state) {
+                return const ImportWalletScreen();
+              },
+              routes: [
+                GoRoute(
+                  path: 'done-create-wallet',
+                  name: AppRoute.doneCreateWallet.name,
+                  builder: (context, state) {
+                    return const DoneCreateWalletScreen();
+                  },
+                ),
+              ],
+            ),
+          ],
         ),
-        GoRoute(
-          path: 'create-wallet-1',
-          name: AppRoute.createWalletScreen.name,
-          builder: (context, state) {
-            return const CreateWalletScreen();
-          },
-        ),
-        GoRoute(
-          path: 'import-wallet',
-          name: AppRoute.importWalletScreen.name,
-          builder: (context, state) {
-            return const ImportWalletScreen();
-          },
-        )
       ],
     ),
     GoRoute(

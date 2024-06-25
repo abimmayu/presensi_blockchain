@@ -6,17 +6,12 @@ import 'package:bip39/bip39.dart' as bip39;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pointycastle/digests/sha512.dart';
-import 'package:pointycastle/key_derivators/pbkdf2.dart';
-import 'package:pointycastle/macs/hmac.dart';
-import 'package:pointycastle/pointycastle.dart';
 import 'package:presensi_blockchain/core/service/firebase_firestore.dart';
 import 'package:presensi_blockchain/core/service/firebase_service.dart';
 import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/utils/preferences.dart';
 import 'package:presensi_blockchain/core/utils/secure_storage.dart';
 import 'package:web3dart/credentials.dart';
-import 'package:web3dart/crypto.dart' as crypto;
 import 'package:web3dart/web3dart.dart';
 
 abstract class AuthDataSource {

@@ -3,13 +3,14 @@ import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:presensi_blockchain/core/error/failure.dart';
+import 'package:presensi_blockchain/feature/login/domain/entities/user_data.dart';
 import 'package:web3dart/credentials.dart';
 
 abstract class AuthRepository {
   Future<Either<Failure, User?>> login(String email, String password);
   Future<Either<Failure, User?>> signUp(String email, String password);
   Future<Either<Failure, void>> logOut();
-  Future<Either<Failure, DocumentSnapshot>> getDataUser({
+  Future<Either<Failure, UserData>> getDataUser({
     required String id,
     String collection = "User",
   });

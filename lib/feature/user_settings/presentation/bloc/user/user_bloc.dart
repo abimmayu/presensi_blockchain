@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:presensi_blockchain/feature/login/domain/entities/user_data.dart';
 import 'package:presensi_blockchain/feature/login/domain/usecases/get_data_user_usecase.dart';
 import 'package:presensi_blockchain/feature/login/domain/usecases/update_data_user_usecase.dart';
 
@@ -51,7 +52,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     final result = await getDataUserUsecase.execute(id);
 
     result.fold(
-      (l) => emit(UserError(l.message!)),
+      (l) => emit(
+        UserError(l.message!),
+      ),
       (r) {
         dataUser = r;
         log(r.toString());

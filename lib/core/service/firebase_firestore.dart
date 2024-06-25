@@ -17,7 +17,7 @@ class FireStore {
         );
     Logger().i(document);
     final DocumentSnapshot result = await document.get();
-    Logger().d(result);
+    Logger().d(result.data());
     return result;
   }
 

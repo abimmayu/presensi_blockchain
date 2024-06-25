@@ -20,14 +20,16 @@ class IntializeUser extends StatefulWidget {
 class _IntializeUserState extends State<IntializeUser> {
   final id = FirebaseAuth.instance.currentUser!.uid;
   String? privateKey;
+  String? address;
 
   @override
   void initState() {
     context.read<UserBloc>().add(
           GetUserData(id),
         );
-    log(id);
+    log("id: $id");
     getPrivateKey();
+    getAddress();
     super.initState();
   }
 
@@ -35,16 +37,32 @@ class _IntializeUserState extends State<IntializeUser> {
     privateKey = await SecureStorage().readData(key: AppConstant.privateKey);
   }
 
+  getAddress() async {
+    final localAddress =
+        await SecureStorage().readData(key: AppConstant.address);
+
+    setState(
+      () {
+        address = localAddress;
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<UserBloc, UserState>(
       listener: (context, state) {
         if (state is UserLoaded) {
-          if (state.user["public_key"] as bool) {
-            if (privateKey == null) {
-              context.pushReplacementNamed(AppRoute.importWalletScreen.name);
+          log("data user: ${state.user}");
+          if (state.user.publicKey != null) {
+            if (state.user.publicKey == true) {
+              if (state.user.address == address) {
+                context.pushReplacementNamed(AppRoute.presentScreen.name);
+              } else {
+                context.pushReplacementNamed(AppRoute.importWalletScreen.name);
+              }
             } else {
-              context.pushReplacementNamed(AppRoute.presentScreen.name);
+              context.pushReplacementNamed(AppRoute.createWalletScreen.name);
             }
           } else {
             context.pushReplacementNamed(AppRoute.createWalletScreen.name);

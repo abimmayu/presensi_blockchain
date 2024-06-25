@@ -65,7 +65,7 @@ class PinInputModal extends StatelessWidget {
                         onSubmitted: onSubmitted,
                         obscureText: true,
                         decoration: const InputDecoration.collapsed(
-                          hintText: "Type your password",
+                          hintText: "Type your pin",
                         ),
                       ),
                     ),

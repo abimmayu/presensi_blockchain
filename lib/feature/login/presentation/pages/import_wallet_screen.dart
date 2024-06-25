@@ -1,9 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:presensi_blockchain/core/utils/constant.dart';
-import 'package:presensi_blockchain/feature/login/presentation/widget/import_private_key.dart';
 import 'package:presensi_blockchain/feature/login/presentation/widget/import_recovery_phrase.dart';
 
 class ImportWalletScreen extends StatefulWidget {
@@ -19,7 +16,6 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
   int index = 0;
 
   final List<Widget> widgets = [
-    ImportPrivateKeyWidget(),
     const ImportRecoveryPhraseWidget(),
   ];
 
@@ -45,24 +41,6 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
             ),
             SizedBox(
               height: 20.h,
-            ),
-            DropdownButton(
-              items: const [
-                DropdownMenuItem(
-                  value: 0,
-                  child: Text("Import Private Key"),
-                ),
-                DropdownMenuItem(
-                  value: 1,
-                  child: Text("Import Recover Phrase"),
-                ),
-              ],
-              value: index,
-              onChanged: (value) {
-                setState(() {
-                  index = value!;
-                });
-              },
             ),
             Expanded(
               child: widgets[index],

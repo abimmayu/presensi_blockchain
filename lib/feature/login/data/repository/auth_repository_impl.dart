@@ -8,6 +8,7 @@ import 'package:presensi_blockchain/core/error/failure.dart';
 import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/utils/secure_storage.dart';
 import 'package:presensi_blockchain/feature/login/data/data_source/login_data_source.dart';
+import 'package:presensi_blockchain/feature/login/domain/entities/user_data.dart';
 import 'package:presensi_blockchain/feature/login/domain/repository/auth_repository.dart';
 import 'package:web3dart/credentials.dart';
 
@@ -78,13 +79,15 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, DocumentSnapshot>> getDataUser({
+  Future<Either<Failure, UserData>> getDataUser({
     required String id,
     String collection = "User",
   }) async {
     try {
       final result = await auth.getDataUser(id: id);
-      return Right(result);
+      return Right(
+        UserData.fromJson(result),
+      );
     } catch (e) {
       return Left(
         LoginFailure(

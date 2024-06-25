@@ -46,7 +46,8 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
                       "address": state.wallet.privateKey.address.hex,
                       "public_key": true,
                     },
-                    context.pushReplacementNamed(AppRoute.presentScreen.name),
+                    context
+                        .pushReplacementNamed(AppRoute.doneCreateWallet.name),
                   ),
                 );
           } else if (state is AuthError) {
@@ -93,7 +94,7 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
                             obscureText: true,
                             controller: controller,
                             decoration: const InputDecoration.collapsed(
-                              hintText: "Type your password",
+                              hintText: "Type your pin",
                             ),
                             maxLength: 6,
                             keyboardType: TextInputType.phone,

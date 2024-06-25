@@ -47,12 +47,6 @@ class _PresentScreenState extends State<PresentScreen> {
       bottomNavigationBar: const CustomNavBar(
         currentIndex: 0,
       ),
-      // appBar: const PreferredSize(
-      //   preferredSize: Size.fromHeight(kToolbarHeight),
-      //   child: CustomAppBar(
-      //     title: 'Present',
-      //   ),
-      // ),
       body: RefreshIndicator(
         onRefresh: () => getLocation(),
         child: ListView(
@@ -69,10 +63,13 @@ class _PresentScreenState extends State<PresentScreen> {
               },
               builder: (context, state) {
                 if (state is PresentLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(
-                      color: mainColor,
-                    ),
+                  return const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(
+                        color: mainColor,
+                      ),
+                    ],
                   );
                 } else if (state is PresentError) {
                   return Center(

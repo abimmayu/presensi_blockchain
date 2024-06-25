@@ -61,7 +61,7 @@ class _ImportRecoveryPhraseWidgetState
       },
       child: Container(
         padding: EdgeInsets.all(8.w),
-        child: Column(
+        child: ListView(
           children: [
             Container(
               height: 250.h,

@@ -70,21 +70,23 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return BlocListener<UserBloc, UserState>(
       listener: (context, state) {
+        log(state.toString());
         if (state is UserLoaded) {
-          if (state.user['device_id'] == null ||
-              state.user['device_id'] == '') {
+          log("User data: ${state.user}");
+          if (state.user.deviceId == null || state.user.deviceId == '') {
             context.read<UserBloc>().add(
                   PostPublicKey(
                     userId.toString(),
                     {
                       "device_id": deviceId,
                     },
-                    null,
+                    context
+                        .pushReplacementNamed(AppRoute.checkWalletScreen.name),
                   ),
                 );
-          } else if (state.user['device_id'] == deviceId) {
+          } else if (state.user.deviceId == deviceId) {
             context.pushReplacementNamed(AppRoute.checkWalletScreen.name);
-          } else if (state.user['device_id'] != deviceId) {
+          } else if (state.user.deviceId != deviceId) {
             context.read<AuthBloc>().add(
                   AuthLogout(
                     AuthSignout(),
