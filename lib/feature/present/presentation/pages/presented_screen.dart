@@ -13,6 +13,7 @@ import 'package:presensi_blockchain/core/utils/secure_storage.dart';
 import 'package:presensi_blockchain/core/widget/button.dart';
 import 'package:presensi_blockchain/core/widget/custom_app_bar.dart';
 import 'package:presensi_blockchain/core/widget/pin_modal.dart';
+import 'package:presensi_blockchain/feature/login/domain/entities/user_data.dart';
 import 'package:presensi_blockchain/feature/present/presentation/bloc/present_bloc.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user/user_bloc.dart';
 
@@ -46,6 +47,8 @@ class _PresentedScreenState extends State<PresentedScreen> {
   final hourFormat = DateFormat('jm');
 
   String? password;
+
+  UserData? userData;
 
   getPassword() async {
     final passwordStorage = await SecureStorage().readData(
@@ -106,6 +109,9 @@ class _PresentedScreenState extends State<PresentedScreen> {
             BlocBuilder<UserBloc, UserState>(
               builder: (context, state) {
                 if (state is UserLoaded) {
+                  setState(() {
+                    userData = state.user;
+                  });
                   return header(state.user);
                 }
                 return const Center(
@@ -219,6 +225,7 @@ class _PresentedScreenState extends State<PresentedScreen> {
                       modalSeePrivateKey(
                         context,
                         password.toString(),
+                        userData!,
                       );
                     } else if (now.millisecondsSinceEpoch < hourPresentStart) {
                       showDialog(
@@ -287,7 +294,7 @@ class _PresentedScreenState extends State<PresentedScreen> {
     );
   }
 
-  modalSeePrivateKey(BuildContext context, String password) {
+  modalSeePrivateKey(BuildContext context, String password, UserData userData) {
     final now = DateTime.now();
     final idPresentNow =
         DateTime(now.year, now.month, now.day, 7, 0).millisecondsSinceEpoch;
@@ -314,7 +321,9 @@ class _PresentedScreenState extends State<PresentedScreen> {
               context.read<PresentBloc>().add(
                     InputPresent(
                       BigInt.from(idPresentNow),
-                      BigInt.from(6),
+                      BigInt.from(
+                        userData.nip!.toInt(),
+                      ),
                     ),
                   );
             } else if (value != password) {
@@ -331,8 +340,10 @@ class _PresentedScreenState extends State<PresentedScreen> {
               context.pop();
               context.read<PresentBloc>().add(
                     InputPresent(
-                      BigInt.from(1),
-                      BigInt.from(3),
+                      BigInt.from(idPresentNow),
+                      BigInt.from(
+                        userData.nip!.toInt(),
+                      ),
                     ),
                   );
             } else if (controller.text != password) {
@@ -349,7 +360,7 @@ class _PresentedScreenState extends State<PresentedScreen> {
     );
   }
 
-  Widget header(dynamic data) {
+  Widget header(UserData data) {
     return Container(
       decoration: BoxDecoration(
         color: mainColor,
@@ -414,7 +425,7 @@ class _PresentedScreenState extends State<PresentedScreen> {
                       SizedBox(
                         width: ScreenUtil().setWidth(260),
                         child: Text(
-                          data["name"],
+                          data.name!,
                           style: normalText,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
@@ -445,9 +456,9 @@ class _PresentedScreenState extends State<PresentedScreen> {
                       SizedBox(
                         width: ScreenUtil().setWidth(150),
                         child: Text(
-                          data["nip"] is double
-                              ? "${(data["nip"] as double).toInt()}"
-                              : "${data["nip"]}",
+                          data.nip is double
+                              ? "${(data.nip as double).toInt()}"
+                              : "${data.nip}",
                           style: tinyText,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
@@ -475,7 +486,7 @@ class _PresentedScreenState extends State<PresentedScreen> {
                       SizedBox(
                         width: ScreenUtil().setWidth(150),
                         child: Text(
-                          data["occupation"],
+                          data.occupation!,
                           style: tinyText,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,

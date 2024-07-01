@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:presensi_blockchain/core/routing/router.dart';
 import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/utils/secure_storage.dart';
 import 'package:presensi_blockchain/core/widget/button.dart';
@@ -97,6 +98,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                           AuthRegisterUser(
                             state.user.uid,
                             {
+                              "address": "",
                               "device_id": null,
                               "id": id,
                               "name": nameController.text,
@@ -136,6 +138,8 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                             InkWell(
                               onTap: () {
                                 context.pop();
+                                context
+                                    .pushNamed(AppRoute.userSettingScreen.name);
                               },
                               child: Container(
                                 padding: EdgeInsets.symmetric(

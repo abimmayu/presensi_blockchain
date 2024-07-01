@@ -5,7 +5,7 @@ class UserData {
   String? deviceId;
   String? id;
   String? name;
-  double? nip;
+  num? nip;
   String? occupation;
   bool? publicKey;
   String? role;

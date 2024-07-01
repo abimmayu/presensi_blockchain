@@ -99,6 +99,12 @@ class _LoginScreenState extends State<LoginScreen> {
               },
             );
           }
+        } else if (state is UserError) {
+          context.read<AuthBloc>().add(
+                AuthLogout(
+                  AuthInitial(),
+                ),
+              );
         }
       },
       child: BlocListener<AuthBloc, AuthState>(

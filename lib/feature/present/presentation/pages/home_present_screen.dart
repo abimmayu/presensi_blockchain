@@ -8,12 +8,14 @@ import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:presensi_blockchain/core/routing/router.dart';
 import 'package:presensi_blockchain/core/service/blockchain_service.dart';
 import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/utils/secure_storage.dart';
 import 'package:presensi_blockchain/core/widget/button.dart';
 import 'package:presensi_blockchain/core/widget/custom_app_bar.dart';
 import 'package:presensi_blockchain/core/widget/pin_modal.dart';
+import 'package:presensi_blockchain/feature/login/domain/entities/user_data.dart';
 import 'package:presensi_blockchain/feature/present/presentation/bloc/present_bloc.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user/user_bloc.dart';
 
@@ -47,6 +49,8 @@ class _HomePresentedScreenState extends State<HomePresentedScreen> {
   final hourFormat = DateFormat('jm');
 
   String? password;
+
+  UserData? userData;
 
   getPassword() async {
     final passwordStorage = await SecureStorage().readData(
@@ -107,6 +111,9 @@ class _HomePresentedScreenState extends State<HomePresentedScreen> {
             BlocBuilder<UserBloc, UserState>(
               builder: (context, state) {
                 if (state is UserLoaded) {
+                  setState(() {
+                    userData = state.user;
+                  });
                   return header(state.user);
                 }
                 return const Center(
@@ -188,6 +195,8 @@ class _HomePresentedScreenState extends State<HomePresentedScreen> {
                     content: Text(state.error),
                   ),
                 );
+              } else if (state is PresentSuccess) {
+                context.pushNamed(AppRoute.presentSuccessScreen.name);
               }
             },
             builder: (context, state) {
@@ -218,9 +227,7 @@ class _HomePresentedScreenState extends State<HomePresentedScreen> {
                     if (now.millisecondsSinceEpoch >= hourPresentStart &&
                         now.millisecondsSinceEpoch <= hourPresentEnd) {
                       modalSeePrivateKey(
-                        context,
-                        password.toString(),
-                      );
+                          context, password.toString(), userData!);
                     } else if (now.millisecondsSinceEpoch < hourPresentStart) {
                       showDialog(
                         context: context,
@@ -288,7 +295,11 @@ class _HomePresentedScreenState extends State<HomePresentedScreen> {
     );
   }
 
-  modalSeePrivateKey(BuildContext context, String password) {
+  modalSeePrivateKey(
+    BuildContext context,
+    String password,
+    UserData userData,
+  ) {
     final now = DateTime.now();
     final idPresentNow =
         DateTime(now.year, now.month, now.day, 7, 0).millisecondsSinceEpoch;
@@ -315,7 +326,9 @@ class _HomePresentedScreenState extends State<HomePresentedScreen> {
               context.read<PresentBloc>().add(
                     InputPresent(
                       BigInt.from(idPresentNow),
-                      BigInt.from(6),
+                      BigInt.from(
+                        userData.nip!.toInt(),
+                      ),
                     ),
                   );
             } else if (value != password) {
@@ -332,8 +345,10 @@ class _HomePresentedScreenState extends State<HomePresentedScreen> {
               context.pop();
               context.read<PresentBloc>().add(
                     InputPresent(
-                      BigInt.from(1),
-                      BigInt.from(3),
+                      BigInt.from(idPresentNow),
+                      BigInt.from(
+                        userData.nip!.toInt(),
+                      ),
                     ),
                   );
             } else if (controller.text != password) {

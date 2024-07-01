@@ -27,7 +27,7 @@ class BlockchainService {
   Future<DeployedContract> getContract() async {
     initiateEthClient();
     String abiFile = await rootBundle.loadString(
-      "assets/contract/Presensi.json",
+      "assets/contract/Presence.json",
     );
 
     String contractAddress = AppConstant.contractAddress;

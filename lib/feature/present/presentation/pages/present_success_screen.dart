@@ -37,7 +37,7 @@ class PresentSuccessScreen extends StatelessWidget {
             ),
             MainButton(
               onTap: () {
-                context.goNamed(AppRoute.dashboardScreen.name);
+                context.goNamed(AppRoute.presentScreen.name);
               },
               text: "Kembali ke Beranda",
               width: ScreenUtil().setWidth(320),
