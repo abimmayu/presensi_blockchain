@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:presensi_blockchain/core/routing/router.dart';
 import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/service/blockchain_service.dart';
 import 'package:presensi_blockchain/core/utils/secure_storage.dart';
@@ -191,8 +192,12 @@ class _PresentedScreenState extends State<PresentedScreen> {
               if (state is PresentFailed) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(state.error),
+                    content: Text(state.error, style: normalText),
                   ),
+                );
+              } else if (state is PresentSuccess) {
+                context.pushReplacementNamed(
+                  AppRoute.presentSuccessScreen.name,
                 );
               }
             },

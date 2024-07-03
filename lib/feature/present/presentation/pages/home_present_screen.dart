@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
@@ -111,7 +112,7 @@ class _HomePresentedScreenState extends State<HomePresentedScreen> {
             BlocBuilder<UserBloc, UserState>(
               builder: (context, state) {
                 if (state is UserLoaded) {
-                  setState(() {
+                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                     userData = state.user;
                   });
                   return header(state.user);
@@ -196,7 +197,9 @@ class _HomePresentedScreenState extends State<HomePresentedScreen> {
                   ),
                 );
               } else if (state is PresentSuccess) {
-                context.pushNamed(AppRoute.presentSuccessScreen.name);
+                context.pushNamed(
+                  AppRoute.presentSuccessScreen.name,
+                );
               }
             },
             builder: (context, state) {
@@ -233,7 +236,7 @@ class _HomePresentedScreenState extends State<HomePresentedScreen> {
                         context: context,
                         builder: (context) {
                           return dialogPresent(
-                            "The present it isn't started yet!",
+                            "The present isn't started yet!",
                           );
                         },
                       );
@@ -365,7 +368,7 @@ class _HomePresentedScreenState extends State<HomePresentedScreen> {
     );
   }
 
-  Widget header(dynamic data) {
+  Widget header(UserData data) {
     return Container(
       decoration: BoxDecoration(
         color: mainColor,
@@ -430,7 +433,7 @@ class _HomePresentedScreenState extends State<HomePresentedScreen> {
                       SizedBox(
                         width: ScreenUtil().setWidth(260),
                         child: Text(
-                          data["name"],
+                          data.name!,
                           style: normalText,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
@@ -461,9 +464,9 @@ class _HomePresentedScreenState extends State<HomePresentedScreen> {
                       SizedBox(
                         width: ScreenUtil().setWidth(150),
                         child: Text(
-                          data["nip"] is double
-                              ? "${(data["nip"] as double).toInt()}"
-                              : "${data["nip"]}",
+                          data.nip is double
+                              ? "${(data.nip as double).toInt()}"
+                              : "${data.nip}",
                           style: tinyText,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
@@ -491,7 +494,7 @@ class _HomePresentedScreenState extends State<HomePresentedScreen> {
                       SizedBox(
                         width: ScreenUtil().setWidth(150),
                         child: Text(
-                          data["occupation"],
+                          data.occupation!,
                           style: tinyText,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
