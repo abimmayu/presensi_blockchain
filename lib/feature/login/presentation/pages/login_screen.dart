@@ -172,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: TextField(
                                   controller: emailController,
                                   decoration: const InputDecoration.collapsed(
-                                    hintText: 'Type your ID Number',
+                                    hintText: 'Type your email',
                                   ),
                                 ),
                               ),

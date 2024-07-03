@@ -109,8 +109,9 @@ class _PresentedScreenState extends State<PresentedScreen> {
             BlocBuilder<UserBloc, UserState>(
               builder: (context, state) {
                 if (state is UserLoaded) {
-                  setState(() {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
                     userData = state.user;
+                    log("userData: ${userData!.name}");
                   });
                   return header(state.user);
                 }
