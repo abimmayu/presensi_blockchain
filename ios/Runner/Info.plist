@@ -45,5 +45,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSPrintInfoSupportedFileTypes</key>
+	<array>
+		<string>pdf</string>
+	</array>
 </dict>
 </plist>

@@ -160,12 +160,45 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                 builder: (context, state) {
                   return MainButton(
                     onTap: () {
-                      context.read<AuthBloc>().add(
-                            AuthSignUp(
-                              emailController.text,
-                              passwordController.text,
-                            ),
+                      if (nameController.text.isNotEmpty &&
+                          nipController.text.isNotEmpty &&
+                          selectedItem != null &&
+                          occupationController.text.isNotEmpty &&
+                          emailController.text.isNotEmpty &&
+                          passwordController.text.isNotEmpty &&
+                          confirmPasswordController.text.isNotEmpty) {
+                        if (passwordController.text ==
+                            confirmPasswordController.text) {
+                          context.read<AuthBloc>().add(
+                                AuthSignUp(
+                                  emailController.text,
+                                  passwordController.text,
+                                ),
+                              );
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return dialog(
+                                "Check your password field",
+                                "Password and Confirm Password must have the same value!",
+                                () => context.pop(),
+                              );
+                            },
                           );
+                        }
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return dialog(
+                              "Please fill all Field",
+                              "There is empty field that must be filled, please fill all the field!",
+                              () => context.pop(),
+                            );
+                          },
+                        );
+                      }
                     },
                     text: "Submit",
                     color: whiteColor,
@@ -267,6 +300,36 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
           obsecure: true,
           controller: confirmPasswordController,
         ),
+      ],
+    );
+  }
+
+  AlertDialog dialog(
+    String title,
+    String content,
+    Function() onOk,
+  ) {
+    return AlertDialog(
+      title: Text(
+        title,
+        style: bigTextSemibold,
+      ),
+      content: Text(
+        content,
+        style: normalText,
+      ),
+      actions: [
+        InkWell(
+          onTap: onOk,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 10.2, vertical: 5.h),
+            decoration: BoxDecoration(
+              color: mainColor,
+              borderRadius: BorderRadius.circular(10.h),
+            ),
+            child: const Text("Ok"),
+          ),
+        )
       ],
     );
   }

@@ -15,12 +15,18 @@ class AllPresentBloc extends Bloc<AllPresentEvent, AllPresentState> {
         ) {
     on<AllPresentGet>(
       (event, emit) async {
-        return await getAllPresent(emit);
+        return await getAllPresent(
+          event.month,
+          event.year,
+          emit,
+        );
       },
     );
   }
 
   Future<void> getAllPresent(
+    int month,
+    int year,
     Emitter<AllPresentState> emit,
   ) async {
     emit(
@@ -31,9 +37,29 @@ class AllPresentBloc extends Bloc<AllPresentEvent, AllPresentState> {
 
     result.fold(
       (l) => emit(AllPresentError(l.message!)),
-      (r) => emit(
-        AllPresentSuccess(r),
-      ),
+      (r) {
+        final startTimeStamp = getStartOfMonthTimestamp(year, month);
+        final lastTimeStamp = getEndOfMonthTimestamp(year, month);
+        List<PresentResult> presentOnMonth = r.where(
+          (element) {
+            final timeStamp = int.parse(element.timeStamp);
+            return timeStamp >= startTimeStamp && timeStamp <= lastTimeStamp;
+          },
+        ).toList();
+        emit(
+          AllPresentSuccess(presentOnMonth),
+        );
+      },
     );
+  }
+
+  int getStartOfMonthTimestamp(int year, int month) {
+    return DateTime(year, month, 1).millisecondsSinceEpoch ~/ 1000;
+  }
+
+  int getEndOfMonthTimestamp(int year, int month) {
+    int lastDay = DateTime(year, month + 1, 0).day;
+    return DateTime(year, month, lastDay, 23, 59, 59).millisecondsSinceEpoch ~/
+        1000;
   }
 }

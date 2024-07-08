@@ -38,4 +38,14 @@ class FirebaseService {
     final result = await auth.signOut();
     return result;
   }
+
+  Future<void> changePassword(String newPassword) async {
+    final user = auth.currentUser!;
+    final result = await user.updatePassword(newPassword);
+    secureStorage.writeData(
+      key: AppConstant.userPassword,
+      value: newPassword,
+    );
+    return result;
+  }
 }

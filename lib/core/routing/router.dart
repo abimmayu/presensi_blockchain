@@ -13,6 +13,7 @@ import 'package:presensi_blockchain/feature/present/presentation/pages/presented
 import 'package:presensi_blockchain/feature/present/presentation/pages/present_screen.dart';
 import 'package:presensi_blockchain/feature/splash/splash_screen.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/pages/admin_menu/account_setting/add_account_screen.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/pages/admin_menu/change_present_time_screen.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/pages/admin_menu/present_collected/present_collected_screen.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/pages/admin_menu/present_collected/present_detail_screen.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/pages/change_password_screen.dart';
@@ -50,6 +51,7 @@ enum AppRoute {
   editAccountScreen,
   presentCollectedScreen,
   presentDetailScreen,
+  chagePresentTimeScreen,
 }
 
 final GoRouter router = GoRouter(
@@ -266,6 +268,13 @@ final GoRouter router = GoRouter(
               },
             ),
           ],
+        ),
+        GoRoute(
+          path: 'change-present-time',
+          name: AppRoute.chagePresentTimeScreen.name,
+          builder: (context, state) {
+            return const ChangePresentTimeScreen();
+          },
         ),
       ],
     ),

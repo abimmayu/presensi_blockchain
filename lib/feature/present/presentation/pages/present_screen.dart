@@ -135,17 +135,6 @@ class _PresentScreenState extends State<PresentScreen> {
             },
             text: "Pulang",
           ),
-          // SizedBox(
-          //   height: ScreenUtil().setHeight(30),
-          // ),
-          // MainButton(
-          //   onTap: () {
-          //     context.pushNamed(
-          //       AppRoute.dayOffScreen.name,
-          //     );
-          //   },
-          //   text: "Izin",
-          // ),
         ],
       ),
     );

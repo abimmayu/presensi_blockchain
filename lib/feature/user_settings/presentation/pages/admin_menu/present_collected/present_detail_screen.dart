@@ -3,14 +3,12 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_date_pickers/flutter_date_pickers.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/widget/button.dart';
 import 'package:presensi_blockchain/core/widget/custom_app_bar.dart';
-import 'package:presensi_blockchain/core/widget/dropdown_button_date.dart';
 import 'package:presensi_blockchain/feature/user_settings/domain/entity/present_result.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/get_all_present/get_present_bloc.dart';
 
@@ -36,7 +34,10 @@ class _PresentDetailScreenState extends State<PresentDetailScreen> {
   @override
   void initState() {
     context.read<AllPresentBloc>().add(
-          AllPresentGet(),
+          AllPresentGet(
+            widget.param.dateTime.month,
+            widget.param.dateTime.year,
+          ),
         );
     super.initState();
   }
@@ -66,7 +67,10 @@ class _PresentDetailScreenState extends State<PresentDetailScreen> {
                 onTap: () {
                   changeIndex(0);
                   context.read<AllPresentBloc>().add(
-                        AllPresentGet(),
+                        AllPresentGet(
+                          widget.param.dateTime.month,
+                          widget.param.dateTime.year,
+                        ),
                       );
                 },
                 text: 'Masuk',
@@ -80,7 +84,10 @@ class _PresentDetailScreenState extends State<PresentDetailScreen> {
                 onTap: () {
                   changeIndex(1);
                   context.read<AllPresentBloc>().add(
-                        AllPresentGet(),
+                        AllPresentGet(
+                          widget.param.dateTime.month,
+                          widget.param.dateTime.year,
+                        ),
                       );
                 },
                 text: 'Pulang',
@@ -155,69 +162,73 @@ class _PresentDetailScreenState extends State<PresentDetailScreen> {
               } else if (state is AllPresentSuccess) {
                 if (employee.isNotEmpty) {
                   return SingleChildScrollView(
-                    child: DataTable(
-                      columnSpacing: 10.w,
-                      showBottomBorder: true,
-                      columns: [
-                        DataColumn(
-                          label: Text(
-                            'No.',
-                            style: normalText.copyWith(
-                              fontWeight: FontWeight.bold,
+                    scrollDirection: Axis.vertical,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: DataTable(
+                        columnSpacing: 10.w,
+                        showBottomBorder: true,
+                        columns: [
+                          DataColumn(
+                            label: Text(
+                              'No.',
+                              style: normalText.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Nama',
-                            style: normalText.copyWith(
-                              fontWeight: FontWeight.bold,
+                          DataColumn(
+                            label: Text(
+                              'Nama',
+                              style: normalText.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Waktu',
-                            style: normalText.copyWith(
-                              fontWeight: FontWeight.bold,
+                          DataColumn(
+                            label: Text(
+                              'Waktu',
+                              style: normalText.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
+                        ],
+                        rows: List.generate(
+                          employee.length,
+                          (index) {
+                            final format = DateFormat('HH:mm');
+                            final data = employee[index];
+                            final timeStamp =
+                                int.parse(state.presents[index].timeStamp);
+                            final date = format.format(
+                              DateTime.fromMillisecondsSinceEpoch(
+                                  timeStamp * 1000),
+                            );
+                            return DataRow(
+                              cells: [
+                                DataCell(
+                                  Text(
+                                    '${index + 1}',
+                                    style: tinyText,
+                                  ),
+                                ),
+                                DataCell(
+                                  Text(
+                                    data['name'],
+                                    style: tinyText,
+                                  ),
+                                ),
+                                DataCell(
+                                  Text(
+                                    '$date WIB',
+                                    style: tinyText,
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
                         ),
-                      ],
-                      rows: List.generate(
-                        employee.length,
-                        (index) {
-                          final format = DateFormat('HH:mm');
-                          final data = employee[index];
-                          final timeStamp =
-                              int.parse(state.presents[index].timeStamp);
-                          final date = format.format(
-                            DateTime.fromMillisecondsSinceEpoch(
-                                timeStamp * 1000),
-                          );
-                          return DataRow(
-                            cells: [
-                              DataCell(
-                                Text(
-                                  '${index + 1}',
-                                  style: tinyText,
-                                ),
-                              ),
-                              DataCell(
-                                Text(
-                                  data['name'],
-                                  style: tinyText,
-                                ),
-                              ),
-                              DataCell(
-                                Text(
-                                  '$date WIB',
-                                  style: tinyText,
-                                ),
-                              ),
-                            ],
-                          );
-                        },
                       ),
                     ),
                   );

@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
@@ -18,6 +17,7 @@ import 'package:presensi_blockchain/core/widget/custom_app_bar.dart';
 import 'package:presensi_blockchain/core/widget/pin_modal.dart';
 import 'package:presensi_blockchain/feature/login/domain/entities/user_data.dart';
 import 'package:presensi_blockchain/feature/present/presentation/bloc/present_bloc.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/present_time/present_time_bloc.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user/user_bloc.dart';
 
 class HomePresentedParam {
@@ -27,9 +27,9 @@ class HomePresentedParam {
 }
 
 class HomePresentedScreen extends StatefulWidget {
-  HomePresentedScreen({super.key, required this.param});
+  const HomePresentedScreen({super.key, required this.param});
 
-  HomePresentedParam param;
+  final HomePresentedParam param;
 
   @override
   State<HomePresentedScreen> createState() => _HomePresentedScreenState();
@@ -89,8 +89,14 @@ class _HomePresentedScreenState extends State<HomePresentedScreen> {
     checkLocation();
     getPrivateKey();
     getPassword();
+    context.read<PresentTimeBloc>().add(
+          GetPresentTime(),
+        );
     super.initState();
   }
+
+  TimeOfDay? presentTimeHomeStart;
+  TimeOfDay? presentTimeHomeEnd;
 
   @override
   Widget build(BuildContext context) {
@@ -107,25 +113,47 @@ class _HomePresentedScreenState extends State<HomePresentedScreen> {
       ),
       body: RefreshIndicator(
         onRefresh: () => checkLocation(),
-        child: ListView(
-          children: [
-            BlocBuilder<UserBloc, UserState>(
-              builder: (context, state) {
-                if (state is UserLoaded) {
-                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                    userData = state.user;
-                  });
-                  return header(state.user);
-                }
-                return const Center(
-                  child: CircularProgressIndicator(
-                    color: mainColor,
-                  ),
-                );
-              },
-            ),
-            body(date, hour),
-          ],
+        child: BlocListener<PresentTimeBloc, PresentTimeState>(
+          listener: (context, state) {
+            if (state is PresentTimeSuccess) {
+              WidgetsBinding.instance.addPostFrameCallback(
+                (timeStamp) {
+                  setState(
+                    () {
+                      presentTimeHomeStart = TimeOfDay(
+                        hour: state.presentTime.getOut.start.hour,
+                        minute: state.presentTime.getOut.start.minute,
+                      );
+                      presentTimeHomeEnd = TimeOfDay(
+                        hour: state.presentTime.getOut.end.hour,
+                        minute: state.presentTime.getOut.end.minute,
+                      );
+                    },
+                  );
+                },
+              );
+            }
+          },
+          child: ListView(
+            children: [
+              BlocBuilder<UserBloc, UserState>(
+                builder: (context, state) {
+                  if (state is UserLoaded) {
+                    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                      userData = state.user;
+                    });
+                    return header(state.user);
+                  }
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: mainColor,
+                    ),
+                  );
+                },
+              ),
+              body(date, hour),
+            ],
+          ),
         ),
       ),
     );
@@ -210,22 +238,28 @@ class _HomePresentedScreenState extends State<HomePresentedScreen> {
                   ),
                 );
               } else if (state is LocationMatch) {
+                if (presentTimeHomeStart == null) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: mainColor,
+                    ),
+                  );
+                }
                 return MainButton(
                   onTap: () {
                     final hourPresentStart = DateTime(
                       now.year,
                       now.month,
                       now.day,
-                      16,
-                      0,
+                      presentTimeHomeStart!.hour,
+                      presentTimeHomeStart!.minute,
                     ).millisecondsSinceEpoch;
                     final hourPresentEnd = DateTime(
                       now.year,
                       now.month,
                       now.day,
-                      16,
-                      30,
-                      0,
+                      presentTimeHomeEnd!.hour,
+                      presentTimeHomeEnd!.minute,
                     ).millisecondsSinceEpoch;
                     if (now.millisecondsSinceEpoch >= hourPresentStart &&
                         now.millisecondsSinceEpoch <= hourPresentEnd) {
@@ -328,7 +362,7 @@ class _HomePresentedScreenState extends State<HomePresentedScreen> {
               context.pop();
               context.read<PresentBloc>().add(
                     InputPresent(
-                      BigInt.from(idPresentNow),
+                      BigInt.from(now.millisecondsSinceEpoch),
                       BigInt.from(
                         userData.nip!.toInt(),
                       ),
@@ -348,7 +382,7 @@ class _HomePresentedScreenState extends State<HomePresentedScreen> {
               context.pop();
               context.read<PresentBloc>().add(
                     InputPresent(
-                      BigInt.from(idPresentNow),
+                      BigInt.from(now.microsecondsSinceEpoch),
                       BigInt.from(
                         userData.nip!.toInt(),
                       ),

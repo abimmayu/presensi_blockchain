@@ -5,4 +5,12 @@ abstract class AllPresentEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class AllPresentGet extends AllPresentEvent {}
+class AllPresentGet extends AllPresentEvent {
+  final int month;
+  final int year;
+
+  AllPresentGet(this.month, this.year);
+
+  @override
+  List<Object> get props => [month, year];
+}

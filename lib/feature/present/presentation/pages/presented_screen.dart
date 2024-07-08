@@ -16,6 +16,7 @@ import 'package:presensi_blockchain/core/widget/custom_app_bar.dart';
 import 'package:presensi_blockchain/core/widget/pin_modal.dart';
 import 'package:presensi_blockchain/feature/login/domain/entities/user_data.dart';
 import 'package:presensi_blockchain/feature/present/presentation/bloc/present_bloc.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/present_time/present_time_bloc.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user/user_bloc.dart';
 
 class PresentedScreenParam {
@@ -87,8 +88,14 @@ class _PresentedScreenState extends State<PresentedScreen> {
     checkLocation();
     getPrivateKey();
     getPassword();
+    context.read<PresentTimeBloc>().add(
+          GetPresentTime(),
+        );
     super.initState();
   }
+
+  TimeOfDay? presentTimeStart;
+  TimeOfDay? presentTimeEnd;
 
   @override
   Widget build(BuildContext context) {
@@ -105,26 +112,49 @@ class _PresentedScreenState extends State<PresentedScreen> {
       ),
       body: RefreshIndicator(
         onRefresh: () => checkLocation(),
-        child: ListView(
-          children: [
-            BlocBuilder<UserBloc, UserState>(
-              builder: (context, state) {
-                if (state is UserLoaded) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    userData = state.user;
-                    log("userData: ${userData!.name}");
-                  });
-                  return header(state.user);
-                }
-                return const Center(
-                  child: CircularProgressIndicator(
-                    color: mainColor,
-                  ),
-                );
-              },
-            ),
-            body(date, hour),
-          ],
+        child: BlocListener<PresentTimeBloc, PresentTimeState>(
+          listener: (context, state) {
+            if (state is PresentTimeSuccess) {
+              WidgetsBinding.instance.addPostFrameCallback(
+                (timeStamp) {
+                  setState(
+                    () {
+                      presentTimeStart = TimeOfDay(
+                        hour: state.presentTime.getIn.start.hour,
+                        minute: state.presentTime.getIn.start.minute,
+                      );
+                      presentTimeEnd = TimeOfDay(
+                        hour: state.presentTime.getIn.end.hour,
+                        minute: state.presentTime.getIn.end.minute,
+                      );
+                      log("present time start: $presentTimeStart");
+                    },
+                  );
+                },
+              );
+            }
+          },
+          child: ListView(
+            children: [
+              BlocBuilder<UserBloc, UserState>(
+                builder: (context, state) {
+                  if (state is UserLoaded) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      userData = state.user;
+                      log("userData: ${userData!.name}");
+                    });
+                    return header(state.user);
+                  }
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: mainColor,
+                    ),
+                  );
+                },
+              ),
+              body(date, hour),
+            ],
+          ),
         ),
       ),
     );
@@ -209,21 +239,28 @@ class _PresentedScreenState extends State<PresentedScreen> {
                   ),
                 );
               } else if (state is LocationMatch) {
+                if (presentTimeStart == null) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: mainColor,
+                    ),
+                  );
+                }
                 return MainButton(
                   onTap: () {
                     final hourPresentStart = DateTime(
                       now.year,
                       now.month,
                       now.day,
-                      8,
-                      0,
+                      presentTimeStart!.hour,
+                      presentTimeStart!.minute,
                     ).millisecondsSinceEpoch;
                     final hourPresentEnd = DateTime(
                       now.year,
                       now.month,
                       now.day,
-                      8,
-                      30,
+                      presentTimeEnd!.hour,
+                      presentTimeEnd!.minute,
                       0,
                     ).millisecondsSinceEpoch;
                     if (now.millisecondsSinceEpoch >= hourPresentStart &&
@@ -326,7 +363,7 @@ class _PresentedScreenState extends State<PresentedScreen> {
               context.pop();
               context.read<PresentBloc>().add(
                     InputPresent(
-                      BigInt.from(idPresentNow),
+                      BigInt.from(now.millisecondsSinceEpoch),
                       BigInt.from(
                         userData.nip!.toInt(),
                       ),
@@ -346,7 +383,7 @@ class _PresentedScreenState extends State<PresentedScreen> {
               context.pop();
               context.read<PresentBloc>().add(
                     InputPresent(
-                      BigInt.from(idPresentNow),
+                      BigInt.from(now.millisecondsSinceEpoch),
                       BigInt.from(
                         userData.nip!.toInt(),
                       ),

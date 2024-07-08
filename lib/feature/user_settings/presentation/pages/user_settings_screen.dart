@@ -14,8 +14,6 @@ import 'package:presensi_blockchain/core/widget/custom_nav_bar.dart';
 import 'package:presensi_blockchain/core/widget/list_user_settings.dart';
 import 'package:presensi_blockchain/feature/login/domain/entities/user_data.dart';
 import 'package:presensi_blockchain/feature/login/presentation/bloc/auth_bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:presensi_blockchain/feature/present/presentation/bloc/present_bloc.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user/user_bloc.dart';
 
 class UserSettingsScreen extends StatefulWidget {
@@ -68,10 +66,11 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
         currentIndex: 1,
       ),
       body: ListView(
-        shrinkWrap: true,
+        shrinkWrap: false,
+        physics: const AlwaysScrollableScrollPhysics(),
         children: [
           SizedBox(
-            height: ScreenUtil().setHeight(250),
+            height: 210.h,
             child: Stack(
               children: [
                 Positioned(
@@ -193,6 +192,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                 } else if (state is UserLoaded) {
                   return ListView(
                     shrinkWrap: true,
+                    physics: const AlwaysScrollableScrollPhysics(),
                     children: [
                       ListUserSettingsWidget(
                         icon: Icons.person,
@@ -223,36 +223,17 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                               },
                             )
                           : const SizedBox.shrink(),
-                      // state.user["role"] == "admin"
-                      //     ? ListUserSettingsWidget(
-                      //         icon: Icons.person_add,
-                      //         title: "Generate today's present",
-                      //         action: () {
-                      //           context.read<PresentBloc>().add(
-                      //                 PresentIn(
-                      //                   BigInt.from(
-                      //                     today,
-                      //                   ),
-                      //                   BigInt.from(DateTime.now().day),
-                      //                   BigInt.from(DateTime.now().month),
-                      //                   BigInt.from(DateTime.now().year),
-                      //                   "Masuk",
-                      //                 ),
-                      //               );
-                      // service.sendBalance();
-                      // context.read<PresentBloc>().add(
-                      //       PresentOut(
-                      //         BigInt.from(DateTime.now()
-                      //             .millisecondsSinceEpoch),
-                      //         BigInt.from(DateTime.now().day),
-                      //         BigInt.from(DateTime.now().month),
-                      //         BigInt.from(DateTime.now().year),
-                      //         "Pulang",
-                      //       ),
-                      //     );
-                      //     },
-                      //   )
-                      // : const SizedBox.shrink(),
+                      state.user.role == "admin"
+                          ? ListUserSettingsWidget(
+                              icon: Icons.timelapse_outlined,
+                              title: "Change Present Time",
+                              action: () {
+                                context.pushNamed(
+                                  AppRoute.chagePresentTimeScreen.name,
+                                );
+                              },
+                            )
+                          : const SizedBox.shrink(),
                       ListUserSettingsWidget(
                         icon: Icons.key,
                         title: "Change Password",
@@ -271,13 +252,6 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                               );
                         },
                       ),
-                      // ListUserSettingsWidget(
-                      //   icon: Icons.account_balance_wallet,
-                      //   title: "Import Wallet",
-                      //   action: () {
-                      //     context.pushNamed(AppRoute.importWalletScreen.name);
-                      //   },
-                      // ),
                     ],
                   );
                 } else if (state is UserError) {

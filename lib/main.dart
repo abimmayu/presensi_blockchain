@@ -1,4 +1,3 @@
-import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -9,10 +8,11 @@ import 'package:presensi_blockchain/core/routing/router.dart';
 import 'package:presensi_blockchain/core/utils/injection.dart' as di;
 import 'package:presensi_blockchain/feature/dashboard/presentation/bloc/home_bloc.dart';
 import 'package:presensi_blockchain/feature/login/presentation/bloc/auth_bloc.dart';
-import 'package:presensi_blockchain/feature/present/data/data_post/present_data_post.dart';
 import 'package:presensi_blockchain/feature/present/presentation/bloc/present_bloc.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/change_password/change_password_bloc.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/get_all_present/get_present_bloc.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/get_holiday/get_holiday_bloc.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/present_time/present_time_bloc.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user/user_bloc.dart';
 import 'package:presensi_blockchain/firebase_options.dart';
 
@@ -68,6 +68,12 @@ class _MyAppState extends State<MyApp> {
         ),
         BlocProvider<HolidayBloc>(
           create: (context) => di.locator<HolidayBloc>(),
+        ),
+        BlocProvider<ChangePasswordBloc>(
+          create: (context) => di.locator<ChangePasswordBloc>(),
+        ),
+        BlocProvider<PresentTimeBloc>(
+          create: (context) => di.locator<PresentTimeBloc>(),
         ),
       ],
       child: ScreenUtilInit(
