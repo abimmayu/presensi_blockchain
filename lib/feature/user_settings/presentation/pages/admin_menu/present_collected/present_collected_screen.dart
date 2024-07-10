@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -8,12 +7,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:permission_handler/permission_handler.dart';
 import 'package:presensi_blockchain/core/routing/router.dart';
 import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/widget/button.dart';
@@ -22,8 +21,8 @@ import 'package:presensi_blockchain/core/widget/dropdown_button_date.dart';
 import 'package:presensi_blockchain/feature/user_settings/domain/entity/present_result.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/get_all_present/get_present_bloc.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/get_holiday/get_holiday_bloc.dart';
+import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/present_time/present_time_bloc.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/pages/admin_menu/present_collected/present_detail_screen.dart';
-import 'package:printing/printing.dart';
 
 class PresentCollectedScreen extends StatefulWidget {
   const PresentCollectedScreen({super.key});
@@ -57,8 +56,8 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
 
   List<DateTime>? dates = [];
 
-  List employeePresent = [];
-  List employeeHomePresent = [];
+  List<Map<String, List<PresentResult>>> transactionInList = [];
+  List<Map<String, List<PresentResult>>> transactionOutList = [];
 
   @override
   void initState() {
@@ -79,6 +78,12 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
         );
     super.initState();
   }
+
+  TimeOfDay? presentStart;
+  TimeOfDay? presentEnd;
+
+  TimeOfDay? homePresentStart;
+  TimeOfDay? homePresentEnd;
 
   @override
   Widget build(BuildContext context) {
@@ -140,154 +145,166 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
                   getDate(year[value], selectedMonth! + 1);
                 },
               ),
-              IconButton(
-                onPressed: () async {
-                  Printing.layoutPdf(
-                    onLayout: (format) => generateLargeTablesPdf(
-                      year[selectedYear!],
-                      selectedMonth! + 1,
-                      month[selectedMonth!],
-                      employeePresent,
-                      employeeHomePresent,
-                      format,
+              BlocBuilder<AllPresentBloc, AllPresentState>(
+                builder: (context, state) {
+                  if (state is AllPresentSuccess) {
+                    if (transactionInList.isEmpty) {
+                      return IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.sim_card_download,
+                          color: greyColor,
+                          size: 60.h,
+                        ),
+                      );
+                    }
+                    return IconButton(
+                      onPressed: () async {
+                        await requestStoragePermission();
+                        try {
+                          OpenResult result = await generateLargeTablesPdf(
+                            year[selectedYear!],
+                            selectedMonth! + 1,
+                            month[selectedMonth!],
+                            transactionInList,
+                            transactionOutList,
+                          );
+
+                          if (result.type == ResultType.done) {
+                            // File PDF telah dibuka
+                            print('File PDF berhasil dibuka');
+                          } else {
+                            // Penanganan kasus lain jika diperlukan
+                            print(result.type);
+                            print('Gagal membuka file PDF');
+                          }
+                        } catch (e) {
+                          // Penanganan exception jika terjadi kesalahan
+                          print('Terjadi kesalahan saat membuka file PDF: $e');
+                        }
+                      },
+                      icon: Icon(
+                        Icons.sim_card_download,
+                        color: mainColor,
+                        size: 60.h,
+                      ),
+                    );
+                  } else if (state is AllPresentLoading) {
+                    return Padding(
+                      padding: EdgeInsets.only(left: 10.w),
+                      child: const Center(
+                        child: CircularProgressIndicator(
+                          color: greyColor,
+                        ),
+                      ),
+                    );
+                  }
+                  return IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.sim_card_download,
+                      color: greyColor,
+                      size: 60.h,
                     ),
                   );
                 },
-                icon: Icon(
-                  Icons.sim_card_download,
-                  color: mainColor,
-                  size: 60.h,
-                ),
               )
             ],
           ),
           SizedBox(
             height: 25.h,
           ),
-          BlocListener<AllPresentBloc, AllPresentState>(
-            listener: (context, state) async {
-              if (state is AllPresentSuccess) {
-                final uniqueDatasPresent = <String, PresentResult>{};
-                final uniqueDatasHomePresent = <String, PresentResult>{};
-                final startPresent =
-                    DateTime(year[selectedYear!], selectedMonth! + 1, 1, 8, 0)
-                            .millisecondsSinceEpoch /
-                        1000;
-                final endPresent =
-                    DateTime(year[selectedYear!], selectedMonth! + 2, 8, 30)
-                            .millisecondsSinceEpoch /
-                        1000;
-                final startHomePresent =
-                    DateTime(year[selectedYear!], selectedMonth! + 1, 1, 15, 30)
-                            .millisecondsSinceEpoch /
-                        1000;
-                final endHomePresent =
-                    DateTime(year[selectedYear!], selectedMonth! + 2, 0, 16, 0)
-                            .millisecondsSinceEpoch /
-                        1000;
-                state.presents.where(
-                  (element) {
-                    final timeStamp = int.parse(element.timeStamp);
-
-                    if (timeStamp >= startPresent && timeStamp < endPresent) {
-                      return true;
-                    } else {
-                      return false;
-                    }
-                  },
-                ).forEach(
-                  (element) {
-                    uniqueDatasHomePresent[element.from] = element;
-                  },
-                );
-                state.presents.where(
-                  (element) {
-                    final timeStamp = int.parse(element.timeStamp);
-                    if (timeStamp >= startHomePresent &&
-                        timeStamp < endHomePresent) {
-                      return true;
-                    } else {
-                      return false;
-                    }
-                  },
-                ).forEach(
-                  (element) {
-                    uniqueDatasPresent[element.from] = element;
-                  },
-                );
-                final realDatasPresent = uniqueDatasPresent.values.toList();
-                final realDatasHomePresent =
-                    uniqueDatasHomePresent.values.toList();
-                final List<Map<String, dynamic>> dataNamePresent = [];
-                final List<Map<String, dynamic>> dataNameHomePresent = [];
-                for (var i = 0; i < realDatasPresent.length; i++) {
-                  final finalData = await searchDataByField(
-                    realDatasPresent[i].from,
-                  );
-                  dataNamePresent.add(finalData);
-                }
-                for (var i = 0; i < realDatasHomePresent.length; i++) {
-                  final finalData = await searchDataByField(
-                    realDatasHomePresent[i].from,
-                  );
-                  dataNameHomePresent.add(finalData);
-                }
-                setState(
-                  () {
-                    employeePresent = dataNamePresent;
-                    employeeHomePresent = dataNameHomePresent;
+          BlocListener<PresentTimeBloc, PresentTimeState>(
+            listener: (context, state) {
+              if (state is PresentTimeSuccess) {
+                WidgetsBinding.instance.addPostFrameCallback(
+                  (timeStamp) {
+                    setState(
+                      () {
+                        presentStart = TimeOfDay(
+                          hour: state.presentTime.getIn.start.hour,
+                          minute: state.presentTime.getIn.start.minute,
+                        );
+                        presentEnd = TimeOfDay(
+                          hour: state.presentTime.getIn.end.hour,
+                          minute: state.presentTime.getIn.end.minute,
+                        );
+                        homePresentStart = TimeOfDay(
+                          hour: state.presentTime.getOut.start.hour,
+                          minute: state.presentTime.getOut.start.minute,
+                        );
+                        homePresentEnd = TimeOfDay(
+                          hour: state.presentTime.getOut.end.hour,
+                          minute: state.presentTime.getOut.end.minute,
+                        );
+                      },
+                    );
                   },
                 );
               }
             },
-            child: BlocConsumer<HolidayBloc, HolidayState>(
-              listener: (context, state) {
-                if (state is HolidaySuccess) {
-                  List<DateTime>? holidays = [];
-                  for (var day in state.holidays) {
-                    final newDate = DateTime(
-                      year[selectedYear!],
-                      selectedMonth! + 1,
-                      day,
-                      0,
-                    );
-                    holidays.add(newDate);
-                  }
-                  if (holidays.isNotEmpty) {
-                    setState(
-                      () {
-                        dates = dates!
-                            .where(
-                              (element) => !holidays.contains(element),
-                            )
-                            .toList();
-                      },
-                    );
+            child: BlocListener<AllPresentBloc, AllPresentState>(
+              listener: (context, state) async {
+                log("State All present: $state");
+                if (state is AllPresentSuccess) {
+                  log("State Present: ${state.presents[0]}");
+                  if (state.presents.isNotEmpty) {
+                    await _fetchData(state.presents);
                   }
                 }
               },
-              builder: (context, state) {
-                if (state is HolidayLoading) {
+              child: BlocConsumer<HolidayBloc, HolidayState>(
+                listener: (context, state) {
+                  if (state is HolidaySuccess) {
+                    context.read<PresentTimeBloc>().add(
+                          GetPresentTime(),
+                        );
+                    List<DateTime>? holidays = [];
+                    for (var day in state.holidays) {
+                      final newDate = DateTime(
+                        year[selectedYear!],
+                        selectedMonth! + 1,
+                        day,
+                        0,
+                      );
+                      holidays.add(newDate);
+                    }
+                    if (holidays.isNotEmpty) {
+                      setState(
+                        () {
+                          dates = dates!
+                              .where(
+                                (element) => !holidays.contains(element),
+                              )
+                              .toList();
+                        },
+                      );
+                    }
+                  }
+                },
+                builder: (context, state) {
+                  if (state is HolidayLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: mainColor,
+                      ),
+                    );
+                  } else if (state is HolidayError) {
+                    return Center(
+                      child: Text(state.message),
+                    );
+                  } else if (state is HolidaySuccess) {
+                    return SingleChildScrollView(
+                      child: dataTable(
+                        dates!,
+                      ),
+                    );
+                  }
                   return const Center(
-                    child: CircularProgressIndicator(
-                      color: mainColor,
-                    ),
+                    child: Text('No data available'),
                   );
-                } else if (state is HolidayError) {
-                  return Center(
-                    child: Text(state.message),
-                  );
-                } else if (state is HolidaySuccess) {
-                  return SingleChildScrollView(
-                    child: dataTable(
-                      dates!,
-                    ),
-                  );
-                }
-                return const Center(
-                  child: Text('No data available'),
-                );
-              },
+                },
+              ),
             ),
           ),
         ],
@@ -347,6 +364,10 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
                         AppRoute.presentDetailScreen.name,
                         extra: PresentDetailParam(
                           dateTime: data,
+                          getInStart: presentStart!,
+                          getInEnd: presentEnd!,
+                          getOutStart: homePresentStart!,
+                          getOutEnd: homePresentEnd!,
                         ),
                       );
                     },
@@ -386,37 +407,168 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
     );
   }
 
-  Future<Map<String, dynamic>> searchDataByField(
-    dynamic value,
-  ) async {
-    log("value: $value");
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('User')
-        .where('address', isEqualTo: value)
-        .get();
-    log("querySnapshot: ${querySnapshot.docs}");
-    if (querySnapshot.docs.isNotEmpty) {
-      Map<String, dynamic> data =
-          querySnapshot.docs[0].data() as Map<String, dynamic>;
-      log('data: $data');
-      return data;
+  Future<void> _fetchData(List<PresentResult> transactions) async {
+    final days = generateDatesInMonth(
+      year[selectedYear!],
+      selectedMonth! + 1,
+    );
+
+    List<PresentResult> presentTransactions = [];
+    List<PresentResult> homePresentTransactions = [];
+
+    log("Days in month: $days");
+
+    for (var day in days) {
+      final startPresent = DateTime(
+        year[selectedYear!],
+        selectedMonth! + 1,
+        day.day,
+        presentStart!.hour,
+        presentStart!.minute,
+      ).millisecondsSinceEpoch;
+      final endPresent = DateTime(
+        year[selectedYear!],
+        selectedMonth! + 1,
+        day.day,
+        presentEnd!.hour,
+        presentEnd!.minute,
+      ).millisecondsSinceEpoch;
+
+      final startHomePresent = DateTime(
+        year[selectedYear!],
+        selectedMonth! + 1,
+        day.day,
+        homePresentStart!.hour,
+        homePresentStart!.minute,
+      ).millisecondsSinceEpoch;
+      final endHomePresent = DateTime(
+        year[selectedYear!],
+        selectedMonth! + 1,
+        day.day,
+        homePresentEnd!.hour,
+        homePresentEnd!.minute,
+      ).millisecondsSinceEpoch;
+
+      log("Processing day: ${day.day}");
+      log("Present start: $startPresent, Present end: $endPresent");
+      log("Home present start: $startHomePresent, Home present end: $endHomePresent");
+
+      List<PresentResult> tempPresentTransactions =
+          transactions.where((element) {
+        int timeStamp = int.parse(element.timeStamp) * 1000;
+        log("Checking timestamp: $timeStamp");
+        return timeStamp >= startPresent && timeStamp < endPresent;
+      }).toList();
+
+      List<PresentResult> tempHomePresentTransactions =
+          transactions.where((element) {
+        int timeStamp = int.parse(element.timeStamp) * 1000;
+        return timeStamp >= startHomePresent && timeStamp < endHomePresent;
+      }).toList();
+
+      log("Found ${tempPresentTransactions.length} present transactions for day ${day.day}");
+      log("Found ${tempHomePresentTransactions.length} home present transactions for day ${day.day}");
+
+      presentTransactions.addAll(tempPresentTransactions);
+      homePresentTransactions.addAll(tempHomePresentTransactions);
     }
-    return {
-      "name": value,
-    };
+
+    log("Total present transactions: ${presentTransactions.length}");
+    log("Total home present transactions: ${homePresentTransactions.length}");
+
+    await sortingTheTransaction(presentTransactions, homePresentTransactions);
   }
 
-  Future<Uint8List> generateLargeTablesPdf(
+  Future<void> sortingTheTransaction(
+    List<PresentResult> presentTransactions,
+    List<PresentResult> homePresentTransactions,
+  ) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    Map<String, List<PresentResult>> transactionInMap = {};
+    Map<String, List<PresentResult>> transactionOutMap = {};
+
+    Map<String, List<PresentResult>> addressToPresentTransactions = {};
+    Map<String, List<PresentResult>> addressToHomePresentTransactions = {};
+
+    for (var transaction in presentTransactions) {
+      addressToPresentTransactions
+          .putIfAbsent(transaction.from, () => [])
+          .add(transaction);
+    }
+
+    for (var transaction in homePresentTransactions) {
+      addressToHomePresentTransactions
+          .putIfAbsent(transaction.from, () => [])
+          .add(transaction);
+    }
+
+    for (var address in addressToPresentTransactions.keys) {
+      QuerySnapshot userDoc = await firestore
+          .collection('User')
+          .where('address', isEqualTo: address)
+          .get();
+
+      if (userDoc.docs.isNotEmpty) {
+        String userName = userDoc.docs.first.get('name');
+        if (transactionInMap.containsKey(userName)) {
+          transactionInMap[userName]!
+              .addAll(addressToPresentTransactions[address]!);
+        } else {
+          transactionInMap[userName] = addressToPresentTransactions[address]!;
+        }
+      }
+    }
+
+    for (var address in addressToHomePresentTransactions.keys) {
+      QuerySnapshot userDoc = await firestore
+          .collection('User')
+          .where('address', isEqualTo: address)
+          .get();
+
+      if (userDoc.docs.isNotEmpty) {
+        String userName = userDoc.docs.first.get('name');
+        if (transactionOutMap.containsKey(userName)) {
+          transactionOutMap[userName]!
+              .addAll(addressToHomePresentTransactions[address]!);
+        } else {
+          transactionOutMap[userName] =
+              addressToHomePresentTransactions[address]!;
+        }
+      }
+    }
+
+    for (var userName in transactionInMap.keys) {
+      transactionInMap[userName]!.sort(
+          (a, b) => int.parse(a.timeStamp).compareTo(int.parse(b.timeStamp)));
+    }
+
+    for (var userName in transactionOutMap.keys) {
+      transactionOutMap[userName]!.sort(
+          (a, b) => int.parse(a.timeStamp).compareTo(int.parse(b.timeStamp)));
+    }
+
+    setState(() {
+      transactionInList =
+          transactionInMap.entries.map((e) => {e.key: e.value}).toList();
+      transactionOutList =
+          transactionOutMap.entries.map((e) => {e.key: e.value}).toList();
+    });
+
+    log("Transaction In List: $transactionInList");
+    log("Transaction Out List: $transactionOutList");
+  }
+
+  Future<OpenResult> generateLargeTablesPdf(
     int year,
     int month,
     String monthTitle,
     List employeePresent,
     List employeePresentHome,
-    PdfPageFormat format,
+    // PdfPageFormat format,
   ) async {
     final pdf = pw.Document();
 
-    final assetFont = await rootBundle.load('assets/times.ttf');
+    final assetFont = await rootBundle.load('assets/DejaVuSans.ttf');
 
     final font = pw.Font.ttf(assetFont);
 
@@ -437,21 +589,44 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
       header.add("${day.day}");
     }
     header.add("Total Kehadiran");
-    final presentEmployee = employeePresent.map(
+    final presentEmployee = transactionInList.asMap().entries.expand(
       (e) {
-        final dataTable = (e as Map<String, dynamic>).entries.map(
+        final index = e.key;
+        final dataTable = e.value.entries.map(
           (e) {
             final name = e.key;
-            final List presentDays = e.value;
-            final List<dynamic> row = [name];
+            final List<PresentResult> presentDays = e.value;
+            final List<int> timeStamp = List.generate(
+              presentDays.length,
+              (index) {
+                final timeStamp =
+                    int.parse(presentDays[index].timeStamp) * 1000;
+                final DateTime time = DateTime.fromMillisecondsSinceEpoch(
+                  timeStamp,
+                );
+                final day = time.day;
 
-            for (var day = days.first.day; day <= days.last.day; day++) {
-              if (presentDays.contains(day)) {
+                return day;
+              },
+            );
+            log("Time Stamp Presensi: $timeStamp");
+            final List<dynamic> row = [index + 1, name];
+
+            for (var day in days) {
+              if (timeStamp.contains(day.day)) {
                 row.add('✓');
               } else {
                 row.add('');
               }
             }
+
+            // for (var day = days.first.day; day <= days.last.day; day++) {
+            //   if (presentDays.contains(day)) {
+            //     row.add('✓');
+            //   } else {
+            //     row.add('');
+            //   }
+            // }
 
             row.add(presentDays.length);
             return row;
@@ -461,13 +636,14 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
       },
     ).toList();
 
-    final homePresentEmployee = employeeHomePresent.map(
+    final homePresentEmployee = transactionOutList.asMap().entries.expand(
       (e) {
-        final dataTable = (e as Map<String, dynamic>).entries.map(
+        final index = e.key;
+        final dataTable = e.value.entries.map(
           (e) {
             final name = e.key;
             final List presentDays = e.value;
-            final List<dynamic> row = [name];
+            final List<dynamic> row = [index + 1, name];
 
             for (var day = days.first.day; day <= days.last.day; day++) {
               if (presentDays.contains(day)) {
@@ -567,12 +743,14 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
         },
       ),
     );
-    final output = await getApplicationDocumentsDirectory();
+    final output = await getApplicationSupportDirectory();
     final file = File('${output.path}/Rekapan Presensi $monthTitle $year.pdf');
     final byte = await pdf.save();
     await file.writeAsBytes(byte);
 
-    return pdf.save();
+    log("Fungsi PDF Sudah sampai disini...");
+
+    return OpenFile.open(file.path);
   }
 
   List<DateTime> generateDatesInMonth(int year, int month) {
@@ -587,5 +765,21 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
     }
 
     return dates;
+  }
+
+  Future<void> requestStoragePermission() async {
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      // Meminta izin akses storage jika belum diberikan
+      status = await Permission.storage.request();
+    }
+
+    if (status.isGranted) {
+      // Izin diberikan, lanjutkan dengan operasi yang membutuhkan izin
+      // Misalnya, menyimpan atau membuka file PDF
+    } else {
+      // Izin tidak diberikan, beritahu pengguna atau lakukan penanganan lainnya
+      // Misalnya, menampilkan pesan bahwa izin diperlukan untuk operasi tertentu
+    }
   }
 }

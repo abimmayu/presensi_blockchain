@@ -14,7 +14,17 @@ import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/get_
 
 class PresentDetailParam {
   final DateTime dateTime;
-  PresentDetailParam({required this.dateTime});
+  final TimeOfDay getInStart;
+  final TimeOfDay getInEnd;
+  final TimeOfDay getOutStart;
+  final TimeOfDay getOutEnd;
+  PresentDetailParam({
+    required this.dateTime,
+    required this.getInStart,
+    required this.getInEnd,
+    required this.getOutStart,
+    required this.getOutEnd,
+  });
 }
 
 class PresentDetailScreen extends StatefulWidget {
@@ -29,7 +39,7 @@ class PresentDetailScreen extends StatefulWidget {
 class _PresentDetailScreenState extends State<PresentDetailScreen> {
   int _currentIndex = 0;
 
-  List employee = [];
+  List<Map<String, List<PresentResult>>> transactionList = [];
 
   @override
   void initState() {
@@ -44,6 +54,7 @@ class _PresentDetailScreenState extends State<PresentDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    log("DateTime: ${widget.param.dateTime}");
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
@@ -113,45 +124,10 @@ class _PresentDetailScreenState extends State<PresentDetailScreen> {
           BlocConsumer<AllPresentBloc, AllPresentState>(
             listener: (context, state) async {
               if (state is AllPresentSuccess) {
-                final date = widget.param.dateTime;
-                final uniqueDatas = <String, PresentResult>{};
-                state.presents.where(
-                  (element) {
-                    final timeStamp = int.parse(element.timeStamp);
-                    final start = _currentIndex == 0
-                        ? DateTime(date.year, date.month, date.day, 8, 0)
-                                .millisecondsSinceEpoch /
-                            1000
-                        : DateTime(date.year, date.month, date.day, 15, 30)
-                                .millisecondsSinceEpoch /
-                            1000;
-                    final end = _currentIndex == 0
-                        ? DateTime(date.year, date.month, date.day, 8, 30)
-                                .millisecondsSinceEpoch /
-                            1000
-                        : DateTime(date.year, date.month, date.day, 16, 0)
-                                .millisecondsSinceEpoch /
-                            1000;
-                    if (timeStamp >= start && timeStamp < end) {
-                      return true;
-                    } else {
-                      return false;
-                    }
-                  },
-                ).forEach((element) {
-                  uniqueDatas[element.from] = element;
-                });
-                final realDatas = uniqueDatas.values.toList();
-                final List<Map<String, dynamic>> dataName = [];
-                for (var i = 0; i < realDatas.length; i++) {
-                  final finalData = await searchDataByField(
-                    realDatas[i].from,
-                  );
-                  dataName.add(finalData);
-                }
-                setState(() {
-                  employee = dataName;
-                });
+                _fetchData(
+                  state.presents,
+                  _currentIndex,
+                );
               }
             },
             builder: (context, state) {
@@ -160,7 +136,7 @@ class _PresentDetailScreenState extends State<PresentDetailScreen> {
                   child: Text(state.error),
                 );
               } else if (state is AllPresentSuccess) {
-                if (employee.isNotEmpty) {
+                if (transactionList.isNotEmpty) {
                   return SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: SingleChildScrollView(
@@ -195,15 +171,20 @@ class _PresentDetailScreenState extends State<PresentDetailScreen> {
                           ),
                         ],
                         rows: List.generate(
-                          employee.length,
+                          transactionList.length,
                           (index) {
                             final format = DateFormat('HH:mm');
-                            final data = employee[index];
-                            final timeStamp =
-                                int.parse(state.presents[index].timeStamp);
+                            final data = transactionList[index];
+                            final key = data.keys.first;
+                            List<PresentResult> presentResult = data[key]!;
+                            final timeStamp = int.parse(
+                              presentResult.first.timeStamp,
+                            );
+                            log("All Data: ${state.presents}");
                             final date = format.format(
                               DateTime.fromMillisecondsSinceEpoch(
-                                  timeStamp * 1000),
+                                timeStamp * 1000,
+                              ),
                             );
                             return DataRow(
                               cells: [
@@ -214,9 +195,12 @@ class _PresentDetailScreenState extends State<PresentDetailScreen> {
                                   ),
                                 ),
                                 DataCell(
-                                  Text(
-                                    data['name'],
-                                    style: tinyText,
+                                  SizedBox(
+                                    width: 200.w,
+                                    child: Text(
+                                      transactionList[index].keys.first,
+                                      style: tinyText,
+                                    ),
                                   ),
                                 ),
                                 DataCell(
@@ -258,23 +242,93 @@ class _PresentDetailScreenState extends State<PresentDetailScreen> {
     });
   }
 
-  Future<Map<String, dynamic>> searchDataByField(
-    dynamic value,
+  Future<void> _fetchData(
+    List<PresentResult> transactions,
+    int index,
   ) async {
-    log("value: $value");
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('User')
-        .where('address', isEqualTo: value)
-        .get();
-    log("querySnapshot: ${querySnapshot.docs}");
-    if (querySnapshot.docs.isNotEmpty) {
-      Map<String, dynamic> data =
-          querySnapshot.docs[0].data() as Map<String, dynamic>;
-      log('data: $data');
-      return data;
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    DateTime date = widget.param.dateTime;
+    Map<String, List<PresentResult>> transactionMap = {};
+    int presentStart = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      widget.param.getInStart.hour,
+      widget.param.getInStart.minute,
+    ).millisecondsSinceEpoch;
+    int presentEnd = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      widget.param.getInEnd.hour,
+      widget.param.getInEnd.minute,
+    ).millisecondsSinceEpoch;
+    int homePresentStart = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      widget.param.getOutStart.hour,
+      widget.param.getOutStart.minute,
+    ).millisecondsSinceEpoch;
+    int homePresentEnd = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      widget.param.getOutEnd.hour,
+      widget.param.getOutEnd.minute,
+    ).millisecondsSinceEpoch;
+
+    List<PresentResult> presentTransactions = [];
+    if (index == 0) {
+      presentTransactions = transactions.where(
+        (element) {
+          int timeStamp = int.parse(element.timeStamp) * 1000;
+          if (timeStamp >= presentStart && timeStamp < presentEnd) {
+            return true;
+          }
+          return false;
+        },
+      ).toList();
+    } else {
+      presentTransactions = transactions.where(
+        (element) {
+          int timeStamp = int.parse(element.timeStamp) * 1000;
+          if (timeStamp >= homePresentStart && timeStamp < homePresentEnd) {
+            return true;
+          }
+          return false;
+        },
+      ).toList();
     }
-    return {
-      "name": value,
-    };
+    for (var transaction in presentTransactions) {
+      String fromAddress = transaction.from;
+
+      QuerySnapshot userDoc = await firestore
+          .collection('User')
+          .where(
+            'address',
+            isEqualTo: fromAddress,
+          )
+          .get();
+
+      String userName = fromAddress; // Default to address if user not found
+      if (userDoc.docs.isNotEmpty) {
+        userName = userDoc.docs.first.get('name');
+      }
+
+      if (transactionMap.containsKey(userName)) {
+        if (int.parse(transaction.timeStamp) <
+            int.parse(transactionMap[userName]!.first.timeStamp)) {
+          transactionMap[userName] = [transaction];
+        }
+      } else {
+        transactionMap[userName] = [transaction];
+      }
+    }
+    setState(() {
+      transactionList =
+          transactionMap.entries.map((e) => {e.key: e.value}).toList();
+      log("transaction List: $transactionList");
+    });
   }
 }
