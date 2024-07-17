@@ -22,6 +22,8 @@ class LocationMatch extends PresentState {}
 
 class LocationNotMatch extends PresentState {}
 
+class LocationGot extends PresentState {}
+
 class PresentLocationGet extends PresentState {
   final Position position;
 

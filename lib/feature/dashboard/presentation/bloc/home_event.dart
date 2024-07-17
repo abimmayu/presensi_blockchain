@@ -3,18 +3,18 @@ part of "home_bloc.dart";
 abstract class HomeEvent extends Equatable {}
 
 class GetPresentInMonth extends HomeEvent {
-  final int id;
   final int month;
   final int year;
+  final String address;
 
   GetPresentInMonth(
-    this.id,
     this.month,
     this.year,
+    this.address,
   );
 
   @override
-  List<Object> get props => [id, month, year];
+  List<Object> get props => [month, year, address];
 }
 
 class GetPresentOutMonth extends HomeEvent {

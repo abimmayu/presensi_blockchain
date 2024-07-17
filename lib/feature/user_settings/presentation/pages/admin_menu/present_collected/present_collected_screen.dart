@@ -121,6 +121,12 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
                           year[selectedYear!],
                         ),
                       );
+                  context.read<HolidayBloc>().add(
+                        GetHoliday(
+                          year[selectedYear!],
+                          value + 1,
+                        ),
+                      );
                   getDate(year[selectedYear!], value + 1);
                 },
               ),
@@ -140,6 +146,12 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
                         AllPresentGet(
                           selectedMonth! + 1,
                           year[value],
+                        ),
+                      );
+                  context.read<HolidayBloc>().add(
+                        GetHoliday(
+                          year[value],
+                          selectedMonth! + 1,
                         ),
                       );
                   getDate(year[value], selectedMonth! + 1);
@@ -262,7 +274,7 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
                     List<DateTime>? holidays = [];
                     for (var day in state.holidays) {
                       final newDate = DateTime(
-                        year[selectedYear!],
+                        selectedYear!,
                         selectedMonth! + 1,
                         day,
                         0,
@@ -528,8 +540,9 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
       if (userDoc.docs.isNotEmpty) {
         String userName = userDoc.docs.first.get('name');
         if (transactionOutMap.containsKey(userName)) {
-          transactionOutMap[userName]!
-              .addAll(addressToHomePresentTransactions[address]!);
+          transactionOutMap[userName]!.addAll(
+            addressToHomePresentTransactions[address]!,
+          );
         } else {
           transactionOutMap[userName] =
               addressToHomePresentTransactions[address]!;
@@ -539,19 +552,43 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
 
     for (var userName in transactionInMap.keys) {
       transactionInMap[userName]!.sort(
-          (a, b) => int.parse(a.timeStamp).compareTo(int.parse(b.timeStamp)));
+        (a, b) => int.parse(
+          a.timeStamp,
+        ).compareTo(
+          int.parse(
+            b.timeStamp,
+          ),
+        ),
+      );
     }
 
     for (var userName in transactionOutMap.keys) {
       transactionOutMap[userName]!.sort(
-          (a, b) => int.parse(a.timeStamp).compareTo(int.parse(b.timeStamp)));
+        (a, b) => int.parse(
+          a.timeStamp,
+        ).compareTo(
+          int.parse(
+            b.timeStamp,
+          ),
+        ),
+      );
     }
 
     setState(() {
-      transactionInList =
-          transactionInMap.entries.map((e) => {e.key: e.value}).toList();
-      transactionOutList =
-          transactionOutMap.entries.map((e) => {e.key: e.value}).toList();
+      transactionInList = transactionInMap.entries
+          .map(
+            (e) => {
+              e.key: e.value,
+            },
+          )
+          .toList();
+      transactionOutList = transactionOutMap.entries
+          .map(
+            (e) => {
+              e.key: e.value,
+            },
+          )
+          .toList();
     });
 
     log("Transaction In List: $transactionInList");

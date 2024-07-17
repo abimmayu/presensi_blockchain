@@ -110,7 +110,10 @@ final GoRouter router = GoRouter(
       path: '/dashboard',
       name: AppRoute.dashboardScreen.name,
       builder: (context, state) {
-        return const DashboardScreen();
+        final extra = state.extra as DashboardParam;
+        return DashboardScreen(
+          param: extra,
+        );
       },
     ),
     GoRoute(
@@ -124,20 +127,14 @@ final GoRouter router = GoRouter(
           path: 'presented',
           name: AppRoute.presentedScreen.name,
           builder: (context, state) {
-            final param = state.extra as PresentedScreenParam;
-            return PresentedScreen(
-              param: param,
-            );
+            return const PresentedScreen();
           },
         ),
         GoRoute(
           path: 'home-present',
           name: AppRoute.homePresentScreen.name,
           builder: (context, state) {
-            final param = state.extra as HomePresentedParam;
-            return HomePresentedScreen(
-              param: param,
-            );
+            return const HomePresentedScreen();
           },
         ),
         GoRoute(

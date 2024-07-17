@@ -8,7 +8,7 @@ Future<Response> getIt(
 ) async {
   Logger().i(url);
   final result = await dio.get(url);
-  Logger().d(result.data);
+  // Logger().d(result.data);
   return result;
 }
 

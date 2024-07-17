@@ -68,6 +68,8 @@ class BlockchainService {
     required List param,
     required String privateKey,
   }) async {
+    final stopwatch = Stopwatch()..start();
+
     final credential = EthPrivateKey.fromHex(privateKey);
     Logger().i(credential);
     final contract = await getContract();
@@ -86,9 +88,13 @@ class BlockchainService {
       transaction,
       chainId: 11155111,
     );
-    Logger().d(result);
+    Logger().d(await result);
+    stopwatch.stop();
 
-    return result;
+    final delay = stopwatch.elapsedMilliseconds;
+    log('Transaction delay: $delay ms');
+
+    return await result;
   }
 
   Future<String> sendBalance() async {

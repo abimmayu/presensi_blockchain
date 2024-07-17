@@ -8,24 +8,15 @@ abstract class HomeState extends Equatable {
 class HomeLoading extends HomeState {}
 
 class HomeLoaded extends HomeState {
-  final BigInt? presentInMonth;
-  final BigInt? presentOutMonth;
-  final BigInt? presentInYear;
-  final BigInt? presentOutYear;
+  final List<PresentResult> presentInMonth;
 
-  HomeLoaded({
+  HomeLoaded(
     this.presentInMonth,
-    this.presentOutMonth,
-    this.presentInYear,
-    this.presentOutYear,
-  });
+  );
 
   @override
   List<Object> get props => [
-        presentInMonth ?? 0,
-        presentOutMonth ?? 0,
-        presentInYear ?? 0,
-        presentOutYear ?? 0,
+        presentInMonth,
       ];
 }
 

@@ -12,6 +12,7 @@ import 'package:presensi_blockchain/core/routing/router.dart';
 import 'package:presensi_blockchain/core/utils/secure_storage.dart';
 import 'package:presensi_blockchain/core/widget/custom_nav_bar.dart';
 import 'package:presensi_blockchain/core/widget/list_user_settings.dart';
+import 'package:presensi_blockchain/feature/dashboard/presentation/pages/dashboard_screen.dart';
 import 'package:presensi_blockchain/feature/login/domain/entities/user_data.dart';
 import 'package:presensi_blockchain/feature/login/presentation/bloc/auth_bloc.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/bloc/user/user_bloc.dart';
@@ -182,14 +183,14 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                 context.pushReplacementNamed(AppRoute.loginScreen.name);
               }
             },
-            child: BlocConsumer<UserBloc, UserState>(
-              listener: (context, state) {},
+            child: BlocBuilder<UserBloc, UserState>(
               builder: (context, state) {
                 if (state is UserLoading) {
                   return const Center(
                     child: CircularProgressIndicator(),
                   );
                 } else if (state is UserLoaded) {
+                  UserData user = state.user;
                   return ListView(
                     shrinkWrap: true,
                     physics: const AlwaysScrollableScrollPhysics(),
@@ -234,6 +235,21 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                               },
                             )
                           : const SizedBox.shrink(),
+                      ListUserSettingsWidget(
+                        icon: Icons.co_present_rounded,
+                        title: "My Present",
+                        action: () {
+                          context.pushNamed(
+                            AppRoute.dashboardScreen.name,
+                            extra: DashboardParam(
+                              name: user.name!,
+                              nip: user.nip!.toInt(),
+                              occupation: user.occupation!,
+                              address: user.address!,
+                            ),
+                          );
+                        },
+                      ),
                       ListUserSettingsWidget(
                         icon: Icons.key,
                         title: "Change Password",

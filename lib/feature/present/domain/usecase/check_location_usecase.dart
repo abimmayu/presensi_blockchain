@@ -31,7 +31,7 @@ class CheckCorrectLocationUsecase {
         .toList();
 
     //Tolerances distance
-    const toleranceDistance = 50;
+    const toleranceDistance = 10;
     for (var i = 0; i < coordinates.length; i++) {
       final distance = Geolocator.distanceBetween(
         latLng.latitude,

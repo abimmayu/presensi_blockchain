@@ -56,7 +56,9 @@ init() async {
     ),
   );
   locator.registerFactory(
-    () => HomeBloc(),
+    () => HomeBloc(
+      locator(),
+    ),
   );
   locator.registerFactory(
     () => UserBloc(
