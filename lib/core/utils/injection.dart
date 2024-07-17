@@ -16,8 +16,6 @@ import 'package:presensi_blockchain/feature/login/domain/usecases/update_data_us
 import 'package:presensi_blockchain/feature/login/presentation/bloc/auth_bloc.dart';
 import 'package:presensi_blockchain/feature/present/domain/usecase/check_location_usecase.dart';
 import 'package:presensi_blockchain/feature/present/domain/usecase/input_present_usecase.dart';
-import 'package:presensi_blockchain/feature/present/domain/usecase/present_in_usecase.dart';
-import 'package:presensi_blockchain/feature/present/domain/usecase/present_out_usecase.dart';
 import 'package:presensi_blockchain/feature/present/presentation/bloc/present_bloc.dart';
 import 'package:presensi_blockchain/feature/login/domain/usecases/add_data_user_usecase.dart';
 import 'package:presensi_blockchain/feature/user_settings/data/datapost/user_settings_datapost.dart';

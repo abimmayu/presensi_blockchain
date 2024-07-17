@@ -355,8 +355,6 @@ class _HomePresentedScreenState extends State<HomePresentedScreen> {
     UserData userData,
   ) {
     final now = DateTime.now();
-    final idPresentNow =
-        DateTime(now.year, now.month, now.day, 7, 0).millisecondsSinceEpoch;
     showModalBottomSheet(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(

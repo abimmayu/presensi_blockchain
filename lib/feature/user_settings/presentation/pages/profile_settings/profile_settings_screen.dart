@@ -12,7 +12,7 @@ class ProfileSettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: CustomNavBar(
+      bottomNavigationBar: const CustomNavBar(
         currentIndex: 1,
       ),
       appBar: const PreferredSize(

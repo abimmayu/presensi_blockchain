@@ -89,7 +89,7 @@ class _PresentedScreenState extends State<PresentedScreen> {
 
   @override
   void initState() {
-    checkLocation();
+    getLocation();
     getPrivateKey();
     getPassword();
     context.read<PresentTimeBloc>().add(
@@ -352,8 +352,6 @@ class _PresentedScreenState extends State<PresentedScreen> {
 
   modalSeePrivateKey(BuildContext context, String password, UserData userData) {
     final now = DateTime.now();
-    final idPresentNow =
-        DateTime(now.year, now.month, now.day, 7, 0).millisecondsSinceEpoch;
     showModalBottomSheet(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
