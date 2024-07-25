@@ -101,13 +101,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
             DateTime.now().month,
           ),
         );
-    context.read<HomeBloc>().add(
-          GetPresentInMonth(
-            DateTime.now().month,
-            DateTime.now().year,
-            widget.param.address,
-          ),
-        );
     super.initState();
   }
 
@@ -152,6 +145,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       );
                     },
                   );
+                  context.read<HomeBloc>().add(
+                        GetPresentInMonth(
+                          DateTime.now().month,
+                          DateTime.now().year,
+                          widget.param.address,
+                        ),
+                      );
                 },
               );
             }
@@ -282,15 +282,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       (element) => !holidays.contains(element),
                                     )
                                     .toList();
-                                log("Dates: $dates");
                               },
                             );
+                            log("Dates: $dates");
                           }
                         }
                       },
                       builder: (context, state) {
                         if (state is HolidaySuccess) {
-                          // log("Dates Pada Builder: $dates");
+                          log("Dates Pada Builder: $dates");
                           return SingleChildScrollView(
                             child: dataTable(
                               dates,
@@ -362,6 +362,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           final dateFormat = DateFormat('EEEE, d MMMM yyyy', 'id_ID');
           final timeFormat = DateFormat('HH:mm', 'id_ID');
           final date = dateFormat.format(data);
+
           return DataRow(
             cells: [
               DataCell(
@@ -374,18 +375,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Text(
                   nowPresentIn.isEmpty
                       ? '-'
-                      : "${nowPresentIn.map(
-                          (e) {
-                            final int timeStamp =
-                                int.parse(e.values.first.timeStamp) * 1000;
-                            final DateTime time =
-                                DateTime.fromMillisecondsSinceEpoch(
-                              timeStamp,
-                            );
-                            final String date = timeFormat.format(time);
-                            return date;
-                          },
-                        ).join(', ')} WIB",
+                      : "${nowPresentIn.map((e) {
+                          final int timeStamp =
+                              int.parse(e.values.first.timeStamp) * 1000;
+                          final DateTime time =
+                              DateTime.fromMillisecondsSinceEpoch(
+                            timeStamp,
+                          );
+                          final String date = timeFormat.format(time);
+                          return date;
+                        }).join(', ')} WIB",
                   style: tinyText,
                 ),
               ),
@@ -416,6 +415,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   convertPresentDataToMap(List<PresentResult> inputData) {
     List<Map<int, PresentResult>> presentInData = [];
     List<Map<int, PresentResult>> presentOutData = [];
+    Set<int> addedInDates = {};
+    Set<int> addedOutDates = {};
 
     for (var item in inputData) {
       // log("Input Data: ${item.timeStamp}");
@@ -455,17 +456,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
       // log("Present Time Start: $presentTimeStart, Present Time End: $presentTimeEnd");
 
       if (timeStamp > presentTimeStart && timeStamp < presentTimeEnd) {
-        presentInData.add(
-          {
+        if (!addedInDates.contains(tanggal)) {
+          presentInData.add({
             tanggal: item,
-          },
-        );
+          });
+          addedInDates.add(tanggal);
+        }
       } else if (timeStamp > homePresentStart && timeStamp < homePresentEnd) {
-        presentOutData.add(
-          {
+        if (!addedOutDates.contains(tanggal)) {
+          presentOutData.add({
             tanggal: item,
-          },
-        );
+          });
+          addedOutDates.add(tanggal);
+        }
       }
     }
     // log("Present In Data: $presentInData, Present Out Data: $presentOutData");

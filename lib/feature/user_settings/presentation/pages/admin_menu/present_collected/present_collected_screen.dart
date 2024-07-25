@@ -69,12 +69,6 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
             DateTime.now().month,
           ),
         );
-    context.read<AllPresentBloc>().add(
-          AllPresentGet(
-            DateTime.now().year,
-            DateTime.now().month,
-          ),
-        );
     super.initState();
   }
 
@@ -96,229 +90,247 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
           },
         ),
       ),
-      body: ListView(
-        shrinkWrap: true,
-        children: [
-          SizedBox(
-            height: 50.h,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              DropdownDateWidget(
-                value: selectedMonth!,
-                dateOption: indexMonth,
-                dateTitle: month,
-                onSelected: (value) {
-                  onSelectedMonth(
-                    value,
-                  );
-                  log("bulan nya: ${value + 1}, tahun nya: ${year[selectedYear!]}");
-                  context.read<AllPresentBloc>().add(
-                        AllPresentGet(
-                          value + 1,
-                          year[selectedYear!],
-                        ),
-                      );
-                  context.read<HolidayBloc>().add(
-                        GetHoliday(
-                          year[selectedYear!],
-                          value + 1,
-                        ),
-                      );
-                  getDate(year[selectedYear!], value + 1);
-                },
-              ),
-              SizedBox(
-                width: 20.w,
-              ),
-              DropdownDateWidget(
-                value: selectedYear!,
-                dateOption: indexYear,
-                dateTitle: year,
-                onSelected: (value) {
-                  onSelectedYear(
-                    value,
-                  );
-                  log("bulan nya: ${selectedMonth! + 1}, tahun nya: ${year[value]}");
-                  context.read<AllPresentBloc>().add(
-                        AllPresentGet(
-                          selectedMonth! + 1,
-                          year[value],
-                        ),
-                      );
-                  context.read<HolidayBloc>().add(
-                        GetHoliday(
-                          year[value],
-                          selectedMonth! + 1,
-                        ),
-                      );
-                  getDate(year[value], selectedMonth! + 1);
-                },
-              ),
-              BlocBuilder<AllPresentBloc, AllPresentState>(
-                builder: (context, state) {
-                  if (state is AllPresentSuccess) {
-                    if (transactionInList.isEmpty) {
+      body: RefreshIndicator(
+        onRefresh: () async {
+          log("year: ${year[selectedYear!]}, month: ${selectedMonth! + 1}");
+          return context.read<AllPresentBloc>().add(
+                AllPresentGet(
+                  selectedMonth! + 1,
+                  year[selectedYear!],
+                ),
+              );
+        },
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            SizedBox(
+              height: 50.h,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                DropdownDateWidget(
+                  value: selectedMonth!,
+                  dateOption: indexMonth,
+                  dateTitle: month,
+                  onSelected: (value) {
+                    onSelectedMonth(
+                      value,
+                    );
+                    log("bulan nya: ${value + 1}, tahun nya: ${year[selectedYear!]}");
+                    // context.read<AllPresentBloc>().add(
+                    //       AllPresentGet(
+                    //         value + 1,
+                    //         year[selectedYear!],
+                    //       ),
+                    //     );
+                    context.read<HolidayBloc>().add(
+                          GetHoliday(
+                            year[selectedYear!],
+                            value + 1,
+                          ),
+                        );
+                    getDate(year[selectedYear!], value + 1);
+                  },
+                ),
+                SizedBox(
+                  width: 20.w,
+                ),
+                DropdownDateWidget(
+                  value: selectedYear!,
+                  dateOption: indexYear,
+                  dateTitle: year,
+                  onSelected: (value) {
+                    onSelectedYear(
+                      value,
+                    );
+                    log("bulan nya: ${selectedMonth! + 1}, tahun nya: ${year[value]}");
+                    // context.read<AllPresentBloc>().add(
+                    //       AllPresentGet(
+                    //         selectedMonth! + 1,
+                    //         year[value],
+                    //       ),
+                    //     );
+                    context.read<HolidayBloc>().add(
+                          GetHoliday(
+                            year[value],
+                            selectedMonth! + 1,
+                          ),
+                        );
+                    getDate(year[value], selectedMonth! + 1);
+                  },
+                ),
+                BlocBuilder<AllPresentBloc, AllPresentState>(
+                  builder: (context, state) {
+                    if (state is AllPresentSuccess) {
+                      if (transactionInList.isEmpty) {
+                        return IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.sim_card_download,
+                            color: greyColor,
+                            size: 60.h,
+                          ),
+                        );
+                      }
                       return IconButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          await requestStoragePermission();
+                          try {
+                            OpenResult result = await generateLargeTablesPdf(
+                              year[selectedYear!],
+                              selectedMonth! + 1,
+                              month[selectedMonth!],
+                              transactionInList,
+                              transactionOutList,
+                            );
+
+                            if (result.type == ResultType.done) {
+                              // File PDF telah dibuka
+                              print('File PDF berhasil dibuka');
+                            } else {
+                              // Penanganan kasus lain jika diperlukan
+                              print(result.type);
+                              print('Gagal membuka file PDF');
+                            }
+                          } catch (e) {
+                            // Penanganan exception jika terjadi kesalahan
+                            print(
+                                'Terjadi kesalahan saat membuka file PDF: $e');
+                          }
+                        },
                         icon: Icon(
                           Icons.sim_card_download,
-                          color: greyColor,
+                          color: mainColor,
                           size: 60.h,
+                        ),
+                      );
+                    } else if (state is AllPresentLoading) {
+                      return Padding(
+                        padding: EdgeInsets.only(left: 10.w),
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                            color: greyColor,
+                          ),
                         ),
                       );
                     }
                     return IconButton(
-                      onPressed: () async {
-                        await requestStoragePermission();
-                        try {
-                          OpenResult result = await generateLargeTablesPdf(
-                            year[selectedYear!],
-                            selectedMonth! + 1,
-                            month[selectedMonth!],
-                            transactionInList,
-                            transactionOutList,
-                          );
-
-                          if (result.type == ResultType.done) {
-                            // File PDF telah dibuka
-                            print('File PDF berhasil dibuka');
-                          } else {
-                            // Penanganan kasus lain jika diperlukan
-                            print(result.type);
-                            print('Gagal membuka file PDF');
-                          }
-                        } catch (e) {
-                          // Penanganan exception jika terjadi kesalahan
-                          print('Terjadi kesalahan saat membuka file PDF: $e');
-                        }
-                      },
+                      onPressed: () {},
                       icon: Icon(
                         Icons.sim_card_download,
-                        color: mainColor,
+                        color: greyColor,
                         size: 60.h,
                       ),
                     );
-                  } else if (state is AllPresentLoading) {
-                    return Padding(
-                      padding: EdgeInsets.only(left: 10.w),
-                      child: const Center(
-                        child: CircularProgressIndicator(
-                          color: greyColor,
-                        ),
-                      ),
-                    );
-                  }
-                  return IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.sim_card_download,
-                      color: greyColor,
-                      size: 60.h,
-                    ),
-                  );
-                },
-              )
-            ],
-          ),
-          SizedBox(
-            height: 25.h,
-          ),
-          BlocListener<PresentTimeBloc, PresentTimeState>(
-            listener: (context, state) {
-              if (state is PresentTimeSuccess) {
-                WidgetsBinding.instance.addPostFrameCallback(
-                  (timeStamp) {
-                    setState(
-                      () {
-                        presentStart = TimeOfDay(
-                          hour: state.presentTime.getIn.start.hour,
-                          minute: state.presentTime.getIn.start.minute,
-                        );
-                        presentEnd = TimeOfDay(
-                          hour: state.presentTime.getIn.end.hour,
-                          minute: state.presentTime.getIn.end.minute,
-                        );
-                        homePresentStart = TimeOfDay(
-                          hour: state.presentTime.getOut.start.hour,
-                          minute: state.presentTime.getOut.start.minute,
-                        );
-                        homePresentEnd = TimeOfDay(
-                          hour: state.presentTime.getOut.end.hour,
-                          minute: state.presentTime.getOut.end.minute,
-                        );
-                      },
-                    );
                   },
-                );
-              }
-            },
-            child: BlocListener<AllPresentBloc, AllPresentState>(
-              listener: (context, state) async {
-                log("State All present: $state");
-                if (state is AllPresentSuccess) {
-                  log("State Present: ${state.presents[0]}");
-                  if (state.presents.isNotEmpty) {
-                    await _fetchData(state.presents);
-                  }
-                }
-              },
-              child: BlocConsumer<HolidayBloc, HolidayState>(
-                listener: (context, state) {
-                  if (state is HolidaySuccess) {
-                    context.read<PresentTimeBloc>().add(
-                          GetPresentTime(),
-                        );
-                    List<DateTime>? holidays = [];
-                    for (var day in state.holidays) {
-                      final newDate = DateTime(
-                        selectedYear!,
-                        selectedMonth! + 1,
-                        day,
-                        0,
-                      );
-                      holidays.add(newDate);
-                    }
-                    if (holidays.isNotEmpty) {
+                )
+              ],
+            ),
+            SizedBox(
+              height: 25.h,
+            ),
+            BlocListener<PresentTimeBloc, PresentTimeState>(
+              listener: (context, state) {
+                if (state is PresentTimeSuccess) {
+                  WidgetsBinding.instance.addPostFrameCallback(
+                    (timeStamp) {
                       setState(
                         () {
-                          dates = dates!
-                              .where(
-                                (element) => !holidays.contains(element),
-                              )
-                              .toList();
+                          presentStart = TimeOfDay(
+                            hour: state.presentTime.getIn.start.hour,
+                            minute: state.presentTime.getIn.start.minute,
+                          );
+                          presentEnd = TimeOfDay(
+                            hour: state.presentTime.getIn.end.hour,
+                            minute: state.presentTime.getIn.end.minute,
+                          );
+                          homePresentStart = TimeOfDay(
+                            hour: state.presentTime.getOut.start.hour,
+                            minute: state.presentTime.getOut.start.minute,
+                          );
+                          homePresentEnd = TimeOfDay(
+                            hour: state.presentTime.getOut.end.hour,
+                            minute: state.presentTime.getOut.end.minute,
+                          );
                         },
                       );
+                    },
+                  );
+                  context.read<AllPresentBloc>().add(
+                        AllPresentGet(
+                          selectedMonth! + 1,
+                          year[selectedYear!],
+                        ),
+                      );
+                }
+              },
+              child: BlocListener<AllPresentBloc, AllPresentState>(
+                listener: (context, state) async {
+                  log("State All present: $state");
+                  if (state is AllPresentSuccess) {
+                    log("State Present: ${state.presents[0]}");
+                    if (state.presents.isNotEmpty) {
+                      await _fetchData(state.presents);
                     }
                   }
                 },
-                builder: (context, state) {
-                  if (state is HolidayLoading) {
+                child: BlocConsumer<HolidayBloc, HolidayState>(
+                  listener: (context, state) {
+                    if (state is HolidaySuccess) {
+                      context.read<PresentTimeBloc>().add(
+                            GetPresentTime(),
+                          );
+                      List<DateTime>? holidays = [];
+                      for (var day in state.holidays) {
+                        final newDate = DateTime(
+                          selectedYear!,
+                          selectedMonth! + 1,
+                          day,
+                          0,
+                        );
+                        holidays.add(newDate);
+                      }
+                      if (holidays.isNotEmpty) {
+                        setState(
+                          () {
+                            dates = dates!
+                                .where(
+                                  (element) => !holidays.contains(element),
+                                )
+                                .toList();
+                          },
+                        );
+                      }
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state is HolidayLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: mainColor,
+                        ),
+                      );
+                    } else if (state is HolidayError) {
+                      return Center(
+                        child: Text(state.message),
+                      );
+                    } else if (state is HolidaySuccess) {
+                      return SingleChildScrollView(
+                        child: dataTable(
+                          dates!,
+                        ),
+                      );
+                    }
                     return const Center(
-                      child: CircularProgressIndicator(
-                        color: mainColor,
-                      ),
+                      child: Text('No data available'),
                     );
-                  } else if (state is HolidayError) {
-                    return Center(
-                      child: Text(state.message),
-                    );
-                  } else if (state is HolidaySuccess) {
-                    return SingleChildScrollView(
-                      child: dataTable(
-                        dates!,
-                      ),
-                    );
-                  }
-                  return const Center(
-                    child: Text('No data available'),
-                  );
-                },
+                  },
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

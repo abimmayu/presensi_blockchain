@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:presensi_blockchain/core/routing/router.dart';
+import 'package:presensi_blockchain/core/utils/constant.dart';
 import 'package:presensi_blockchain/core/widget/button.dart';
 import 'package:presensi_blockchain/core/widget/pin_modal.dart';
 import 'package:presensi_blockchain/feature/login/presentation/bloc/auth_bloc.dart';
@@ -144,33 +145,41 @@ class _ImportRecoveryPhraseWidgetState
       context: context,
       builder: (context) {
         TextEditingController controller = TextEditingController();
-        return PinInputModal(
-          controller: controller,
-          onChanged: (value) {
-            setState(() {
-              controller.text = value;
-            });
-          },
-          onSubmitted: (value) {
-            context.pop();
-            context.read<AuthBloc>().add(
-                  AuthImportWallet(
-                    value,
-                    null,
-                    controllers,
-                  ),
-                );
-          },
-          function: () {
-            context.pop();
-            context.read<AuthBloc>().add(
-                  AuthImportWallet(
-                    controller.text,
-                    null,
-                    controllers,
-                  ),
-                );
-          },
+        return Column(
+          children: [
+            Text(
+              "Create your Pin",
+              style: normalText,
+            ),
+            PinInputModal(
+              controller: controller,
+              onChanged: (value) {
+                setState(() {
+                  controller.text = value;
+                });
+              },
+              onSubmitted: (value) {
+                context.pop();
+                context.read<AuthBloc>().add(
+                      AuthImportWallet(
+                        value,
+                        null,
+                        controllers,
+                      ),
+                    );
+              },
+              function: () {
+                context.pop();
+                context.read<AuthBloc>().add(
+                      AuthImportWallet(
+                        controller.text,
+                        null,
+                        controllers,
+                      ),
+                    );
+              },
+            ),
+          ],
         );
       },
     );

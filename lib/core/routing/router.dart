@@ -11,6 +11,7 @@ import 'package:presensi_blockchain/feature/present/presentation/pages/home_pres
 import 'package:presensi_blockchain/feature/present/presentation/pages/present_success_screen.dart';
 import 'package:presensi_blockchain/feature/present/presentation/pages/presented_screen.dart';
 import 'package:presensi_blockchain/feature/present/presentation/pages/present_screen.dart';
+import 'package:presensi_blockchain/feature/present/presentation/pages/transaction_sepolia_screen.dart';
 import 'package:presensi_blockchain/feature/splash/splash_screen.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/pages/admin_menu/account_setting/add_account_screen.dart';
 import 'package:presensi_blockchain/feature/user_settings/presentation/pages/admin_menu/change_present_time_screen.dart';
@@ -36,6 +37,7 @@ enum AppRoute {
   homePresentScreen,
   dayOffScreen,
   presentSuccessScreen,
+  presentTransactionScreen,
   presentFailedScreen,
   userSettingScreen,
   profileSettingScreen,
@@ -145,19 +147,23 @@ final GoRouter router = GoRouter(
           },
         ),
         GoRoute(
-          path: 'present-success',
+          path: 'present-success/:hashTrx',
           name: AppRoute.presentSuccessScreen.name,
           builder: (context, state) {
-            return const PresentSuccessScreen();
+            return PresentSuccessScreen(
+              hashTrx: state.pathParameters['hashTrx']!,
+            );
           },
         ),
         GoRoute(
-          path: 'present-failed',
-          name: AppRoute.presentFailedScreen.name,
+          path: 'present-transaction/:hashTrx',
+          name: AppRoute.presentTransactionScreen.name,
           builder: (context, state) {
-            return const PresentSuccessScreen();
+            return HistoryTransaction(
+              hashTrx: state.pathParameters['hashTrx']!,
+            );
           },
-        ),
+        )
       ],
     ),
     GoRoute(

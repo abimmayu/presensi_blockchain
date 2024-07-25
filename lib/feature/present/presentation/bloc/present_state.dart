@@ -16,7 +16,14 @@ class PresentError extends PresentState {
   List<Object> get props => [error];
 }
 
-class PresentSuccess extends PresentState {}
+class PresentSuccess extends PresentState {
+  final String hashTrx;
+
+  PresentSuccess(this.hashTrx);
+
+  @override
+  List<Object> get props => [hashTrx];
+}
 
 class LocationMatch extends PresentState {}
 

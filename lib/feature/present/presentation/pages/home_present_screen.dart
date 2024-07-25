@@ -203,6 +203,9 @@ class _HomePresentedScreenState extends State<HomePresentedScreen> {
             } else if (state is PresentSuccess) {
               context.pushReplacementNamed(
                 AppRoute.presentSuccessScreen.name,
+                pathParameters: {
+                  'hashTrx': state.hashTrx,
+                },
               );
             } else if (state is LocationNotMatch) {
               return await showDialog(

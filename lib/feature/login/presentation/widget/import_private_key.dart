@@ -55,6 +55,7 @@ class _ImportPrivateKeyWidgetState extends State<ImportPrivateKeyWidget> {
                         SvgPicture.asset(
                           'assets/images/Password logo.svg',
                           height: 30.h,
+                          // ignore: deprecated_member_use
                           color: whiteColor,
                         ),
                         SizedBox(

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:presensi_blockchain/feature/user_settings/domain/entity/present_result.dart';
@@ -42,6 +44,7 @@ class AllPresentBloc extends Bloc<AllPresentEvent, AllPresentState> {
         final lastTimeStamp = getEndOfMonthTimestamp(year, month);
         List<PresentResult> presentOnMonth = r.where(
           (element) {
+            log("Sedang menyeleksi presensi...");
             final timeStamp = int.parse(element.timeStamp);
             return timeStamp >= startTimeStamp && timeStamp <= lastTimeStamp;
           },

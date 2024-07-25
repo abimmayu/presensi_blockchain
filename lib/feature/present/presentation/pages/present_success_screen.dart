@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -7,7 +9,12 @@ import 'package:presensi_blockchain/core/widget/button.dart';
 import 'package:svg_flutter/svg.dart';
 
 class PresentSuccessScreen extends StatelessWidget {
-  const PresentSuccessScreen({super.key});
+  const PresentSuccessScreen({
+    super.key,
+    required this.hashTrx,
+  });
+
+  final String hashTrx;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +41,22 @@ class PresentSuccessScreen extends StatelessWidget {
             ),
             SizedBox(
               height: ScreenUtil().setHeight(50),
+            ),
+            MainButton(
+              onTap: () {
+                context.goNamed(
+                  AppRoute.presentTransactionScreen.name,
+                  pathParameters: {
+                    'hashTrx': hashTrx,
+                  },
+                );
+                log('https://sepolia.etherscan.io/tx/$hashTrx');
+              },
+              text: hashTrx,
+              width: ScreenUtil().setWidth(320),
+            ),
+            SizedBox(
+              height: ScreenUtil().setHeight(20),
             ),
             MainButton(
               onTap: () {

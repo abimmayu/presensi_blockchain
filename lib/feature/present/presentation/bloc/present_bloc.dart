@@ -104,7 +104,7 @@ class PresentBloc extends Bloc<PresentEvent, PresentState> {
         PresentFailed(l.message!),
       ),
       (r) => emit(
-        PresentSuccess(),
+        PresentSuccess(r),
       ),
     );
   }

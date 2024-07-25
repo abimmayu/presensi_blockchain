@@ -205,6 +205,9 @@ class _PresentedScreenState extends State<PresentedScreen> {
             } else if (state is PresentSuccess) {
               context.pushReplacementNamed(
                 AppRoute.presentSuccessScreen.name,
+                pathParameters: {
+                  'hashTrx': state.hashTrx,
+                },
               );
             } else if (state is LocationNotMatch) {
               return await showDialog(
@@ -285,13 +288,14 @@ class _PresentedScreenState extends State<PresentedScreen> {
             } else if (state is LocationNotMatch) {
               return Column(
                 children: [
-                  Flexible(
-                    child: Center(
-                      child: Text(
-                        "Anda tidak berada di lokasi kerja.",
-                        style: normalText,
-                        maxLines: 4,
-                      ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                    ),
+                    child: Text(
+                      "Anda tidak berada di lokasi kerja.",
+                      style: normalText,
+                      maxLines: 4,
                     ),
                   ),
                   SizedBox(
