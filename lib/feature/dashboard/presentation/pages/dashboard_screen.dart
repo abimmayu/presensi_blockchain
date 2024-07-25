@@ -84,7 +84,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  List<DateTime> dates = [];
+  List<DateTime>? dates = [];
 
   @override
   void initState() {
@@ -277,7 +277,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           if (holidays.isNotEmpty) {
                             setState(
                               () {
-                                dates = dates
+                                dates = dates!
                                     .where(
                                       (element) => !holidays.contains(element),
                                     )
@@ -289,18 +289,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         }
                       },
                       builder: (context, state) {
-                        if (state is HolidaySuccess) {
+                        if (state is HolidayError) {
+                          return Center(
+                            child: Text(state.message),
+                          );
+                        } else if (state is HolidaySuccess) {
                           log("Dates Pada Builder: $dates");
                           return SingleChildScrollView(
                             child: dataTable(
-                              dates,
+                              dates!,
                               presentInMap,
                               presentOutMap,
                             ),
-                          );
-                        } else if (state is HolidayError) {
-                          return Center(
-                            child: Text(state.message),
                           );
                         }
                         return const Center(

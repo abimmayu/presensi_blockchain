@@ -118,12 +118,6 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
                       value,
                     );
                     log("bulan nya: ${value + 1}, tahun nya: ${year[selectedYear!]}");
-                    // context.read<AllPresentBloc>().add(
-                    //       AllPresentGet(
-                    //         value + 1,
-                    //         year[selectedYear!],
-                    //       ),
-                    //     );
                     context.read<HolidayBloc>().add(
                           GetHoliday(
                             year[selectedYear!],
@@ -145,12 +139,6 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
                       value,
                     );
                     log("bulan nya: ${selectedMonth! + 1}, tahun nya: ${year[value]}");
-                    // context.read<AllPresentBloc>().add(
-                    //       AllPresentGet(
-                    //         selectedMonth! + 1,
-                    //         year[value],
-                    //       ),
-                    //     );
                     context.read<HolidayBloc>().add(
                           GetHoliday(
                             year[value],
@@ -708,6 +696,20 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
       },
     ).toList();
 
+    final String presentStartHour = "${presentStart!.hour}";
+    final String presentStartMinute =
+        presentStart!.minute != 0 ? '${presentStart!.minute}' : "00";
+    final String presentEndHour = "${presentEnd!.hour}";
+    final String presentEndMinute =
+        presentEnd!.minute != 0 ? '${presentEnd!.minute}' : "00";
+
+    final String homePresentStartHour = "${homePresentStart!.hour}";
+    final String homePresentStartMinute =
+        homePresentStart!.minute != 0 ? '${homePresentStart!.minute}' : "00";
+    final String homePresentEndHour = "${homePresentEnd!.hour}";
+    final String homePresentEndMinute =
+        presentEnd!.minute != 0 ? '${homePresentEnd!.minute}' : "00";
+
     pdf.addPage(
       pw.MultiPage(
         orientation: pw.PageOrientation.landscape,
@@ -728,6 +730,11 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
                 style: pw.TextStyle(
                   font: font,
                 ),
+              ),
+            ),
+            pw.Center(
+              child: pw.Text(
+                'Waktu Presensi: $presentStartHour:$presentStartMinute - $presentEndHour:$presentEndMinute WIB',
               ),
             ),
             pw.Center(
@@ -770,6 +777,11 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
                 style: pw.TextStyle(
                   font: font,
                 ),
+              ),
+            ),
+            pw.Center(
+              child: pw.Text(
+                'Waktu Presensi: $homePresentStartHour:$homePresentStartMinute - $homePresentEndHour:$homePresentEndMinute WIB',
               ),
             ),
             pw.Center(
