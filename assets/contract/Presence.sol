@@ -9,12 +9,14 @@ contract Presence {
 
     mapping(uint256 => Present[]) private objectPresent;
     uint256[] private listOfPresent;
+    mapping(uint256 => bool) private presentTimeExists;
 
     function inputPresent(uint256 presentTime, uint256 employee_nip) public {
-        objectPresent[presentTime].push(Present(block.timestamp, employee_nip));
-        if (objectPresent[presentTime].length == 1) {
+        if (!presentTimeExists[presentTime]) {
+            presentTimeExists[presentTime] = true;
             listOfPresent.push(presentTime);
         }
+        objectPresent[presentTime].push(Present(block.timestamp, employee_nip));
     }
 
     function getPresentTimes() public view returns (uint256[] memory) {
@@ -34,20 +36,19 @@ contract Presence {
         require(startIndex < endIndex, "Invalid indices");
         require(endIndex <= listOfPresent.length, "End index out of range");
 
-        uint256 totalPresentsCount = 0;
+        uint256 totalPresentsCount;
         for (uint256 i = startIndex; i < endIndex; i++) {
             totalPresentsCount += objectPresent[listOfPresent[i]].length;
         }
 
         Present[] memory paginatedPresents = new Present[](totalPresentsCount);
-        uint256 currentIndex = 0;
+        uint256 currentIndex;
 
         for (uint256 i = startIndex; i < endIndex; i++) {
             uint256 time = listOfPresent[i];
             Present[] memory presentsForTime = objectPresent[time];
             for (uint256 j = 0; j < presentsForTime.length; j++) {
-                paginatedPresents[currentIndex] = presentsForTime[j];
-                currentIndex++;
+                paginatedPresents[currentIndex++] = presentsForTime[j];
             }
         }
 
