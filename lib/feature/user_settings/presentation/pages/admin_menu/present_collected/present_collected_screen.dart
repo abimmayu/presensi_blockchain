@@ -610,7 +610,7 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
 
     final fontStyle = pw.TextStyle(
       font: font,
-      fontSize: 10,
+      fontSize: 5,
       color: PdfColors.black,
     );
 
@@ -625,6 +625,7 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
       header.add("${day.day}");
     }
     header.add("Total Kehadiran");
+
     final presentEmployee = transactionInList.asMap().entries.expand(
       (e) {
         final index = e.key;
@@ -648,23 +649,18 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
             log("Time Stamp Presensi: $timeStamp");
             final List<dynamic> row = [index + 1, name];
 
+            int presentCount = 0;
+
             for (var day in days) {
               if (timeStamp.contains(day.day)) {
                 row.add('✓');
+                presentCount++;
               } else {
                 row.add('');
               }
             }
 
-            // for (var day = days.first.day; day <= days.last.day; day++) {
-            //   if (presentDays.contains(day)) {
-            //     row.add('✓');
-            //   } else {
-            //     row.add('');
-            //   }
-            // }
-
-            row.add(presentDays.length);
+            row.add(presentCount);
             return row;
           },
         ).toList();
@@ -678,17 +674,33 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
         final dataTable = e.value.entries.map(
           (e) {
             final name = e.key;
-            final List presentDays = e.value;
+            final List<PresentResult> presentDays = e.value;
+            final List<int> timeStamp = List.generate(
+              presentDays.length,
+              (index) {
+                final timeStamp =
+                    int.parse(presentDays[index].timeStamp) * 1000;
+                final DateTime time = DateTime.fromMillisecondsSinceEpoch(
+                  timeStamp,
+                );
+                final day = time.day;
+
+                return day;
+              },
+            );
             final List<dynamic> row = [index + 1, name];
 
+            int presentCount = 0;
+
             for (var day = days.first.day; day <= days.last.day; day++) {
-              if (presentDays.contains(day)) {
+              if (timeStamp.contains(day)) {
                 row.add('✓');
+                presentCount++;
               } else {
                 row.add('');
               }
             }
-            row.add(presentDays.length);
+            row.add(presentCount);
             return row;
           },
         ).toList();
@@ -765,7 +777,7 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
           return [
             pw.Center(
               child: pw.Text(
-                'Rekapan Presensi Masuk',
+                'Rekapan Pulang',
                 style: pw.TextStyle(
                   font: font,
                 ),
@@ -830,16 +842,10 @@ class _PresentCollectedScreenState extends State<PresentCollectedScreen> {
   Future<void> requestStoragePermission() async {
     var status = await Permission.storage.status;
     if (!status.isGranted) {
-      // Meminta izin akses storage jika belum diberikan
       status = await Permission.storage.request();
     }
 
     if (status.isGranted) {
-      // Izin diberikan, lanjutkan dengan operasi yang membutuhkan izin
-      // Misalnya, menyimpan atau membuka file PDF
-    } else {
-      // Izin tidak diberikan, beritahu pengguna atau lakukan penanganan lainnya
-      // Misalnya, menampilkan pesan bahwa izin diperlukan untuk operasi tertentu
-    }
+    } else {}
   }
 }

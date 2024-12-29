@@ -149,7 +149,7 @@ class _ImportRecoveryPhraseWidgetState
           children: [
             Text(
               "Create your Pin",
-              style: normalText,
+              style: bigTextSemibold,
             ),
             PinInputModal(
               controller: controller,
